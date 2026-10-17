@@ -37,7 +37,7 @@
       "problemMatcher": []
     },
     {
-      "label": "04 - SUBIR a GitHub y lanzar release 3.0.0",
+      "label": "04 - SUBIR a GitHub y lanzar release 3.1.0",
       "type": "process",
       "command": "powershell.exe",
       "args": [

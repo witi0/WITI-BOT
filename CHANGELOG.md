@@ -1,3 +1,15 @@
+# WITI BOT 3.1.0 · LIVE Fix + Overlay Studio 12.2
+
+- Lector TikTok: acepta @usuario o URL de perfil/live, clasifica errores por motivo, prueba conexión alternativa y reintenta sin interacción.
+- Diferencia entre LIVE detectado por consulta y conexión de chat confirmada; no finge estar conectado cuando el WebSocket falla.
+- Muestra errores de conexión detallados y estado de reintento.
+- Interfaz HTML/CSS original de OVERLAY STUDIO 12.2, con sus 29 fuentes, galerías, filtros, favoritos y editor lateral, integrada dentro de WITI BOT 3.1.
+- Conectores de la galería a las fuentes persistentes de WITI BOT 3.x; al copiar, crear o guardar conserva un ID estable y el mismo enlace para OBS.
+- Preserva 120 MP3 y 1,667 imágenes del paquete anterior, las reglas y bases de datos existentes.
+- Ocho nuevas pruebas de regresión de LIVE y Overlay Studio.
+
+Nota: interfaz original de 12.2 con motor de fuentes 3.x adaptado. Los efectos especializados de 12.2 sin equivalente en el motor actual pueden mostrarse mediante un tipo compatible; esto NO implica igualdad funcional completa del motor antiguo.
+
 # WITI BOT 3.0.0 · RGB Purple Studio
 
 - Recuperado el morado RGB en toda la interfaz y eliminada la barra nativa File/Edit/View/Window.

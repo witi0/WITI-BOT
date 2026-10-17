@@ -1,3 +1,11 @@
+# WITI BOT 3.1.0 · Corrección de TikTok LIVE y OVERLAY STUDIO 12.2
+
+Esta revisión sustituye en la navegación de Overlays la interfaz previa por el HTML/CSS original de WITI BOT 12.2, aislado en un iframe y conectado al motor local de WITI BOT 3.1. Contiene sus 29 definiciones y el editor lateral, pero no porta íntegro su servidor antiguo: las fuentes especializadas sin motor equivalente utilizan un tipo compatible.
+
+**TikTok LIVE**: introducir @usuario o `https://www.tiktok.com/@usuario/live`. Si la lectura del LIVE detecta transmisión pero falla el chat, se mostrará expresamente "LIVE detectado; chat pendiente" y un diagnóstico técnico. Se prueban dos configuraciones del conector y la reconexión automática. No hay garantía de conexión si TikTok/Euler bloquean el servicio; las credenciales y políticas son externas.
+
+**Para compilar y publicar**: extrae el ZIP completo y usa `01_CREAR_INSTALADOR_WINDOWS.bat` o `02_SUBIR_Y_PUBLICAR_GITHUB.bat`. GitHub Actions compilará con Windows si la publicación y las pruebas pasan. La etiqueta v3.1.0 requerirá tu secreto de firma Ed25519 para actualizaciones y no debe crearse si falla el CI.
+
 # WITI BOT 3.0.0 · RGB Purple Studio
 
 Aplicación Windows 10/11 x64 para TikTok LIVE, Spotify y OBS. El usuario instala el EXE; no necesita Python, Node, Visual Studio ni Git.
@@ -32,7 +40,7 @@ Ver PRUEBAS_2.5.0.md, verification.json y registros en la entrega. Las pruebas d
 
 La instalación, ejecución, actualización y desinstalación en Windows limpio aún necesitan validación en Windows. No se declara esa prueba realizada. Spotify requiere consentimiento y aprobación/capacidad del proveedor; TikTok LIVE depende de una emisión real y del conector comunitario. Las voces online dependen de sus proveedores. No se han inventado credenciales ni aprobaciones de TikTok.
 
-## Visual Studio Code — publicación 3.0.0
+## Visual Studio Code — publicación 3.1.0
 
 Extrae el ZIP y abre `WITI-BOT-3.code-workspace` (o ejecuta `00_ABRIR_EN_VISUAL_STUDIO_CODE.bat`). En Terminal > Ejecutar tarea están los controles para instalar dependencias, probar, compilar y publicar. `02_SUBIR_Y_PUBLICAR_GITHUB.bat` funciona también sin Visual Studio Code; solo necesita Git para Windows con sesión autorizada. No uses «Publish to GitHub» para crear un repositorio nuevo: ya existe `witi0/WITI-BOT`.
 

@@ -40,3 +40,10 @@ body.theme-rgb .appearance-preview{background:linear-gradient(110deg,#3d2d76,#1c
 #toast:not(.error){background:#261c46;border-color:#9674e6;color:#f4efff}
 .command-trigger,.command-modal,.command-modal #commandSearch,kbd{background:#241a40;border-color:#7056a5;color:#e9e2fb}.command-result[aria-selected=true],.command-result:hover{background:#453069;border-color:#b294ff}
 @media(prefers-reduced-motion:reduce){button,button:not(:disabled):hover{transform:none!important;transition:none!important}}body.reduce-motion button{transition:none!important;transform:none!important}
+
+.tiktok-diagnostics{display:grid;gap:7px;margin:9px 0 14px;font-size:13px;color:#c9b6ef;overflow-wrap:anywhere}.tiktok-diagnostics strong{color:#b9f1ff}.tiktok-diagnostics details{border:1px solid #554073;border-radius:9px;padding:8px 10px}.tiktok-diagnostics summary{cursor:pointer}.tiktok-diagnostics p{white-space:pre-wrap;color:#e9d9ff}.tiktok-diagnostics small{color:#ae9bc8}
+
+/* Original 12.2 Studio is isolated in its own browsing context: no cascade collision. */
+#overlays > :not(#legacy12StudioFrame){display:none!important}
+#overlays #legacy12StudioFrame{display:block;width:100%;height:calc(100vh - 100px);min-height:730px;border:0;background:#0e0a19;border-radius:15px;overflow:auto;box-shadow:0 0 0 1px #46345c}
+#overlays{padding:0!important;overflow:hidden}

@@ -1,0 +1,12 @@
+
+/* Embedded 12.2 overlay studio. Original visual styles above remain unmodified. */
+html,body{overflow:auto!important;min-height:100%;background:#0e0a19;color:#f7f0ff}body{padding:16px 18px 50px!important}
+.views{padding:0!important;margin:0!important;display:block!important;min-height:100vh!important;width:100%!important;max-width:none!important;overflow:visible!important}
+.view[data-view="overlays"]{display:block!important;position:relative;max-width:100%!important;margin:0!important;padding:0!important;transform:none!important}
+.overlay-grid{min-height:230px}
+.overlay-editor{z-index:10000!important}
+#studio12-toast{position:fixed;z-index:12001;bottom:18px;left:50%;transform:translateX(-50%);max-width:620px;padding:12px 20px;border:1px solid #9567ff;background:#251438;box-shadow:0 8px 35px #000a;border-radius:13px;color:white;display:none}
+#studio12-toast.error{border-color:#f47aa8;background:#421b37}
+.overlay-preview iframe{pointer-events:none}
+.overlay-pro-card .overlay-actions button{white-space:nowrap}
+@media(max-width:840px){body{padding:8px!important}.overlay-editor-panel{width:min(100vw,680px)!important}.overlay-metrics{grid-template-columns:repeat(3,1fr)}}
