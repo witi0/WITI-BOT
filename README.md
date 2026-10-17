@@ -1,19 +1,24 @@
-# WITI BOT V2
+# WITI BOT 2.4.1 · Cobre RGB
 
-Panel de escritorio Windows x64 para TikTok LIVE, OBS y Spotify. Electron 44, Node 22, SQLite y servidor de overlays ligado a 127.0.0.1.
+Aplicación Windows x64 para TikTok LIVE, Spotify y OBS. Instala el EXE sin Python, Node ni Git.
 
-**Build:** `npm ci`, `npm test`, `npm run dist:win`.
+## Colección incluida
 
-**Runtime:** eventos de TikTok LIVE por conector comunitario, reconexión con espera exponencial y cola de eventos priorizada. Estado persistente, búsqueda de actualizaciones con manifiesto Ed25519 y verificación SHA-256.
+Los 120 audios MP3 del ZIP proporcionado por Witi se incluyen como sonidos predeterminados. No se incluyen las imágenes de regalos del ZIP. El logo y las portadas que entrega Spotify se conservan. Las imágenes de regalos antiguas de esa colección se retiran al actualizar; los recursos personalizados o utilizados por reglas se protegen. Los nombres, favoritos y audios eliminados se conservan.
 
-**Overlay Studio:** 34 plantillas no exclusivas, estilos RGB independientes para texto y marco, 6 estilos de marco y salida HTML para fuentes navegador OBS.
 
-**Regalos:** catálogo regional de referencia con 1667 entradas, 682 con etiqueta MX, sincronización dinámica al conectar LIVE. La disponibilidad y el valor de regalos dependen de TikTok.
+## Cobre y petróleo
 
-**Medios:** biblioteca personal importada desde MP3/WAV/OGG. No se distribuyen audios de terceros ni sonidos sintéticos de versiones anteriores. Las reglas heredadas que apuntan a efectos eliminados se deshabilitan y pueden actualizarse.
+Tema oscuro verde petróleo, cobre y acentos lima. RGB animado en contornos de paneles, controles, tarjetas, navegación y determinados títulos; la tipografía de lectura y las imágenes conservan su legibilidad y color. Ajustes permite desactivar RGB, cambiar acento, modo, velocidad e intensidad, elegir tipografía o reducir animaciones.
 
-**Diseño:** fuentes Outfit/Syne autohospedadas, RGB desactivable, menor movimiento, transiciones y atajos configurables con la aplicación enfocada.
+Las instalaciones nuevas incluyen ocho pantallas útiles: alertas, música, top regalos, top likes, meta, temporizador, chat y último regalo. Las instalaciones existentes conservan sus pantallas, reglas y enlaces. Continúan disponibles los 37 diseños y el editor con borrador visual aislado de OBS.
 
-**Seguridad:** tokens de overlays locales, credenciales cifradas mediante safeStorage, actualización firmada Ed25519, copias de SQLite. Datos sensibles excluidos del repositorio.
+## Publicación y compilación
 
-**Pruebas externas pendientes:** comportamiento con cuentas TikTok LIVE reales, Spotify real, OBS en Windows y compatibilidad completa del instalador.
+Para el propietario: PUBLICAR_WITI_BOT.ps1, en la raíz del ZIP, sube las fuentes y los recursos a witi0/WITI-BOT, espera la compilación de GitHub Actions y publica la etiqueta v2.4.1. Requiere Git y el acceso del propietario; no requiere Node en el equipo que publica. El consumidor de la aplicación solo usa el instalador.
+
+Para reproducir la compilación: `npm ci`, `npm test`, `npm run dist:win`, o scripts/Build.ps1 en Windows. GitHub Actions utiliza Windows 2022 y Node 22. WITI_UPDATE_PRIVATE_KEY permanece como secreto de GitHub para firmar el manifiesto Ed25519. No se incluye ninguna clave privada. La firma Authenticode requiere certificado o servicio de firma propio, que puede ser de pago; configurar CSC_LINK y CSC_KEY_PASSWORD. SmartScreen depende de firma y reputación.
+
+## Verificación
+
+Consultar PRUEBAS_2.4.1.md y los registros de la entrega. El instalador se compila y su contenido se verifica en Linux. La instalación, ejecución, actualización y desinstalación sobre Windows 10/11 limpios requieren validación en Windows. Spotify requiere consentimiento; TikTok LIVE depende de un conector comunitario y una emisión real. La identidad TikTok y el acceso LIVE son conexiones independientes. Las voces online dependen de la disponibilidad de sus proveedores.

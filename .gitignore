@@ -14,3 +14,7 @@ assets/gifts/*.webp
 WITI_BOT_V2_Medios_Personales/
 *.exe
 *.zip
+
+# Resources explicitly included in this release
+!assets/personal/
+!assets/personal/**
