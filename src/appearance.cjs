@@ -1,7 +1,7 @@
 'use strict';
-const DEFAULT_APPEARANCE=Object.freeze({rgb:true,reducedMotion:false,mode:'aurora',accent:'#f2a66f',speed:9,intensity:62,font:'bahnschrift',compact:false});
+const DEFAULT_APPEARANCE=Object.freeze({rgb:true,reducedMotion:false,mode:'pulse',accent:'#d93d56',speed:9,intensity:62,font:'gothic',compact:false});
 const MODES=new Set(['aurora','spectrum','pulse']);
-const FONTS=new Set(['bahnschrift','segoe','trebuchet']);
+const FONTS=new Set(['bahnschrift','segoe','trebuchet','gothic']);
 function normalizeAppearance(value={}){
  if(!value||typeof value!=='object'||Array.isArray(value))throw Error('Preferencias de apariencia inválidas');
  const base=DEFAULT_APPEARANCE;

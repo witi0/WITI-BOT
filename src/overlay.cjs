@@ -1,8 +1,8 @@
 const http=require('node:http'),fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
-const {demoState}=require('./live-state.cjs');
+const {demoState}=require('./live-state.cjs');const {catalog,fromTemplate}=require('./gallery.cjs');const {PlaybackQueue}=require('./playback.cjs');
 async function startOverlayServer(store,dir,options={}){
  let token=store.get('overlayToken');if(!token){token=crypto.randomBytes(32).toString('hex');store.set('overlayToken',token);}
- const clients=new Map();let port;
+ const clients=new Map();let port,playback,serverClosing=false;
  const server=http.createServer((req,res)=>{
   let url;try{url=new URL(req.url,'http://127.0.0.1');}catch{res.writeHead(400);return res.end();}
   if(req.headers.host!==`127.0.0.1:${port}`){res.writeHead(403);return res.end();}
@@ -19,20 +19,24 @@ async function startOverlayServer(store,dir,options={}){
    let start=0,end=size-1;if(req.headers.range){const m=/^bytes=(\d+)-(\d*)$/.exec(req.headers.range);if(!m){res.writeHead(416);return res.end();}start=Number(m[1]);end=m[2]?Number(m[2]):end;if(start>end||end>=size){res.writeHead(416,{'Content-Range':`bytes */${size}`});return res.end();}res.writeHead(206,{'Content-Range':`bytes ${start}-${end}/${size}`,'Content-Length':end-start+1});}else res.setHeader('Content-Length',size);
    const stream=fs.createReadStream(file,{start,end});stream.on('error',()=>res.destroy());res.on('close',()=>stream.destroy());return stream.pipe(res);
   }
-  const overlay=store.list('overlays').find(x=>x.id===id);if(!overlay){res.writeHead(404);return res.end();}
-  if(parts[1]==='events'){
-   const client={res,preview:url.searchParams.get('preview')==='1'};
-   res.writeHead(200,{'Content-Type':'text/event-stream','Connection':'keep-alive'});if(!clients.has(id))clients.set(id,new Set());clients.get(id).add(client);
-   res.write('data: '+JSON.stringify({type:'config',overlay,timer:store.timer(),...getState(client.preview)})+'\n\n');res.on('close',()=>clients.get(id)?.delete(client));return;
+  const rule=store.list('rules').find(r=>r.id===id&&r.trigger==='gift');const base=rule?store.list('overlays').find(o=>o.id===rule.actions.find(a=>a.overlay)?.overlay):null;const template=url.searchParams.get('preview')==='1'&&catalog.find(t=>t.template===id);const overlay=store.list('overlays').find(x=>x.id===id)||(rule?{...base,id:rule.id,kind:'actions',name:rule.name}:null)||(template?{...fromTemplate(id),id}:null);if(!overlay){res.writeHead(404);return res.end();}
+  if(parts[1]==='ack'&&req.method==='POST'){
+   let body='';req.on('data',chunk=>{body+=chunk;if(body.length>4096)req.destroy();});req.on('end',()=>{try{const data=JSON.parse(body);const ok=playback.ack(String(data.delivery||''),data.status);res.writeHead(ok?200:409,{'Content-Type':'application/json'});res.end(JSON.stringify({ok}));}catch{res.writeHead(400);res.end();}});return;
   }
-  if(parts[1]!=='overlay'){res.writeHead(404);return res.end();}
+  if(parts[1]==='events'){
+   const client={id:crypto.randomUUID(),res,preview:url.searchParams.get('preview')==='1'};
+   res.writeHead(200,{'Content-Type':'text/event-stream','Connection':'keep-alive'});if(!clients.has(id))clients.set(id,new Set());clients.get(id).add(client);
+   res.write('data: '+JSON.stringify({type:'config',playbackPaused:playback?.paused||false,overlay,timer:store.timer(),...getState(client.preview)})+'\n\n');res.on('close',()=>{clients.get(id)?.delete(client);if(serverClosing)return;if(client.preview&&![...(clients.get(id)||[])].some(c=>c.preview))playback?.cancelPreview(id);playback?.disconnect(client.id);});playback?.wake();return;
+  }
+  if(!['overlay','gift-alert','template'].includes(parts[1])){res.writeHead(404);return res.end();}
   res.setHeader('Content-Type','text/html; charset=utf-8');res.setHeader('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; media-src 'self'; connect-src 'self'; frame-ancestors 'self' file:");
   res.end(fs.readFileSync(path.join(__dirname,'../renderer/overlay.html'),'utf8').replaceAll('__TOKEN__',token));
  });
  function getState(preview=false){const state=preview?demoState():options.state?.()||{};return {...state,timer:preview?{remaining:3675,running:true,anchor:Date.now()}:store.timer(),users:preview?[{name:'Witi',balance:1400},{name:'Sher',balance:900},{name:'Comunidad',balance:500}]:store.all('SELECT name,balance FROM users ORDER BY balance DESC LIMIT 20')};}
  await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(options.port??19381,'127.0.0.1',resolve);});port=server.address().port;
+ playback=new PlaybackQueue(store,{change:options.playbackChange,player:(id,preview)=>{const c=[...(clients.get(id)||[])].find(c=>c.preview===preview&&!c.res.destroyed);return c?{id:c.id,send:data=>c.res.write('data: '+JSON.stringify(data)+'\n\n')}:null;}});
  const send=(id,data)=>{const set=clients.get(id)||new Set();let n=0;for(const c of set){if(data.type==='live'&&c.preview)continue;c.res.write('data: '+JSON.stringify(data)+'\n\n');n++;}return n;};
  const tick=setInterval(()=>{for(const o of store.list('overlays'))for(const c of clients.get(o.id)||[])c.res.write('data: '+JSON.stringify({type:'state',...getState(c.preview)})+'\n\n');},1000);tick.unref();
- return {url:(id,preview=false)=>`http://127.0.0.1:${port}/overlay/${id}?token=${token}${preview?'&preview=1':''}`,asset:(id,builtin=false)=>`http://127.0.0.1:${port}/${builtin?'sound':'media'}/${id}?token=${token}`,emit:send,broadcast:data=>{for(const id of clients.keys())send(id,data);},refresh:()=>store.list('overlays').forEach(o=>{for(const c of clients.get(o.id)||[])c.res.write('data: '+JSON.stringify({type:'config',overlay:o,...getState(c.preview)})+'\n\n');}),close:()=>{clearInterval(tick);for(const set of clients.values())for(const c of set)c.res.end();server.close();}};
+ return {templateUrl:id=>`http://127.0.0.1:${port}/template/${id}?token=${token}&preview=1`,ruleUrl:(id,preview=false)=>`http://127.0.0.1:${port}/gift-alert/${id}?token=${token}${preview?'&preview=1':''}`,url:(id,preview=false)=>`http://127.0.0.1:${port}/overlay/${id}?token=${token}${preview?'&preview=1':''}`,asset:(id,builtin=false)=>`http://127.0.0.1:${port}/${builtin?'sound':'media'}/${id}?token=${token}`,playback,preview:(id,data)=>{for(const c of clients.get(id)||[])if(c.preview)c.res.write('data: '+JSON.stringify(data)+'\n\n');},emit:send,broadcast:data=>{for(const id of clients.keys())send(id,data);},refresh:()=>store.list('overlays').forEach(o=>{for(const c of clients.get(o.id)||[])c.res.write('data: '+JSON.stringify({type:'config',overlay:o,...getState(c.preview)})+'\n\n');}),close:()=>{serverClosing=true;clearInterval(tick);for(const set of clients.values())for(const c of set)c.res.end();server.close();}};
 }
 module.exports={startOverlayServer};

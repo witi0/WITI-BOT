@@ -2,6 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const initSqlJs = require('sql.js');
+const {giftRepeats}=require('./playback.cjs');
 class Store {
   static async open(dir) {
     fs.mkdirSync(dir, {recursive:true});
@@ -61,7 +62,7 @@ function validateRule(r,overlayIds){
    if(a.type==='sound'&&!/^(?:witi-\d{3}\.wav|[a-f\d]{64}\.(?:mp3|wav|ogg))$/.test(a.sound||''))throw Error('Elige un sonido de la biblioteca');
    if(a.text&&a.text.length>500)throw Error('Texto demasiado largo');
  }
- return {...r,id:typeof r.id==='string'?r.id:crypto.randomUUID(),enabled:r.enabled!==false,cooldown:Math.min(3600,Math.max(0,Number(r.cooldown)||0))};
+ return {...r,id:typeof r.id==='string'?r.id:crypto.randomUUID(),enabled:r.enabled!==false,repeatGiftAudio:r.repeatGiftAudio!==false,cooldown:Math.min(3600,Math.max(0,Number(r.cooldown)||0))};
 }
 class Engine{
  constructor(store,execute){this.store=store;this.execute=execute;this.seen=new Map();this.cooldowns=new Map();}
@@ -74,12 +75,12 @@ class Engine{
      if(!r.enabled||r.trigger!==event.type)continue;
      if(r.match&&r.match!==event.text&&r.match!==event.gift&&String(r.match).toLowerCase()!==String(event.giftName||'').toLowerCase())continue;
      const key=r.id+':'+event.user;
-     if(Date.now()-(this.cooldowns.get(key)||0)<r.cooldown*1000)continue;
-     this.cooldowns.set(key,Date.now());
+     const cooling=Date.now()-(this.cooldowns.get(key)||0)<r.cooldown*1000;
+     if(!cooling)this.cooldowns.set(key,Date.now());
      for(let i=0;i<r.actions.length;i++){
-       const a=r.actions[i];try{let outcome;
+       const a=r.actions[i],perGiftAudio=event.type==='gift'&&r.repeatGiftAudio!==false&&(a.type==='sound'||a.type==='media'&&/\.(mp3|wav|ogg)$/i.test(a.media||''));if(cooling&&!perGiftAudio)continue;try{let outcome;
          if(a.type==='points') {if(!event.simulated)this.store.credit(event.user,event.name||event.user,a.value,event.id+':'+r.id+':'+i);}
-         else outcome=await this.execute(a,event);
+         else outcome=await this.execute(a,event,{id:crypto.createHash('sha256').update(event.id+':'+r.id+':'+i).digest('hex'),repeats:giftRepeats(a,event,r),rule:r.id,individualOverlay:!!r.individualOverlay});
          results.push({rule:r.name,action:a.type,status:event.simulated&&a.type==='points'?'omitido: simulación sin puntos permanentes':(outcome?.status||'ejecutada')});
        }catch(e){results.push({rule:r.name,action:a.type,status:'error',message:e.message});}
      }

@@ -22,8 +22,8 @@ function studioTab(tab){
 }
 for(const b of document.querySelectorAll('[data-studio-tab]'))b.addEventListener('click',()=>studioTab(b.dataset.studioTab));
 for(const b of document.querySelectorAll('#studioColorPresets [data-color]'))b.addEventListener('click',()=>{const f=document.getElementById('overlayForm');f.elements.color.value=b.dataset.color;f.elements.secondary.value=b.dataset.secondary;overlayDirtyHint();previewOverlayDraft();});
-function studioMini(kind,color='#f2a66f',title=''){
- const mini=node('div',undefined,'studio-mini mini-'+kind);mini.style.setProperty('--mini-accent',color||'#f2a66f');
+function studioMini(kind,color='#d93d56',title=''){
+ const mini=node('div',undefined,'studio-mini mini-'+kind);mini.style.setProperty('--mini-accent',color||'#d93d56');
  const symbol={music:'♫',chat:'💬',webcam:'▣',goal:'♥',giftcounter:'🎁',topgift:'🏆',topstreak:'⚡',lastgift:'🎁',lastfollow:'✦',giftfeed:'🎁',fireworks:'✶',coinjar:'◉',ranking:'🥇',topgifters:'🥇',toplikes:'♥',timer:'◷',actions:'✦',wheel:'◴'}[kind]||'◈';
  mini.append(node('div',symbol,'mini-symbol'));
  if(kind==='webcam'){mini.append(node('div','CAM','mini-webcam'));}
@@ -40,7 +40,7 @@ function studioCardButton(label,fn,primary=false){const b=node('button',label,pr
 function beginOverlayEdit(o,preview=true){if(!allowOverlayChange())return;editOverlay(o);studioTab('editor');if(preview)previewOverlay(o);document.getElementById('studioEditorPane').scrollIntoView?.({behavior:'smooth',block:'start'});}
 function renderTemplates(){
  const list=(state.catalog||[]).filter(matchesOverlay);const root=$('#templateList');root.replaceChildren();$('#studioGalleryCount').textContent=list.length+' diseños';
- for(const t of list){const b=node('article',undefined,'studio-design-card');b.append(studioMini(t.kind,'#f2a66f',t.name));const content=node('div',undefined,'studio-design-body');const cat=node('div',t.category,'studio-tag');content.append(cat,node('h3',t.name),node('p',t.description));const controls=node('div',undefined,'studio-card-actions');controls.append(studioCardButton('＋ Añadir a mi estudio',async()=>{if(!allowOverlayChange())return;overlayEditBaseline='';const o=await call('create-template',t.template);await refresh();beginOverlayEdit(o);toast('Overlay creado. Personaliza y guarda sus ajustes.');},true));content.append(controls);b.append(content);root.append(b);}
+ for(const t of list){const b=node('article',undefined,'studio-design-card');b.append(studioMini(t.kind,'#d93d56',t.name));const content=node('div',undefined,'studio-design-body');const cat=node('div',t.category,'studio-tag');content.append(cat,node('h3',t.name),node('p',t.description));const controls=node('div',undefined,'studio-card-actions');controls.append(studioCardButton('＋ Añadir a mi estudio',async()=>{if(!allowOverlayChange())return;overlayEditBaseline='';const o=await call('create-template',t.template);await refresh();beginOverlayEdit(o);toast('Overlay creado. Personaliza y guarda sus ajustes.');},true));content.append(controls);b.append(content);root.append(b);}
  if(!list.length)empty(root,'No se encontraron diseños. Cambia de categoría o prueba otro término.');
 }
 renderOverlays=function(){

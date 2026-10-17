@@ -1,3 +1,15 @@
+# WITI BOT 2.5.0 · Gothic Studio
+
+- Negro y rojo carmesí, títulos góticos, RGB ajustable y reducción de movimiento.
+- Galería inspirada en 12.2.0: favoritos, preview antes de añadir, editor en ventana y fuentes exclusivas para regalos.
+- 43 diseños, seis variantes góticas nuevas y controles contextuales de visibilidad, tamaño de avatar, alineación y tipografía.
+- Restauradas 1667 imágenes del paquete del propietario y conservados los 120 audios.
+- Cola persistente de audio sin el límite que descartaba eventos al superar 100 pendientes.
+- Confirmación individual de final de reproducción, pausa, reintento de errores y aislamiento de simulaciones.
+- Rachas finales normalizadas sin sumar actualizaciones intermedias ni confundir cantidad con monedas.
+- Pruebas de 1000 regalos separados, racha de 1000, reconexión, duplicados, persistencia, HTTP/SSE y reproductor DOM.
+- Publicador 2.5.0 verifica e incluye toda la colección antes de esperar el resultado de Windows en GitHub.
+
 # WITI BOT 2.4.1 · Audios sin imágenes
 
 - Retiradas las 1667 imágenes de regalos del paquete a petición de Witi.

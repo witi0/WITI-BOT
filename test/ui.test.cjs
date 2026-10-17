@@ -7,7 +7,7 @@ test('interfaz DOM → puente de prueba → núcleo real: reglas, puntos, timer 
  const dom=await JSDOM.fromFile(path.resolve('renderer/index.html'),{resources:'usable',runScripts:'dangerously',pretendToBeVisual:true,virtualConsole,beforeParse(w){w.witi={call:bridge,on:()=>{}};w.structuredClone=structuredClone;w.speechSynthesis={getVoices:()=>[],cancel(){},speak(){},resume(){},pause(){}};w.confirm=()=>true;}});
  t.after(()=>{dom.window.close();store.db.close();fs.rmSync(dir,{recursive:true,force:true});});
  await new Promise(r=>dom.window.addEventListener('load',r));await settle();const d=dom.window.document;
- assert.equal(d.querySelectorAll('.overlay-card').length,8);assert.equal(errors.length,0,errors.join('\n'));
+ assert.equal(d.querySelectorAll('.studio-owned-card').length,8);assert.equal(errors.length,0,errors.join('\n'));
  const submit=async f=>{f.dispatchEvent(new dom.window.Event('submit',{bubbles:true,cancelable:true}));await settle();};
  const profile=d.querySelector('#profileForm');profile.elements.name.value='Witi';await submit(profile);assert.equal(store.get('profile').name,'Witi');
  d.querySelector('[data-page=rules]').click();const rule=d.querySelector('#ruleForm');rule.elements.name.value='Alerta de prueba';await submit(rule);assert.equal(store.list('rules').length,1);assert.equal(store.list('rules')[0].name,'Alerta de prueba');

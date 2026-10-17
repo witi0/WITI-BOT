@@ -1,7 +1,7 @@
 (() => {
   'use strict';
   const $=selector=>document.querySelector(selector);
-  const defaults={rgb:true,reducedMotion:false,mode:'aurora',accent:'#f2a66f',speed:9,intensity:62,font:'bahnschrift',compact:false};
+  const defaults={rgb:true,reducedMotion:false,mode:'pulse',accent:'#d93d56',speed:9,intensity:62,font:'gothic',compact:false};
   const inputs={rgb:$('#themeRgb'),reducedMotion:$('#reduceMotion'),mode:$('#rgbMode'),accent:$('#accentColor'),speed:$('#rgbSpeedApp'),intensity:$('#rgbStrength'),font:$('#uiTypeface'),compact:$('#compactUI')};
   let current={...defaults};
   const appearance=()=>({rgb:inputs.rgb.checked,reducedMotion:inputs.reducedMotion.checked,mode:inputs.mode.value,accent:inputs.accent.value,speed:Number(inputs.speed.value),intensity:Number(inputs.intensity.value),font:inputs.font.value,compact:inputs.compact.checked});

@@ -12,7 +12,7 @@ test('la apariencia admite personalización sin modificar otros ajustes',()=>{
 });
 test('los ajustes fuera de rango se normalizan antes de persistir',()=>{
  const selected=normalizeAppearance({mode:'../../temp',accent:'javascript:alert(1)',font:'insegura',speed:-30,intensity:999});
- assert.equal(selected.mode,'aurora');assert.equal(selected.accent,DEFAULT_APPEARANCE.accent);assert.equal(selected.font,'bahnschrift');
+ assert.equal(selected.mode,'pulse');assert.equal(selected.accent,DEFAULT_APPEARANCE.accent);assert.equal(selected.font,'gothic');
  assert.equal(selected.speed,4);assert.equal(selected.intensity,100);
  assert.throws(()=>normalizeAppearance(null));
 });
