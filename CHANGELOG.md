@@ -1,3 +1,9 @@
+## 1.2.1 - Actualizacion oficial de mantenimiento
+
+- Primera publicacion oficial para probar el sistema de actualizaciones firmadas desde WITI BOT 1.2.0.
+- Se conservan el logo, las voces y la biblioteca de 60 sonidos visibles mas los 200 archivos anteriores para compatibilidad.
+- Sin cambios en las cuentas, puntos ni configuraciones del usuario.
+
 ## Corrección de compilación 1.2.0
 
 - Recupera mediante generación reproducible los 200 WAV históricos para no romper reglas existentes.

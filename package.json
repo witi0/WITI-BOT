@@ -1,6 +1,6 @@
 {
   "name": "witi-bot",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Herramientas locales para creadores de LIVE — WITI BOT",
   "main": "src/main.cjs",
   "scripts": {
