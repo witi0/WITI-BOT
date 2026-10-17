@@ -3,3 +3,14 @@ test('todos los widgets construyen DOM; música muestra portada, perfil, progres
 source.onmessage({data:JSON.stringify({type:'config',overlay:{...fromTemplate('witi-0'),kind:'chat'},chat:[{name:'<script>BAD</script>',text:'<img src=x onerror=BAD>',avatar:''}]})});assert.equal(d.querySelectorAll('script').length,0);assert.equal(d.querySelectorAll('img[onerror]').length,0);assert.match(d.querySelector('.message').textContent,/<img/);
 });
 test('normalización TikTok conserva identidad y monedas finales de racha sin cookies',()=>{const e=normalize('gift',{common:{msgId:'42'},user:{userId:'u',nickname:'Witi',profilePicture:{url:['https://example.com/avatar']}},giftId:9,repeatCount:3,diamondCount:10,giftName:'Ejemplo'});assert.equal(e.id,'tiktok:gift:42');assert.equal(e.count,3);assert.equal(e.coins,30);assert.equal(e.avatar,'https://example.com/avatar');assert.equal(e.simulated,false);assert.equal(typeof require('tiktok-live-connector').TikTokLiveConnection,'function');});
+test('borradores visuales solo entran desde el padre en simulación y para el overlay seleccionado',t=>{
+ for(const preview of [false,true]){
+  let source;const parent={};const html=fs.readFileSync(path.join(__dirname,'../renderer/overlay.html'),'utf8').replace(/<script[^>]*><\/script>/,'').replace(/<link[^>]*>/,'');
+  const dom=new JSDOM(html,{runScripts:'dangerously',url:'http://127.0.0.1/overlay/test?token=test'+(preview?'&preview=1':''),beforeParse(w){Object.defineProperty(w,'parent',{value:parent});w.EventSource=class{constructor(){source=this;}};w.requestAnimationFrame=()=>0;w.HTMLCanvasElement.prototype.getContext=()=>({clearRect(){}});}});t.after(()=>dom.window.close());const w=dom.window;w.eval(fs.readFileSync(path.join(__dirname,'../renderer/widget.js'),'utf8'));const overlay={...fromTemplate('witi-0'),id:'test'};source.onmessage({data:JSON.stringify({type:'config',overlay,...demoState()})});
+  const post=(sender,id,color)=>w.dispatchEvent(new w.MessageEvent('message',{source:sender,data:{type:'WITI_PREVIEW_DRAFT',overlay:{...overlay,id,color}}}));
+  post({},'test','#123456');assert.equal(w.document.documentElement.style.getPropertyValue('--accent'),overlay.color);
+  post(parent,'other','#123456');assert.equal(w.document.documentElement.style.getPropertyValue('--accent'),overlay.color);
+  post(parent,'test','#123456');assert.equal(w.document.documentElement.style.getPropertyValue('--accent'),preview?'#123456':overlay.color);
+  source.onmessage({data:JSON.stringify({type:'config',overlay,...demoState()})});assert.equal(w.document.documentElement.style.getPropertyValue('--accent'),overlay.color);
+ }
+});

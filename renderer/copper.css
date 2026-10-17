@@ -1,0 +1,57 @@
+/* Copper / petrol studio. Media and semantic warning colors keep their colors. */
+:root{--ui-accent:#f2a66f;--bg:#101817;--panel:#182321;--line:#3d5049;--muted:#aabbb2;--purple:var(--ui-accent)}
+body{background:radial-gradient(ellipse at 78% 0,#29423855,transparent 60%),var(--bg);color:#f3efe4}
+.workspace>header{background:#111c19ed;color:#b1c4b8;border-color:#3a5046}
+aside{background:linear-gradient(165deg,#1d302a,#111e1b 80%);border-color:#41544a}
+aside .brand small,aside .section-label,.aside-bottom,nav button{color:#b6c5b8}
+aside .dot{background:#c9e77c;box-shadow:0 0 10px #c9e77455}
+nav button:hover{background:#2a3d33;border-color:#738c6b}
+nav button.active{background:linear-gradient(90deg,#473a26,#29372b);color:#fff8e7;box-shadow:inset 3px 0 var(--ui-accent)}
+p,small,label,.muted,.studio-design-body p{color:#b8c4b9}
+h1,h2,h3,.title,.gift-tile strong{color:#f8f2e4}
+button{background:#263a31;border-color:#526350;color:#f3efe3}
+button:hover{background:#354b3a;border-color:#d4bd83;color:#fff8e7}
+button:disabled{cursor:not-allowed;opacity:.45}
+.primary,button.primary{color:#14211b;background:var(--ui-accent);border-color:#f5c6a2}
+input:not([type=checkbox]):not([type=range]):not([type=color]),textarea,select{background:#101c18;color:#f4f1e2;border-color:#536452}
+input::placeholder,textarea::placeholder{color:#8fa396}
+.panel,.stats article,.studio-design-card,.gift-tile,.sound-card,.shortcut-key,.studio-preview-side,.gift-inspector,.list-item,.action-row{background-color:var(--panel);border-color:var(--line)}
+.studio-workspace,.gift-workspace{--studio-bg:#16231e;--studio-border:#455847;--studio-cyan:#a4dfc5;--studio-purple:#f2a66f}
+.studio-hero,.gifts-hero{background:radial-gradient(ellipse at 85% 0,#b99d4250,transparent 55%),linear-gradient(120deg,#263a30,#182923);border-color:#67724a}
+.studio-hero-art,.gift-hero-icon{filter:sepia(.35) hue-rotate(315deg)}
+.studio-mini{background:radial-gradient(ellipse at 20% 10%,#bf945d33,transparent 70%),#13231e}
+.studio-tag,.eyebrow,.studio-editor-section h3,.studio-preview-label{color:#e5c397}
+.studio-switch,.studio-toolbar,.gift-searchbar,.gift-filterline,.studio-advanced,.studio-editor-section{background-color:#15251e;border-color:#415a48}
+.studio-switch-btn{color:#b8c7b8!important}.studio-switch-btn.active{background:#3f492c!important;color:#f3e8c5!important;border-color:#bdc88a!important}
+.studio-more,.studio-advanced summary,.sound-edit,.studio-preview-tip,.gift-inspector-hint,.gift-status{color:#b7c6b6;background-color:#1b2d24;border-color:#445d49}
+.gift-tile.selected{box-shadow:inset 0 0 0 2px #f2a66f,0 0 22px #f2a66f22}
+.gift-inspector-price,.gift-cost{color:#ead393}.gift-status.live{color:#a0e6bb;background:#24432e}
+.studio-preview-head,.studio-section-header,.studio-editor-title,.studio-form-footer{border-color:#405a47}
+#previewViewport{background:repeating-conic-gradient(#21382d 0% 25%,#172a21 0% 50%) 50%/24px 24px;border-color:#577452}
+.command-trigger,.command-modal,.command-modal #commandSearch,kbd{background:#15291f;border-color:#647955;color:#e8ecd7}
+.command-result[aria-selected=true],.command-result:hover{background:#35482e;border-color:#b5c17b}
+.command-result .command-icon{background:#34482e}.command-head,.command-hint{border-color:#455c46}
+.appearance-preview{background:linear-gradient(110deg,#405035,#17291f);border-color:#8a9a68}
+#appSplash{background:radial-gradient(circle,#3e4b2e,#101c17 70%)}
+#appSplash .splash-mark,.appearance-preview-logo{background:#f2a66f;color:#17271d;box-shadow:0 0 36px #f2a66f33}
+#toast:not(.error){background:#20382a;border-color:#a4c589;color:#eef6df}
+body.theme-rgb,body.theme-rgb[data-rgb-mode=aurora]{--app-rgb:linear-gradient(115deg,#f2a66f,#c9e77c,#83ddc6,#ffb387,#f2a66f)}
+body.theme-rgb[data-rgb-mode=spectrum]{--app-rgb:linear-gradient(115deg,#ff9e82,#f1d87d,#a4e27f,#71d9d1,#95c9f8,#ff9e82)}
+body.theme-rgb[data-rgb-mode=pulse]{--app-rgb:linear-gradient(115deg,var(--ui-accent),#e9d7a2,#94d8b4,var(--ui-accent))}
+body.theme-rgb :is(.panel,.stats article,.studio-design-card,.gift-tile,.sound-card,.shortcut-key,.studio-preview-side,.gift-inspector,.studio-hero,.gifts-hero,.studio-advanced,.list-item,.action-row,.command-modal,.witi-update-dialog){border:1px solid transparent;background-image:linear-gradient(var(--panel),var(--panel)),var(--app-rgb);background-origin:padding-box,border-box;background-clip:padding-box,border-box;background-size:100% 100%,350% 100%;animation:copperBorder var(--ui-rgb-duration) linear infinite}
+body.theme-rgb :is(button:not(.primary):not(:disabled),.command-trigger,.studio-switch-btn){border:1px solid transparent;background-image:linear-gradient(#21372b,#21372b),var(--app-rgb);background-origin:padding-box,border-box;background-clip:padding-box,border-box;background-size:100% 100%,350% 100%;animation:copperBorder var(--ui-rgb-duration) linear infinite}
+body.theme-rgb nav button:not(.active){background:transparent;border-color:transparent;animation:none}
+body.theme-rgb nav button.active{border:1px solid transparent;background-image:linear-gradient(#35432d,#24372a),var(--app-rgb);background-origin:padding-box,border-box;background-clip:padding-box,border-box;background-size:100% 100%,350% 100%;animation:copperBorder var(--ui-rgb-duration) linear infinite;box-shadow:inset 3px 0 #e9c58c,0 0 calc(18px * var(--ui-glow-alpha)) #b6cf7230}
+body.theme-rgb .primary,body.theme-rgb button.primary{background-image:var(--app-rgb);color:#12261b;border-color:#b7cb90;animation:uiRgbFlow var(--ui-rgb-duration) linear infinite}
+body.theme-rgb :is(h1,.brand>div,.stats strong,.eyebrow,.studio-tag,.gift-inspector-price,#timerValue){background-image:var(--app-rgb);background-size:350% 100%;background-clip:text;-webkit-background-clip:text;color:transparent;animation:uiRgbFlow var(--ui-rgb-duration) linear infinite}
+body.theme-rgb .brand small{color:#b8c7b5;-webkit-text-fill-color:#b8c7b5}
+body.theme-rgb .workspace>header{border-bottom:2px solid transparent;border-image:var(--app-rgb) 1}
+body.theme-rgb .studio-design-card:hover,body.theme-rgb .panel:hover,body.theme-rgb .gift-tile:hover{box-shadow:0 0 calc(24px * var(--ui-glow-alpha)) #c2d48130}
+body.theme-rgb input:focus-visible,body.theme-rgb select:focus-visible,body.theme-rgb textarea:focus-visible{outline:2px solid #d7e79a;outline-offset:3px;box-shadow:0 0 15px #b3ce7630}
+body:not(.theme-rgb) .appearance-preview{background:linear-gradient(110deg,#3d4b32,#172b21)}
+@keyframes copperBorder{from{background-position:0 0,0% 50%}to{background-position:0 0,350% 50%}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+.sound-card,.studio-design-card{content-visibility:auto;contain-intrinsic-size:auto 240px}
+body.theme-rgb nav button.active{border-image:none}
+body.theme-rgb>aside{border-right:2px solid transparent;background-image:linear-gradient(#1d302a,#111e1b),var(--app-rgb);background-origin:padding-box,border-box;background-clip:padding-box,border-box;background-size:100% 100%,350% 100%;animation:copperBorder var(--ui-rgb-duration) linear infinite}

@@ -18,11 +18,9 @@ nav button{padding:9px 12px;margin-bottom:2px}nav{overflow-y:auto;scrollbar-widt
 @media(max-width:590px){.witi-update-popup{padding:10px}.witi-update-dialog{padding:24px 19px}.witi-update-head img{width:50px;height:50px}.witi-update-head h2{font-size:20px}.witi-update-actions{flex-direction:column}.witi-update-actions button{width:100%}}
 @media(prefers-reduced-motion:reduce){.witi-update-dialog{animation:none}}
 
-@font-face{font-family:WitiOutfit;src:url('fonts/outfit-latin-wght-normal.woff2') format('woff2');font-weight:100 900;font-display:swap}
-@font-face{font-family:WitiSyne;src:url('fonts/syne-latin-wght-normal.woff2') format('woff2');font-weight:100 900;font-display:swap}
 :root{--v2-bright:#bc8bff;--v2-border:#554178;--rgb-speed:8s}
-html{scroll-behavior:smooth}body,button,input,select,textarea{font-family:WitiOutfit,'Segoe UI',sans-serif;font-weight:650}
-h1,h2,h3,.brand,.section-heading{font-family:WitiSyne,'Segoe UI',sans-serif;font-weight:800;letter-spacing:-.025em}button,nav button,.template-card b{font-weight:750}
+html{scroll-behavior:smooth}body,button,input,select,textarea{font-family:'Segoe UI Variable Text','Segoe UI',Arial,sans-serif;font-weight:650}
+h1,h2,h3,.brand,.section-heading{font-family:'Bahnschrift SemiBold','Bahnschrift','Segoe UI',sans-serif;font-weight:800;letter-spacing:-.025em}button,nav button,.template-card b{font-weight:750}
 body{color:#f7f3ff;background:#0b0910}nav button{font-size:13px;min-height:41px}aside{background:linear-gradient(165deg,#12101f 5%,#0b0b13 75%)}
 .page.active{animation:v2Slide .26s cubic-bezier(.2,.9,.22,1)}@keyframes v2Slide{from{opacity:.3;transform:translateY(12px) scale(.997)}to{opacity:1;transform:none}}
 .panel,.sound-card,.template-card,.overlay-card{border-radius:16px;transition:border-color .2s,transform .2s,box-shadow .2s}.panel:hover,.sound-card:hover,.overlay-card:hover{border-color:var(--v2-border)}

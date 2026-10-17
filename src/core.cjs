@@ -17,7 +17,7 @@ class Store {
       CREATE TABLE IF NOT EXISTS logs(id INTEGER PRIMARY KEY AUTOINCREMENT,body TEXT NOT NULL);
       PRAGMA user_version=1;`);
     if (!s.get('timer')) s.set('timer',{remaining:300,running:false,anchor:Date.now()});
-    if(!s.all('SELECT id FROM overlays').length) for(let i=1;i<=8;i++) s.save('overlays',{id:crypto.randomUUID(),name:`Pantalla ${i}`,kind:'actions',color:'#aa79ff',rgb:false});
+    if(!s.all('SELECT id FROM overlays').length){const {fromTemplate}=require('./gallery.cjs');for(const id of [34,0,1,2,10,16,4,7])s.save('overlays',fromTemplate('witi-'+id));}
     s.flush(); return s;
   }
   constructor(db,file){this.db=db;this.file=file;}
@@ -58,7 +58,7 @@ function validateRule(r,overlayIds){
    if(['alert','media','sound','wheel'].includes(a.type)&&!overlayIds.includes(a.overlay))throw Error('Elige una pantalla válida');
    if(['points','timer'].includes(a.type)&&(!Number.isSafeInteger(a.value)||Math.abs(a.value)>1000000))throw Error('Cantidad inválida');
    if(a.type==='media'&&!/^[a-f0-9]{64}\.(png|jpg|jpeg|webp|gif|mp4|webm|mp3|wav|ogg)$/.test(a.media||''))throw Error('Importa un recurso');
-   if(a.type==='sound'&&!/^witi-\d{3}\.wav$/.test(a.sound||''))throw Error('Elige un sonido de la biblioteca');
+   if(a.type==='sound'&&!/^(?:witi-\d{3}\.wav|[a-f\d]{64}\.(?:mp3|wav|ogg))$/.test(a.sound||''))throw Error('Elige un sonido de la biblioteca');
    if(a.text&&a.text.length>500)throw Error('Texto demasiado largo');
  }
  return {...r,id:typeof r.id==='string'?r.id:crypto.randomUUID(),enabled:r.enabled!==false,cooldown:Math.min(3600,Math.max(0,Number(r.cooldown)||0))};
