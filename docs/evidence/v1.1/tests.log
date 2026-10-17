@@ -1,0 +1,34 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> witi-bot@1.1.0 test
+> node --test test/*.test.cjs
+
+✔ SQLite conserva puntos al reabrir, deduplica y rechaza saldo negativo (48.726012ms)
+✔ simulador ejecuta alertas sin acreditar puntos permanentes (16.009616ms)
+✔ cooldown evita doble ejecución por usuario y coincide comando exacto (12.452462ms)
+✔ 1000 eventos y repeticiones no duplican puntos (1302.993648ms)
+✔ validación rechaza medios con traversal, cantidad inválida y pantalla inexistente (0.474798ms)
+✔ timer pausa, ajusta y persiste sin descontar dos veces (6.369783ms)
+✔ servidor solo loopback, requiere token y rechaza Host y rutas incorrectos (36.939696ms)
+✔ migración instala galería una sola vez sin perder pantallas previas (74.435626ms)
+✔ editor conserva opacidad y volumen cero, restringe rangos y rechaza tipos (0.698325ms)
+✔ ruleta aplica pesos y no admite una lista vacía (0.202977ms)
+✔ 200 WAV originales son distintos, reproducibles y tienen cabeceras válidas (20.227312ms)
+✔ estadísticas usan eventos observados y demo no muta datos reales (9.26052ms)
+✔ PKCE usa SHA256 base64url para Spotify y hex para TikTok; estado impredecible (0.468428ms)
+✔ firma Ed25519 autentica manifiesto y rechaza manipulación, clave ajena y ausencia (2.759829ms)
+✔ actualizador no permite downgrade ni HTTP o dominios ajenos (0.403489ms)
+✔ instalador descargado se vuelve a verificar antes de ejecutarlo (7.211735ms)
+✔ OAuth Spotify valida estado, canjea PKCE, consulta perfil y expone música sin tokens (43.036311ms)
+✔ servidor entrega música demo, JS, 200 sonidos y rangos sin alterar estado (35.56264ms)
+✔ interfaz DOM → puente de prueba → núcleo real: reglas, puntos, timer y overlays (620.355403ms)
+✔ todos los widgets construyen DOM; música muestra portada, perfil, progreso y tres siguientes (140.354917ms)
+✔ normalización TikTok conserva identidad y monedas finales de racha sin cookies (123.281824ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1527.441414

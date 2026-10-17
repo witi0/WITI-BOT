@@ -1,0 +1,56 @@
+name: WITI BOT Windows build and signed releases
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-2022
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Generate original sound library
+        run: python scripts/generate-sounds.py
+      - name: Tests
+        run: npm test
+      - name: Build Windows x64 installer
+        run: npm run dist:win
+        env:
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+      - name: Check tag and sign update manifest
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: pwsh
+        env:
+          WITI_UPDATE_PRIVATE_KEY: ${{ secrets.WITI_UPDATE_PRIVATE_KEY }}
+        run: |
+          $version = node -p "require('./package.json').version"
+          if ($env:GITHUB_REF_NAME -ne "v$version") { throw "Tag and package.json versions differ" }
+          node scripts/sign-release.cjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: WITI-BOT-Windows-x64
+          path: |
+            dist/*.exe
+            dist/*.blockmap
+            dist/witi-update.json
+          if-no-files-found: error
+      - name: Publish signed release
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $setup = Get-ChildItem 'dist/WITI_BOT_Setup_v*.exe' | Select-Object -First 1
+          gh release create "$env:GITHUB_REF_NAME" $setup.FullName 'dist/witi-update.json' --title "WITI BOT $env:GITHUB_REF_NAME" --notes-file CHANGELOG.md --verify-tag
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

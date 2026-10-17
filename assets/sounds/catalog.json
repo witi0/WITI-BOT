@@ -1,0 +1,602 @@
+[
+  {
+    "id": "witi-201",
+    "name": "Bruh dramático",
+    "category": "Memes originales",
+    "file": "witi-201.wav",
+    "duration": 0.72,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "f1a307059c48a4b5daa8c2fa96e95b7cd29a6ea4b14ca57874ae543a3b7f4ec6"
+  },
+  {
+    "id": "witi-202",
+    "name": "Ojo con eso",
+    "category": "Memes originales",
+    "file": "witi-202.wav",
+    "duration": 0.83,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "ff673c069d567d555be10ff3198e5c743b3d1451226d18fd430ab53d6822bc75"
+  },
+  {
+    "id": "witi-203",
+    "name": "No puede ser",
+    "category": "Memes originales",
+    "file": "witi-203.wav",
+    "duration": 1.15,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "a9b48549f1916d21aec3bc61a36653c2d40e06844008948eed84eeb92ec2a1fc"
+  },
+  {
+    "id": "witi-204",
+    "name": "Se armó",
+    "category": "Memes originales",
+    "file": "witi-204.wav",
+    "duration": 1.2,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "ba28c91f582feaf9c31b3b9d5057378b32629a11a7b606afdc985c479a2aeefe"
+  },
+  {
+    "id": "witi-205",
+    "name": "Momento incómodo",
+    "category": "Memes originales",
+    "file": "witi-205.wav",
+    "duration": 1.32,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "d11e4709357e64f41a416d549b43506620293f98941afbb791cc07c000ea2bc5"
+  },
+  {
+    "id": "witi-206",
+    "name": "¿Qué fue eso?",
+    "category": "Memes originales",
+    "file": "witi-206.wav",
+    "duration": 0.9,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "39293eaba11383311470f162c86557a20bc00761033e9d9958d2218fb63e4360"
+  },
+  {
+    "id": "witi-207",
+    "name": "Plot twist",
+    "category": "Memes originales",
+    "file": "witi-207.wav",
+    "duration": 1.0,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "7f9f654340e86b59bd2af064e465431e0b58c7f9c4a58f31581bf82101c67e79"
+  },
+  {
+    "id": "witi-208",
+    "name": "Así no",
+    "category": "Memes originales",
+    "file": "witi-208.wav",
+    "duration": 0.52,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "b9a240b88607f70e2f8b2a05228b84ff7ca742acec657fb10883d877d4c5b664"
+  },
+  {
+    "id": "witi-209",
+    "name": "Tremendo fail",
+    "category": "Memes originales",
+    "file": "witi-209.wav",
+    "duration": 0.95,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "83efd0c5b2e89101df9efdd3773a317ea8aa3e1a64fa584b3c0ebeaa883fd1f4"
+  },
+  {
+    "id": "witi-210",
+    "name": "Modo troll",
+    "category": "Memes originales",
+    "file": "witi-210.wav",
+    "duration": 1.1,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "9c87eed4f669dda0b790e3ae39b94aa4794c0af4b5e4952e8efc0769450541d5"
+  },
+  {
+    "id": "witi-211",
+    "name": "Carcajada pixel",
+    "category": "Reacciones",
+    "file": "witi-211.wav",
+    "duration": 1.2,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "fad9a477a8c62afecaedd738b353e76fa9a3143307f207646a3788a34d3d0429"
+  },
+  {
+    "id": "witi-212",
+    "name": "Risa malvada",
+    "category": "Reacciones",
+    "file": "witi-212.wav",
+    "duration": 1.5,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "bf44fb0883bedc5130c0cbcbd8fb8ad17478f4b1a3dd8dd598a36433bfdf49c9"
+  },
+  {
+    "id": "witi-213",
+    "name": "Risa nerviosa",
+    "category": "Reacciones",
+    "file": "witi-213.wav",
+    "duration": 0.9,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "2ef34f816342f9e11c1856b8dc95a82a669c7b8d0daa1a1e6d36cd3ee9f06185"
+  },
+  {
+    "id": "witi-214",
+    "name": "Susto de golpe",
+    "category": "Reacciones",
+    "file": "witi-214.wav",
+    "duration": 0.6,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "14418cad82e8d7da6d2cb61031a5cc414f76dade8fb098ef999366c8b19e795c"
+  },
+  {
+    "id": "witi-215",
+    "name": "Suspiro digital",
+    "category": "Reacciones",
+    "file": "witi-215.wav",
+    "duration": 0.9,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "0b923d95f34b71f67cf7e76883e94325322ff36d063513e6b3bcce3379fe2369"
+  },
+  {
+    "id": "witi-216",
+    "name": "Confusión total",
+    "category": "Reacciones",
+    "file": "witi-216.wav",
+    "duration": 1.15,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "0e6e226a04d8e74f6cb140c26127d2eaf254382d8a8fd58aa1a7593dc8c71c29"
+  },
+  {
+    "id": "witi-217",
+    "name": "Cara de póker",
+    "category": "Reacciones",
+    "file": "witi-217.wav",
+    "duration": 0.32,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "32f296a32a21f26d749b18ceb0b471143d6acb8a2f5ccbd144f80b9ec2d4c5a5"
+  },
+  {
+    "id": "witi-218",
+    "name": "Silencio incómodo",
+    "category": "Reacciones",
+    "file": "witi-218.wav",
+    "duration": 1.4,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "06e0587f92f574e28f3c14faf32f72e1d9471481c916e3a13b97ba17eae4edab"
+  },
+  {
+    "id": "witi-219",
+    "name": "Te pasaste",
+    "category": "Reacciones",
+    "file": "witi-219.wav",
+    "duration": 0.9,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "d0527a6bcec49fe7a1c31cdaba775ae75029c740b0e516fc3789d8b7cb575e4f"
+  },
+  {
+    "id": "witi-220",
+    "name": "Nooo épico",
+    "category": "Reacciones",
+    "file": "witi-220.wav",
+    "duration": 1.6,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "f7dc748b5250aed0d849d8b878ffddb00636c5c4246997d6f06ae976d8e4360c"
+  },
+  {
+    "id": "witi-221",
+    "name": "Golpe cinematográfico",
+    "category": "Impactos",
+    "file": "witi-221.wav",
+    "duration": 1.25,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "6bf2cc32609c857e27f8351c6b192580fe9043150bf30e571507e82f15c7df71"
+  },
+  {
+    "id": "witi-222",
+    "name": "Bomba de bajos",
+    "category": "Impactos",
+    "file": "witi-222.wav",
+    "duration": 0.72,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "f1a307059c48a4b5daa8c2fa96e95b7cd29a6ea4b14ca57874ae543a3b7f4ec6"
+  },
+  {
+    "id": "witi-223",
+    "name": "Impacto glitch",
+    "category": "Impactos",
+    "file": "witi-223.wav",
+    "duration": 0.52,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "70a98c5a27ace4cc20a8174381b071cacd2c7862ef7f8ee47fd641976b90519e"
+  },
+  {
+    "id": "witi-224",
+    "name": "Golpe metálico",
+    "category": "Impactos",
+    "file": "witi-224.wav",
+    "duration": 0.82,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "c7604925687059dc7abf59bd6fb7705f8674e8da8f8f1ec8ab2254ab2344605a"
+  },
+  {
+    "id": "witi-225",
+    "name": "Grito electrónico",
+    "category": "Impactos",
+    "file": "witi-225.wav",
+    "duration": 0.78,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "d955f6e0c8a4f5f69948ee0683108b414c1ab55fe94f32421498f0c9eb768a9c"
+  },
+  {
+    "id": "witi-226",
+    "name": "Vibración oscura",
+    "category": "Impactos",
+    "file": "witi-226.wav",
+    "duration": 1.3,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "138411d6e005f716dcf698f9af5e114d6b5e18fde39d6454c7b73dfeb7f013b9"
+  },
+  {
+    "id": "witi-227",
+    "name": "Glitch agresivo",
+    "category": "Impactos",
+    "file": "witi-227.wav",
+    "duration": 0.6,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "2cc1847afbda19909e23bf2a6f619bd424e84d58ff887a7eaa48b6091a8737fb"
+  },
+  {
+    "id": "witi-228",
+    "name": "Terror en vivo",
+    "category": "Impactos",
+    "file": "witi-228.wav",
+    "duration": 1.5,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "8be23bba28e5424508a601b81696fa3baf259650920e4973780634cd52ec2e91"
+  },
+  {
+    "id": "witi-229",
+    "name": "Bass drop",
+    "category": "Impactos",
+    "file": "witi-229.wav",
+    "duration": 1.15,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "3dc3d094e2b3696fbda57d6f9d5f99fd7965fceaacac2dd18774207435f6e481"
+  },
+  {
+    "id": "witi-230",
+    "name": "Choque 8-bit",
+    "category": "Impactos",
+    "file": "witi-230.wav",
+    "duration": 0.65,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "d7211e9973c83f84dc1442025235ce12daccc80cc07265d111ec857c3923fc54"
+  },
+  {
+    "id": "witi-231",
+    "name": "Nivel completado",
+    "category": "Victorias",
+    "file": "witi-231.wav",
+    "duration": 1.28,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "2d992146a95013eb0d3ee36335b4747ca43b20b443e50e4c0721f4798c66c45a"
+  },
+  {
+    "id": "witi-232",
+    "name": "Victoria arcade",
+    "category": "Victorias",
+    "file": "witi-232.wav",
+    "duration": 1.1,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "4a8a905c034a8c7bb63c713f9cfafa999aa71e0501441beca15d3e68c8947647"
+  },
+  {
+    "id": "witi-233",
+    "name": "Hype total",
+    "category": "Victorias",
+    "file": "witi-233.wav",
+    "duration": 1.65,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "3f8a5a5189b786f7dc79a466ccfa685e50a6fa4e7b9d583db9c4d5d19485fb96"
+  },
+  {
+    "id": "witi-234",
+    "name": "Racha legendaria",
+    "category": "Victorias",
+    "file": "witi-234.wav",
+    "duration": 1.7,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "94c27fa0bb2b9921ef05803cd12d40d0a00c240b4d5e9a05e318dbe2b0ca3f49"
+  },
+  {
+    "id": "witi-235",
+    "name": "Celebración cósmica",
+    "category": "Victorias",
+    "file": "witi-235.wav",
+    "duration": 1.2,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "58affd33e3d8f1cc22a803160c94c9e8fb2ec263d76a16fa350c482427fa825c"
+  },
+  {
+    "id": "witi-236",
+    "name": "Logro desbloqueado",
+    "category": "Victorias",
+    "file": "witi-236.wav",
+    "duration": 1.0,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "315a75406650cecc32ebe570fa9114914167c02718583701298749b835acd1ab"
+  },
+  {
+    "id": "witi-237",
+    "name": "Monedas extra",
+    "category": "Victorias",
+    "file": "witi-237.wav",
+    "duration": 0.9,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "1c8aac038b56a8aac4493ee9bb6e5f798d496617c79d4ed9665e847b50e6fa26"
+  },
+  {
+    "id": "witi-238",
+    "name": "Power-up",
+    "category": "Victorias",
+    "file": "witi-238.wav",
+    "duration": 0.95,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "e7f814e608e3b847f62a492dd707a9344b091f2ef7378ab873d0f6fae710b52f"
+  },
+  {
+    "id": "witi-239",
+    "name": "Héroe 8-bit",
+    "category": "Victorias",
+    "file": "witi-239.wav",
+    "duration": 1.4,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "044e9bbf526695d3e323cf6f597a0f07e03a7ef35bfc567e2ac9be82d66f53c4"
+  },
+  {
+    "id": "witi-240",
+    "name": "Celebración neón",
+    "category": "Victorias",
+    "file": "witi-240.wav",
+    "duration": 1.3,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "8dc80356e3c9ce113241549831ca63f8c47043983aedaa787b83b25bb4868831"
+  },
+  {
+    "id": "witi-241",
+    "name": "Algo se acerca",
+    "category": "Suspenso",
+    "file": "witi-241.wav",
+    "duration": 1.85,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "64ac294fc2b4de0d0fa2a3407924c4f13e4e6f2b64f56312a6f09443958da2a7"
+  },
+  {
+    "id": "witi-242",
+    "name": "Peligro inminente",
+    "category": "Suspenso",
+    "file": "witi-242.wav",
+    "duration": 1.3,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "34a9af7d0f4b534212a37ed376b5bf49384bf2822054ed52f680187ef1e00f17"
+  },
+  {
+    "id": "witi-243",
+    "name": "Cuenta regresiva",
+    "category": "Suspenso",
+    "file": "witi-243.wav",
+    "duration": 1.9,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "0bad8c95618113757b084e4897f2a353af462408719e5ed4f4dc6b55d599e276"
+  },
+  {
+    "id": "witi-244",
+    "name": "Tensión de jefe",
+    "category": "Suspenso",
+    "file": "witi-244.wav",
+    "duration": 2.0,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "88b51fc2f9b353d3e2b46d4054c569cb7ac017ebdab96084f08ad41d5d10b9b4"
+  },
+  {
+    "id": "witi-245",
+    "name": "Misterio siniestro",
+    "category": "Suspenso",
+    "file": "witi-245.wav",
+    "duration": 1.65,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "75c2e5881020e8ee85681dd9096cdff77bce89b9ed4aa079b04d2496b9d254d5"
+  },
+  {
+    "id": "witi-246",
+    "name": "Alerta fantasma",
+    "category": "Suspenso",
+    "file": "witi-246.wav",
+    "duration": 1.0,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "28b2aa3da7045564aa777dbe19a10fcc2f0e3b52ce1bfd95781da89eba21eaa1"
+  },
+  {
+    "id": "witi-247",
+    "name": "Latido oscuro",
+    "category": "Suspenso",
+    "file": "witi-247.wav",
+    "duration": 1.75,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "83ae3a224cf8da4f939331d07508afa823d4523141bab561b96ee5ff354fc301"
+  },
+  {
+    "id": "witi-248",
+    "name": "Risa fantasmal",
+    "category": "Suspenso",
+    "file": "witi-248.wav",
+    "duration": 1.35,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "dbf19015dcf658dfce954b224447711a6e098561dadce77f196b376ade14efb6"
+  },
+  {
+    "id": "witi-249",
+    "name": "Apareció el boss",
+    "category": "Suspenso",
+    "file": "witi-249.wav",
+    "duration": 1.7,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "8ca5b976f04c4ad932cd252e49e9919f8b92796148a1dbc8a49d8fbede1ae8a7"
+  },
+  {
+    "id": "witi-250",
+    "name": "Se viene algo",
+    "category": "Suspenso",
+    "file": "witi-250.wav",
+    "duration": 1.65,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "d90ab6a4e2e54621b383b36a51660861b0c3b5a93566b457923152ef11022d0f"
+  },
+  {
+    "id": "witi-251",
+    "name": "Regalazo",
+    "category": "Donaciones",
+    "file": "witi-251.wav",
+    "duration": 1.16,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "8098f919d90578e9c0ae7834d125088cedd4b2006917d7629b2941123eed0376"
+  },
+  {
+    "id": "witi-252",
+    "name": "Lluvia de monedas",
+    "category": "Donaciones",
+    "file": "witi-252.wav",
+    "duration": 1.38,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "b6167f9ccd23ec93c4cd275f4f586927f36381b7fdf005776514b5e6ded650c6"
+  },
+  {
+    "id": "witi-253",
+    "name": "Donación épica",
+    "category": "Donaciones",
+    "file": "witi-253.wav",
+    "duration": 1.65,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "c163456cce1c1a71a8de136ae4772011d015e38c4cfe011ede3491858541e6ea"
+  },
+  {
+    "id": "witi-254",
+    "name": "Alerta premium",
+    "category": "Donaciones",
+    "file": "witi-254.wav",
+    "duration": 1.05,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "c2a7ef868072517b4c907d704b90535487aac512525145ff66c55eaa4ac1c73e"
+  },
+  {
+    "id": "witi-255",
+    "name": "Meta cumplida",
+    "category": "Donaciones",
+    "file": "witi-255.wav",
+    "duration": 1.45,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "acadfeb914f781941b4eaa9bec76e8e88f630338248fcfb3d411645d963cdd4d"
+  },
+  {
+    "id": "witi-256",
+    "name": "Combo x10",
+    "category": "Donaciones",
+    "file": "witi-256.wav",
+    "duration": 0.93,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "7acfb230b6dfb9a3e42744b0974ccc316295f55de60c88893cd72b58ea3830b6"
+  },
+  {
+    "id": "witi-257",
+    "name": "Supercombo",
+    "category": "Donaciones",
+    "file": "witi-257.wav",
+    "duration": 1.5,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "22ffa653a53d08bc689cce968cce449540af62e2e0dd86a325aea33b6e3af175"
+  },
+  {
+    "id": "witi-258",
+    "name": "Regalo sorpresa",
+    "category": "Donaciones",
+    "file": "witi-258.wav",
+    "duration": 1.0,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "8c2e7a03cfbaeb756ee5b9b532dab1d63df3022c558063cf23b4b44600ae428a"
+  },
+  {
+    "id": "witi-259",
+    "name": "Puntos extra",
+    "category": "Donaciones",
+    "file": "witi-259.wav",
+    "duration": 1.1,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "27708978ec5f64c1431e032d8418eb36e781061010ee755eb164341f680ae04d"
+  },
+  {
+    "id": "witi-260",
+    "name": "Jefe del chat",
+    "category": "Donaciones",
+    "file": "witi-260.wav",
+    "duration": 1.45,
+    "origin": "Efecto electrónico original WITI BOT · sin voces ni clips de terceros",
+    "license": "Original — incluido en WITI BOT",
+    "sha256": "b38bb4a192fd3d167ef7e9a60c74e6bf42524d2acb0ea1831941c3eef2288850"
+  }
+]

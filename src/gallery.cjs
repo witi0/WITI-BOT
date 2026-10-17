@@ -1,0 +1,39 @@
+const crypto=require('node:crypto');
+const catalog=[
+ ['music','Música · Studio','Música','Portada, avatar, progreso y siguientes canciones'],
+ ['topgifters','Top regalos · Podio','Rankings','Medallas y monedas por espectador'],
+ ['toplikes','Top likes · Comunidad','Rankings','Clasificación de likes observados'],
+ ['ranking','Ranking de puntos','Rankings','Puntos persistentes del creador'],
+ ['chat','Chat · Burbujas','Comunidad','Comentarios con avatar y nombre'],
+ ['giftfeed','Regalos · Feed','Interacciones','Últimos regalos y cantidades'],
+ ['lastfollow','Último seguidor','Comunidad','Tarjeta de bienvenida'],
+ ['lastgift','Último regalo','Interacciones','Usuario, regalo y monedas'],
+ ['lastshare','Último compartido','Comunidad','La persona que comparte el LIVE'],
+ ['lastsub','Última suscripción','Comunidad','Suscripción informada por el proveedor'],
+ ['goal','Meta de likes','Metas','Progreso configurable en directo'],
+ ['goal','Meta de seguidores','Metas','Barra o anillo de progreso','follows'],
+ ['goal','Meta de monedas','Metas','Objetivo de regalos en monedas','coins'],
+ ['goal','Meta de compartidos','Metas','Seguimiento de compartidos','shares'],
+ ['giftcounter','Contador de regalo','Metas','Cuenta un ID de regalo seleccionado'],
+ ['stats','Estadísticas del LIVE','Metas','Likes, seguidores, regalos y espectadores'],
+ ['timer','Temporizador · Extensible','Tiempo','Cuenta atrás persistente'],
+ ['ticker','Avisos · Ticker','Escena','Texto en movimiento configurable'],
+ ['social','Rotador de redes','Escena','Enlaces sociales en rotación'],
+ ['webcam','Marco de webcam','Escena','Marco transparente con RGB opcional'],
+ ['likefountain','Fuente de corazones','Interacciones','Partículas por likes'],
+ ['fireworks','Celebración de regalos','Interacciones','Explosiones de partículas por regalo'],
+ ['coinjar','Frasco de monedas','Interacciones','Partículas con gravedad dentro de un frasco'],
+ ['buddies','Compañeros del chat','Comunidad','Avatares que recorren el escenario'],
+ ['wheel','Ruleta','Herramientas','Premios con pesos configurables'],
+ ['vote','Votación del chat','Herramientas','Votos A y B, uno por usuario'],
+ ['commands','Panel de comandos','Comunidad','Instrucciones visibles para espectadores'],
+ ['usercard','Tarjeta de usuario','Comunidad','Última persona activa en chat'],
+ ['slider','Duelo de likes y regalos','Herramientas','Comparación de contadores'],
+ ['actions','Pantalla de acciones','Interacciones','Alertas, imágenes, GIF, video y sonido']
+].map(([kind,name,category,description,metric],i)=>({template:'witi-'+i,kind,name,category,description,metric:metric||'likes'}));
+const kinds=[...new Set(catalog.map(x=>x.kind))];
+function fromTemplate(template){const t=catalog.find(t=>t.template===template);if(!t)throw Error('Plantilla desconocida');return {...t,id:crypto.randomUUID(),color:'#ad7aff',secondary:'#4de2da',rgb:false,width:800,height:450,fontSize:28,opacity:0.92,radius:22,duration:7,volume:0.8,target:1000,top:5,goalStyle:'bar',showAvatar:true,showCover:true,showQueue:true,transparent:false,text:'Bienvenidos al LIVE · Gracias por acompañarme',items:'TikTok: @tuusuario\nDiscord: tu comunidad\nYouTube: tu canal',prizes:[{name:'10 puntos',weight:4},{name:'Un saludo',weight:3},{name:'Sorpresa',weight:1}],giftId:''};}
+function installGallery(store){if(store.get('galleryVersion')>=1)return;for(const t of catalog)if(t.kind!=='actions')store.save('overlays',fromTemplate(t.template));store.set('galleryVersion',1);}
+function validateOverlay(o){if(o?.id&&!/^[a-f\d-]{36}$/i.test(o.id))throw Error('ID de pantalla inválido');if(!o||typeof o.name!=='string'||!o.name.trim()||o.name.length>100||!kinds.includes(o.kind))throw Error('Overlay inválido');for(const key of ['color','secondary'])if(o[key]&&!/^#[a-f\d]{6}$/i.test(o[key]))throw Error('Color inválido');const out={...o,id:typeof o.id==='string'?o.id:crypto.randomUUID()};for(const [key,min,max,fallback]of [['width',200,3840,800],['height',100,2160,450],['fontSize',12,100,28],['opacity',0,1,.92],['radius',0,100,22],['duration',1,120,7],['volume',0,1,.8],['target',1,100000000,1000],['top',1,20,5]])out[key]=Math.min(max,Math.max(min,Number.isFinite(Number(o[key]))?Number(o[key]):fallback));out.color=o.color||'#ad7aff';out.secondary=o.secondary||'#4de2da';out.text=String(o.text||'').slice(0,2000);out.items=String(o.items||'').slice(0,5000);out.giftId=String(o.giftId||'').slice(0,100);out.prizes=(o.prizes||[]).slice(0,30).map(p=>({name:String(p.name||'Premio').slice(0,80),weight:Math.min(1000,Math.max(1,Number(p.weight)||1))}));return out;}
+function pickPrize(prizes,random=Math.random){if(!Array.isArray(prizes)||!prizes.length)throw Error('La ruleta necesita premios');let n=random()*prizes.reduce((s,p)=>s+p.weight,0);for(const p of prizes){n-=p.weight;if(n<0)return p.name;}return prizes.at(-1).name;}
+module.exports={catalog,kinds,fromTemplate,installGallery,validateOverlay,pickPrize};

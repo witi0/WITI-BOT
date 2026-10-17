@@ -1,0 +1,18 @@
+const {test}=require('node:test');const assert=require('node:assert/strict');const {JSDOM,VirtualConsole}=require('jsdom');const fs=require('node:fs');const os=require('node:os');const path=require('node:path');const {Store,Engine,validateRule}=require('../src/core.cjs');const crypto=require('node:crypto');
+const settle=()=>new Promise(r=>setTimeout(r,30));
+test('interfaz DOM → puente de prueba → núcleo real: reglas, puntos, timer y overlays',async t=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'witi-ui-')),store=await Store.open(dir),engine=new Engine(store,async()=>{}),errors=[];
+ const virtualConsole=new VirtualConsole();virtualConsole.on('jsdomError',e=>errors.push(e.message));
+ const bridge=async(name,...args)=>{const a=args[0];switch(name){case 'snapshot':return {...store.snapshot(),profile:store.get('profile')||{},urls:Object.fromEntries(store.list('overlays').map(o=>[o.id,'http://127.0.0.1/test'])),obsConnected:false,version:'1.0.0',update:{status:'No configurado'}};case 'profile':store.set('profile',a);return;case 'save-rule':return store.save('rules',validateRule(a,store.list('overlays').map(o=>o.id)));case 'simulate':return engine.receive({...a,id:crypto.randomUUID(),user:'prueba',simulated:true});case 'credit':return store.credit(a.user,a.user,a.amount,crypto.randomUUID());case 'timer':return store.changeTimer(a,args[1]);case 'save-overlay':return store.save('overlays',{...a,id:a.id||crypto.randomUUID()});default:throw Error('No implementado en puente de prueba: '+name);}};
+ const dom=await JSDOM.fromFile(path.resolve('renderer/index.html'),{resources:'usable',runScripts:'dangerously',pretendToBeVisual:true,virtualConsole,beforeParse(w){w.witi={call:bridge,on:()=>{}};w.structuredClone=structuredClone;w.speechSynthesis={getVoices:()=>[],cancel(){},speak(){},resume(){},pause(){}};w.confirm=()=>true;}});
+ t.after(()=>{dom.window.close();store.db.close();fs.rmSync(dir,{recursive:true,force:true});});
+ await new Promise(r=>dom.window.addEventListener('load',r));await settle();const d=dom.window.document;
+ assert.equal(d.querySelectorAll('.overlay-card').length,8);assert.equal(errors.length,0,errors.join('\n'));
+ const submit=async f=>{f.dispatchEvent(new dom.window.Event('submit',{bubbles:true,cancelable:true}));await settle();};
+ const profile=d.querySelector('#profileForm');profile.elements.name.value='Witi';await submit(profile);assert.equal(store.get('profile').name,'Witi');
+ d.querySelector('[data-page=rules]').click();const rule=d.querySelector('#ruleForm');rule.elements.name.value='Alerta de prueba';await submit(rule);assert.equal(store.list('rules').length,1);assert.equal(store.list('rules')[0].name,'Alerta de prueba');
+ d.querySelector('[data-page=home]').click();await submit(d.querySelector('#simForm'));assert.match(d.querySelector('#simResult').textContent,/ejecutada/);
+ d.querySelector('[data-page=community]').click();const credit=d.querySelector('#creditForm');credit.elements.user.value='@witi';credit.elements.amount.value='50';await submit(credit);assert.equal(store.snapshot().users[0].balance,50);assert.match(d.querySelector('#userList').textContent,/@witi/);
+ d.querySelector('[data-page=timer]').click();const timer=d.querySelector('#timerForm');timer.elements.seconds.value='20';await submit(timer);assert.equal(store.timer().remaining,320);
+ d.querySelector('[data-page=overlays]').click();const overlay=d.querySelector('#overlayForm');overlay.elements.name.value='Ranking nuevo';overlay.elements.kind.value='ranking';await submit(overlay);assert.equal(store.list('overlays').length,9);assert.equal(errors.length,0,errors.join('\n'));
+});
