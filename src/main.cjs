@@ -1,4 +1,4 @@
-const {app,BrowserWindow,ipcMain,dialog,safeStorage,shell,clipboard}=require('electron');
+const {app,BrowserWindow,ipcMain,dialog,safeStorage,shell,clipboard,Menu}=require('electron');
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const {spawn}=require('node:child_process');
 const {installBundledMedia,audioPayload}=require('./bundled-media.cjs');
@@ -44,7 +44,10 @@ async function commandHandler(e){const [cmd,...args]=e.text.trim().split(/\s+/);
 }
 function handle(name,fn){ipcMain.handle(name,async(event,...args)=>{if(event.sender!==win?.webContents||!event.senderFrame?.url.startsWith('file://'))throw Error('Origen no autorizado');try{return {ok:true,value:await fn(...args)};}catch(e){return {ok:false,error:e.message};}});}
 app.whenReady().then(async()=>{
- const dir=app.getPath('userData');mediaDir=path.join(dir,'media');fs.mkdirSync(mediaDir,{recursive:true});store=await Store.open(dir);if(!store.get('v2SoundMigration')){for(const rule of store.list('rules'))if(rule.actions?.some(a=>a.type==='sound'&&/^witi-\d{3}\.wav$/.test(a.sound||'')))store.save('rules',{...rule,enabled:false});store.set('v2SoundMigration',true);}installBundledMedia(store,mediaDir);if(!store.get('copperThemeV1')){const a=store.get('appearance')||{};store.set('appearance',normalizeAppearance({...a,accent:(!a.accent||a.accent==='#9c70ff')?'#f2a66f':a.accent}));store.set('copperThemeV1',true);}if(!store.get('gothicThemeV1')){store.set('appearance',normalizeAppearance({...store.get('appearance'),accent:'#d93d56',mode:'pulse',font:'gothic'}));store.set('gothicThemeV1',true);}installGallery(store);liveState=new LiveState(store);
+ Menu.setApplicationMenu(null);
+ const dir=app.getPath('userData');mediaDir=path.join(dir,'media');fs.mkdirSync(mediaDir,{recursive:true});store=await Store.open(dir);
+ {const a=store.get('appearance');if(a&&a.accent==='#d93d56'&&a.font==='gothic'){store.set('appearance',normalizeAppearance({...a,accent:'#9464ff',font:'segoe'}));}}
+ if(!store.get('v2SoundMigration')){for(const rule of store.list('rules'))if(rule.actions?.some(a=>a.type==='sound'&&/^witi-\d{3}\.wav$/.test(a.sound||'')))store.save('rules',{...rule,enabled:false});store.set('v2SoundMigration',true);}installBundledMedia(store,mediaDir);if(!store.get('copperThemeV1')){const a=store.get('appearance')||{};store.set('appearance',normalizeAppearance({...a,accent:(!a.accent||a.accent==='#9c70ff')?'#f2a66f':a.accent}));store.set('copperThemeV1',true);}if(!store.get('gothicThemeV1')){store.set('appearance',normalizeAppearance({...store.get('appearance'),accent:'#d93d56',mode:'pulse',font:'gothic'}));store.set('gothicThemeV1',true);}installGallery(store);liveState=new LiveState(store);
  server=await startOverlayServer(store,mediaDir,{state:stateNow,playbackChange:s=>notify('playback',s)});engine=new Engine(store,runAction);
  updates=new Updates({config:release,version:app.getVersion(),dir:path.join(dir,'updates'),change:s=>notify('update',s)});
  spotify=new Spotify({store,secretGet,secretSet,open:u=>shell.openExternal(u),change:(s,m)=>{if(m)liveState.music=m;notify('connection',{kind:'spotify',state:s});}});
@@ -120,7 +123,8 @@ app.whenReady().then(async()=>{
  handle('export-logs',async()=>{const r=await dialog.showSaveDialog(win,{defaultPath:'WITI_BOT_Diagnostico.json'});if(!r.canceled)fs.writeFileSync(r.filePath,JSON.stringify({version:app.getVersion(),platform:process.platform,logs:store.snapshot().logs},null,2));});
  handle('update-check',()=>updates.check());handle('update-download',()=>updates.download());
  handle('update-install',async()=>{if(locked())throw Error('Termina el LIVE y desactiva el bloqueo antes de actualizar');const file=updates.verifiedInstaller();const r=await dialog.showMessageBox(win,{type:'question',buttons:['Cancelar','Actualizar y cerrar WITI BOT'],defaultId:0,cancelId:0,message:'La firma del manifiesto y el SHA-256 del instalador fueron verificados. ¿Guardar copia de datos y abrir el asistente de actualización?'});if(r.response!==1)return;store.backup();const p=spawn(file,[],{detached:true,stdio:'ignore',shell:false});p.once('error',()=>notify('update',{status:'Windows no pudo abrir el instalador'}));p.once('spawn',()=>{p.unref();app.quit();});});
- win=new BrowserWindow({width:1480,height:980,minWidth:1050,minHeight:720,title:'WITI BOT',backgroundColor:'#101817',icon:path.join(__dirname,'../build/icon.png'),webPreferences:{autoplayPolicy:'no-user-gesture-required',preload:path.join(__dirname,'preload.cjs'),contextIsolation:true,nodeIntegration:false,sandbox:true,webSecurity:true}});
+ win=new BrowserWindow({width:1480,height:980,minWidth:1050,minHeight:720,title:'WITI BOT',backgroundColor:'#0d0b17',icon:path.join(__dirname,'../build/icon.png'),webPreferences:{autoplayPolicy:'no-user-gesture-required',preload:path.join(__dirname,'preload.cjs'),contextIsolation:true,nodeIntegration:false,sandbox:true,webSecurity:true}});
+ win.removeMenu();win.setMenuBarVisibility(false);win.setAutoHideMenuBar(true);
  win.webContents.setWindowOpenHandler(()=>({action:'deny'}));win.webContents.on('will-navigate',e=>e.preventDefault());win.webContents.session.setPermissionRequestHandler((wc,p,cb)=>cb(false));
  await win.loadFile(path.join(__dirname,'../renderer/index.html'));spotify.restore();identity.restore();
  autoUpdate=setTimeout(()=>updates.check().catch(()=>{}),5000);autoUpdate.unref();const period=setInterval(()=>updates.check().catch(()=>{}),6*3600000);period.unref();

@@ -1,3 +1,14 @@
+# WITI BOT 3.0.0 · RGB Purple Studio
+
+- Recuperado el morado RGB en toda la interfaz y eliminada la barra nativa File/Edit/View/Window.
+- Galería de overlays y fuentes exclusivas para regalos conservadas de la 12.2.0, sobre la base 2.5.0.
+- Nombres localizados en la biblioteca sin cambiar el identificador, nombre técnico ni activación de cada regalo.
+- Botones, navegación, previsualización, accesibilidad y edición reforzados.
+- Motor de audio, audios e imágenes originales conservados.
+- Instalador Windows x64 NSIS y pruebas automatizadas.
+
+El funcionamiento con cuentas reales, OBS y Windows limpio requiere validación in situ.
+
 # WITI BOT 2.5.0 · Gothic Studio
 
 - Negro y rojo carmesí, títulos góticos, RGB ajustable y reducción de movimiento.

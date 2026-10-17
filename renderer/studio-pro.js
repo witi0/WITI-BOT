@@ -59,7 +59,7 @@ $('#clearOverlay').addEventListener('click',()=>{studioTab('editor');overlayEdit
 function safeGiftArt(g){const wrap=node('div',undefined,'gift-art');if(typeof g?.image==='string'&&(/^(https:\/\/|http:\/\/127\.0\.0\.1:)/).test(g.image)){const img=node('img');img.src=g.image;img.alt='';img.loading='lazy';img.referrerPolicy='no-referrer';wrap.append(img);}else wrap.append(node('span','🎁'));return wrap;}
 function selectGift(g){
  selectedGiftKey=g.source+':'+g.id;
- $('#giftInspectorArt').replaceChildren(safeGiftArt(g));$('#giftInspectorName').textContent=g.name;
+ $('#giftInspectorArt').replaceChildren(safeGiftArt(g));$('#giftInspectorName').textContent=g.displayName||g.name;
  $('#giftInspectorPrice').textContent=Number(g.coins||0).toLocaleString('es-MX')+' monedas';
  $('#giftInspectorSource').textContent=(g.source==='live'?'Disponible en el LIVE conectado':'Catálogo de referencia')+' · ID '+g.id;
  $('#giftCreateAlert').disabled=false;$('#giftCreateCounter').disabled=false;
@@ -67,8 +67,8 @@ function selectGift(g){
 }
 function giftSelected(){return giftCache.find(g=>g.source+':'+g.id===selectedGiftKey);}
 for(const id of ['giftOrigin','giftCost','giftSort'])document.getElementById(id).onchange=()=>{giftPage=0;renderGifts();};
-$('#giftCreateAlert').addEventListener('click',()=>{const g=giftSelected();if(!g)return;clearRule();const f=$('#ruleForm');f.elements.trigger.value='gift';f.elements.name.value='Alerta · '+g.name;f.elements.match.value=g.source==='live'?String(g.id):g.name;document.querySelector('nav button[data-page="rules"]').click();$('#ruleForm').scrollIntoView?.({behavior:'smooth',block:'start'});toast('Regalo seleccionado. Elige las acciones y guarda la regla.');});
-$('#giftCreateCounter').addEventListener('click',()=>{safe(async()=>{const g=giftSelected();if(!g)return;if(!allowOverlayChange())return;overlayEditBaseline='';const template=state.catalog.find(t=>t.kind==='giftcounter');if(!template)throw Error('No está disponible la plantilla de contador');const o=await call('create-template',template.template);const saved=await call('save-overlay',{...o,giftId:g.source==='live'?String(g.id):g.name,name:'Contador · '+g.name,target:100,goalStyle:'bar'});await refresh();document.querySelector('nav button[data-page="overlays"]').click();beginOverlayEdit(saved);toast('Contador creado. Elige el objetivo y copia su enlace a OBS.');})();});
+$('#giftCreateAlert').addEventListener('click',()=>{const g=giftSelected();if(!g)return;clearRule();const f=$('#ruleForm');f.elements.trigger.value='gift';f.elements.name.value='Alerta · '+(g.displayName||g.name);f.elements.match.value=g.source==='live'?String(g.id):g.name;document.querySelector('nav button[data-page="rules"]').click();$('#ruleForm').scrollIntoView?.({behavior:'smooth',block:'start'});toast('Regalo seleccionado. Elige las acciones y guarda la regla.');});
+$('#giftCreateCounter').addEventListener('click',()=>{safe(async()=>{const g=giftSelected();if(!g)return;if(!allowOverlayChange())return;overlayEditBaseline='';const template=state.catalog.find(t=>t.kind==='giftcounter');if(!template)throw Error('No está disponible la plantilla de contador');const o=await call('create-template',template.template);const saved=await call('save-overlay',{...o,giftId:g.source==='live'?String(g.id):g.name,name:'Contador · '+(g.displayName||g.name),target:100,goalStyle:'bar'});await refresh();document.querySelector('nav button[data-page="overlays"]').click();beginOverlayEdit(saved);toast('Contador creado. Elige el objetivo y copia su enlace a OBS.');})();});
 function giftSearchKey(value){return String(value).trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('es-MX');}
 renderGifts=function(){
  const root=$('#giftList'),q=giftSearchKey($('#giftSearch').value),mx=$('#giftsMX').checked;
@@ -76,7 +76,7 @@ renderGifts=function(){
  let list=giftCache.filter(g=>{
   if(mx&&g.source!=='live'&&!g.regions?.includes('MX'))return false;
   if(origin!=='all'&&g.source!==origin)return false;
-  if(q&&!giftSearchKey(g.name+' '+g.id+' '+g.coins).includes(q))return false;
+  if(q&&!giftSearchKey((g.displayName||g.name)+' '+g.name+' '+g.id+' '+g.coins).includes(q))return false;
   const coins=Number(g.coins)||0;
   if(cost==='1-99'&&(coins<1||coins>99))return false;
   if(cost==='100-999'&&(coins<100||coins>999))return false;
@@ -84,14 +84,14 @@ renderGifts=function(){
   if(cost==='10000+'&&coins<10000)return false;
   return true;
  });
- list=list.slice().sort((a,b)=>sort==='cheap'?a.coins-b.coins||a.name.localeCompare(b.name):sort==='expensive'?b.coins-a.coins||a.name.localeCompare(b.name):a.name.localeCompare(b.name,'es'));
+ list=list.slice().sort((a,b)=>sort==='cheap'?a.coins-b.coins||(a.displayName||a.name).localeCompare(b.displayName||b.name,'es'):sort==='expensive'?b.coins-a.coins||(a.displayName||a.name).localeCompare(b.displayName||b.name,'es'):(a.displayName||a.name).localeCompare(b.displayName||b.name,'es'));
  const total=Math.max(1,Math.ceil(list.length/24));giftPage=Math.min(giftPage,total-1);
  $('#giftResultSummary').textContent=list.length+' regalos encontrados';$('#giftPageStatus').textContent='Página '+(giftPage+1)+' de '+total;
  $('#giftPrevious').disabled=giftPage<=0;$('#giftNext').disabled=giftPage>=total-1;
  $('#giftSource').textContent=liveGifts?('● '+liveGifts+' regalos sincronizados con el LIVE · catálogo de referencia adicional'):('○ Catálogo de referencia · conecta TikTok para verificar regalos disponibles');
  for(const g of list.slice(giftPage*24,(giftPage+1)*24)){
-  const card=node('button',undefined,'gift-tile');card.type='button';card.dataset.giftKey=g.source+':'+g.id;card.setAttribute('aria-label','Seleccionar '+g.name);
-  card.append(safeGiftArt(g));card.append(node('strong',g.name),node('span',(Number(g.coins)||0).toLocaleString('es-MX')+' ◈','gift-cost'));card.append(node('small',g.source==='live'?'LIVE':'Referencia','gift-status '+(g.source==='live'?'live':'')));
+  const card=node('button',undefined,'gift-tile');card.type='button';card.dataset.giftKey=g.source+':'+g.id;card.setAttribute('aria-label','Seleccionar '+(g.displayName||g.name));
+  card.append(safeGiftArt(g));card.append(node('strong',g.displayName||g.name),node('span',(Number(g.coins)||0).toLocaleString('es-MX')+' ◈','gift-cost'));card.append(node('small',g.source==='live'?'LIVE':'Referencia','gift-status '+(g.source==='live'?'live':'')));
   card.setAttribute('aria-pressed',String(card.dataset.giftKey===selectedGiftKey));card.classList.toggle('selected',card.dataset.giftKey===selectedGiftKey);card.onclick=()=>selectGift(g);root.append(card);
  }
  if(!list.length)empty(root,'No hay regalos con esos filtros. Prueba otro valor o búsqueda.');

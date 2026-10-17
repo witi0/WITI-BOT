@@ -61,11 +61,11 @@ $('#giftPrevious').onclick=()=>{giftPage=Math.max(0,giftPage-1);renderGifts();};
 $('#giftNext').onclick=()=>{giftPage++;renderGifts();};
 function renderGifts(){
  const root=$('#giftList'),q=$('#giftSearch').value.toLocaleLowerCase('es-MX'),mx=$('#giftsMX').checked;root.replaceChildren();
- const list=giftCache.filter(g=>(!mx||g.source==='live'||g.regions?.includes('MX'))&&(!q||String(g.name+' '+g.id+' '+g.coins).toLocaleLowerCase('es-MX').includes(q)));
+ const list=giftCache.filter(g=>(!mx||g.source==='live'||g.regions?.includes('MX'))&&(!q||String((g.displayName||g.name)+' '+g.name+' '+g.id+' '+g.coins).toLocaleLowerCase('es-MX').includes(q)));
  const total=Math.max(1,Math.ceil(list.length/48));giftPage=Math.min(giftPage,total-1);$('#giftPageStatus').textContent=(giftPage+1)+' / '+total+' · '+list.length+' regalos';$('#giftPrevious').disabled=giftPage<=0;$('#giftNext').disabled=giftPage>=total-1;
  $('#giftSource').textContent=liveGifts?liveGifts+' regalos sincronizados con LIVE':'Catálogo de referencia · '+(giftUpdated?giftUpdated.split('T')[0]:'sin fecha');
  for(const g of list.slice(giftPage*48,giftPage*48+48)){const c=node('article',undefined,'sound-card gift-card');if(typeof g.image==='string'&&(/^(https:\/\/|http:\/\/127\.0\.0\.1:)/.test(g.image))){const img=node('img');img.src=g.image;img.alt='';img.loading='lazy';c.append(img);}else c.append(node('div','🎁','template-icon'));
- c.append(node('h3',g.name),node('small',g.coins+' monedas · '+(g.source==='live'?'En el LIVE':'Referencia')),button('Crear alerta',()=>{clearRule();const f=$('#ruleForm');f.elements.name.value='Alerta · '+g.name;f.elements.trigger.value='gift';f.elements.match.value=g.source==='live'?g.id:g.name;$('nav [data-page=rules]').click();}));root.append(c);}
+ c.append(node('h3',g.displayName||g.name),node('small',g.coins+' monedas · '+(g.source==='live'?'En el LIVE':'Referencia')),button('Crear alerta',()=>{clearRule();const f=$('#ruleForm');f.elements.name.value='Alerta · '+(g.displayName||g.name);f.elements.trigger.value='gift';f.elements.match.value=g.source==='live'?g.id:g.name;$('nav [data-page=rules]').click();}));root.append(c);}
  if(!root.children.length)empty(root,'No encontramos regalos con esos filtros.');
 }
 window.witi.on('connection',safe(async()=>{const fresh=await call('snapshot');for(const k of ['spotify','tiktok','identity','liveState','songQueue','live','obsConnected'])state[k]=fresh[k];renderConnections();renderMusic();$('#liveLock').checked=state.live;}));let liveRefresh;

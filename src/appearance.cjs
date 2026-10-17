@@ -1,5 +1,5 @@
 'use strict';
-const DEFAULT_APPEARANCE=Object.freeze({rgb:true,reducedMotion:false,mode:'pulse',accent:'#d93d56',speed:9,intensity:62,font:'gothic',compact:false});
+const DEFAULT_APPEARANCE=Object.freeze({rgb:true,reducedMotion:false,mode:'pulse',accent:'#9464ff',speed:9,intensity:72,font:'segoe',compact:false});
 const MODES=new Set(['aurora','spectrum','pulse']);
 const FONTS=new Set(['bahnschrift','segoe','trebuchet','gothic']);
 function normalizeAppearance(value={}){

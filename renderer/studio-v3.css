@@ -1,0 +1,42 @@
+:root{--ui-accent:#9464ff;--bg:#0d0b17;--panel:#171326;--line:#393051;--muted:#b3a9ca;--purple:#a77cff;--ui-typeface-body:'Segoe UI Variable Text','Segoe UI',sans-serif;--ui-typeface:'Bahnschrift','Segoe UI Variable Display','Segoe UI',sans-serif}
+body{color:#f6f2ff;background:radial-gradient(ellipse at 77% -10%,#40316b77,transparent 45%),radial-gradient(ellipse at 5% 70%,#1a134955,transparent 45%),#0d0b17;font-family:var(--ui-typeface-body)}
+body[data-ui-font=gothic]{--ui-typeface:'Bahnschrift','Segoe UI',sans-serif;--ui-typeface-body:'Segoe UI Variable Text','Segoe UI',sans-serif}
+body[data-ui-font=gothic] h1{font-size:33px;letter-spacing:-.03em}body[data-ui-font=gothic] h2{font-size:21px}
+h1,h2,h3,.title,.gift-tile strong{color:#f8f5ff}p,small,label,.muted,.studio-design-body p{color:#bcb2d3}
+aside{background:linear-gradient(170deg,#1e1734,#100d1f 85%);border-color:#453567}body.theme-rgb>aside{background-image:linear-gradient(#1e1734,#100d1f),var(--app-rgb)}
+aside .brand small,aside .section-label,.aside-bottom,nav button{color:#bdb4d5}
+.workspace>header{background:#110e21ed;color:#c4b8df;border-color:#51416d}
+nav button{min-height:39px;border-radius:11px}nav button:hover{background:#28203f;border-color:#6e50ab;color:#fff}nav button.active{background:linear-gradient(100deg,#40306b,#241a43);color:#f9f5ff;box-shadow:inset 3px 0 #a67dff}
+.panel,.stats article,.studio-design-card,.gift-tile,.sound-card,.shortcut-key,.studio-preview-side,.gift-inspector,.list-item,.action-row{background-color:#171326;border-color:#44385e}
+.studio-workspace,.gift-workspace{--studio-bg:#181329;--studio-border:#4a3a70;--studio-cyan:#ad9bf8;--studio-purple:#a77cff}
+.studio-hero,.gifts-hero{background:radial-gradient(ellipse at 90% 0%,#7a4fe65e,transparent 57%),linear-gradient(115deg,#281f49,#17132d);border-color:#7054bd}
+.studio-hero-art,.gift-hero-icon{filter:hue-rotate(60deg)}
+.studio-mini{background:radial-gradient(ellipse at 25% 5%,#8e70ff55,transparent 70%),#16112a}
+.studio-tag,.eyebrow,.studio-editor-section h3,.studio-preview-label,.gift-inspector-price,.gift-cost{color:#c5adff}
+.studio-switch,.studio-toolbar,.gift-searchbar,.gift-filterline,.studio-advanced,.studio-editor-section{background-color:#1b1530;border-color:#51406f}
+.studio-switch-btn{color:#c6bde0!important}.studio-switch-btn.active{background:#46316e!important;color:#fff!important;border-color:#b49aff!important}
+.studio-more,.studio-advanced summary,.sound-edit,.studio-preview-tip,.gift-inspector-hint,.gift-status{color:#c6bddf;background-color:#231b3a;border-color:#544371}
+.gift-tile.selected{box-shadow:inset 0 0 0 2px #ac80ff,0 0 22px #9168ff50}
+.studio-preview-head,.studio-section-header,.studio-editor-title,.studio-form-footer{border-color:#554273}
+#previewViewport{background:repeating-conic-gradient(#302446 0% 25%,#1d1730 0% 50%) 50%/24px 24px;border-color:#66568d}
+button{background:#2b2343;border:1px solid #655181;color:#f2ebff;border-radius:11px;min-height:36px;transition:transform .16s ease,box-shadow .16s ease,background .16s ease,border-color .16s ease}
+button:not(:disabled):hover{background:#3a2b60;border-color:#b193ff;box-shadow:0 4px 16px #7751db33;transform:translateY(-1px)}button:not(:disabled):active{transform:translateY(0) scale(.992)}
+button:disabled{cursor:not-allowed;opacity:.45}.primary,button.primary{background:linear-gradient(125deg,#a57aff,#7c55e7);color:#100c21;border-color:#c3a6ff;font-weight:700;text-shadow:none}
+input:not([type=checkbox]):not([type=range]):not([type=color]),textarea,select{background:#110d21;color:#f5efff;border:1px solid #594776;border-radius:11px}
+input::placeholder,textarea::placeholder{color:#a49abc}input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid #c7a9ff;outline-offset:2px}
+.classic-dialog{background:#110e20;border-color:#8d6ad6;color:#f5edff;box-shadow:0 38px 125px #000d}.classic-dialog-head{background:#1b1630;border-color:#5e4a87}.classic-dialog .panel{background-color:#19142d}
+.classic-toolbar .active{background:#624198;color:#fff;border-color:#bc98ff}.studio-design-card .studio-mini{border-color:#5f4e85}.template-preview-stage{background:repeating-conic-gradient(#2e2247 0% 25%,#19132c 0% 50%) 50%/28px 28px}
+body.theme-rgb,body.theme-rgb[data-rgb-mode=aurora]{--app-rgb:linear-gradient(115deg,#9e68ff,#5ddce5,#ca7dff,#766af5,#9e68ff)}
+body.theme-rgb[data-rgb-mode=spectrum]{--app-rgb:linear-gradient(115deg,#bd6aff,#54d9fa,#bb7eff,#ff95e2,#9fa5ff,#bd6aff)}
+body.theme-rgb[data-rgb-mode=pulse]{--app-rgb:linear-gradient(115deg,#a475ff,#7e54e5,#b38aff,#635bec,#a475ff)}
+body.theme-rgb :is(.panel,.stats article,.studio-design-card,.gift-tile,.sound-card,.shortcut-key,.studio-preview-side,.gift-inspector,.studio-hero,.gifts-hero,.studio-advanced,.list-item,.action-row,.command-modal,.witi-update-dialog){background-image:linear-gradient(#171326,#171326),var(--app-rgb)}
+body.theme-rgb :is(button:not(.primary):not(:disabled),.command-trigger,.studio-switch-btn){background-image:linear-gradient(#2b2343,#2b2343),var(--app-rgb)}
+body.theme-rgb nav button.active{background-image:linear-gradient(#40306b,#241a43),var(--app-rgb);box-shadow:inset 3px 0 #ad85ff,0 0 calc(18px * var(--ui-glow-alpha)) #9d7de044}
+body.theme-rgb :is(h1,.brand>div,.stats strong,.eyebrow,.studio-tag,.gift-inspector-price,#timerValue){background-image:var(--app-rgb)}
+body.theme-rgb .primary,body.theme-rgb button.primary{background-image:var(--app-rgb);color:#100b23;border-color:#bca2ff}
+body.theme-rgb .studio-design-card:hover,body.theme-rgb .panel:hover,body.theme-rgb .gift-tile:hover{box-shadow:0 0 calc(25px * var(--ui-glow-alpha)) #9572ff55}
+body.theme-rgb .appearance-preview{background:linear-gradient(110deg,#3d2d76,#1c1538)}
+#appSplash{background:radial-gradient(circle,#31205e,#0d0b17 72%)}#appSplash .splash-mark,.appearance-preview-logo{background:#9f78ff;color:#120d22;box-shadow:0 0 35px #9274ff66}
+#toast:not(.error){background:#261c46;border-color:#9674e6;color:#f4efff}
+.command-trigger,.command-modal,.command-modal #commandSearch,kbd{background:#241a40;border-color:#7056a5;color:#e9e2fb}.command-result[aria-selected=true],.command-result:hover{background:#453069;border-color:#b294ff}
+@media(prefers-reduced-motion:reduce){button,button:not(:disabled):hover{transform:none!important;transition:none!important}}body.reduce-motion button{transition:none!important;transform:none!important}
