@@ -1,3 +1,10 @@
+## Corrección de compilación 1.2.0
+
+- Recupera mediante generación reproducible los 200 WAV históricos para no romper reglas existentes.
+- Mantiene solo los 60 nuevos sonidos en el catálogo visible.
+- Ajusta los tests y el verificador del instalador a 260 WAV totales.
+- Prueba streaming HTTP de sonidos antiguos y nuevos.
+
 # Historial — WITI BOT
 
 ## 1.2.0 — Meme Sound Lab y voces clásicas

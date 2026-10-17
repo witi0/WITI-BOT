@@ -2,6 +2,11 @@
 from pathlib import Path
 import random,math,wave,hashlib,struct,json
 root=Path(__file__).resolve().parent.parent
+
+# Keep the 200 previous WAV assets available for existing sound IDs.
+# Their metadata is stored separately from the 60 visible curated sounds.
+import runpy
+runpy.run_path(str(root/'scripts/generate-legacy-sounds.py'),run_name='__main__')
 # generate engaging original meme-style stingers, not imitations of copyrighted speech
 out=root/'assets/sounds';sr=22050
 presets=[
