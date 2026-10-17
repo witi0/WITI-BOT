@@ -1,10 +1,16 @@
 node_modules/
 dist/
-*.pfx
-*.p12
+*.log
+.env
+.env.*
 *.pem
-.env*
-WITI_BOT_Windows_Evidence.json
-
-# Original audio is generated reproducibly in Windows CI.
-assets/sounds/*.wav
+*.p12
+*.pfx
+WitiData/
+media/
+assets/sounds/
+assets/memes/*.mp3
+assets/gifts/*.webp
+WITI_BOT_V2_Medios_Personales/
+*.exe
+*.zip

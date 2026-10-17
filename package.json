@@ -1,7 +1,7 @@
 {
   "name": "witi-bot",
-  "version": "1.2.1",
-  "description": "Herramientas locales para creadores de LIVE — WITI BOT",
+  "version": "2.0.0",
+  "description": "Panel de control de TikTok LIVE con eventos, overlays y automatizaciones",
   "main": "src/main.cjs",
   "scripts": {
     "start": "electron .",

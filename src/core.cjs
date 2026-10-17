@@ -72,7 +72,7 @@ class Engine{
    const results=[];
    for(const r of this.store.list('rules')){
      if(!r.enabled||r.trigger!==event.type)continue;
-     if(r.match&&r.match!==event.text&&r.match!==event.gift)continue;
+     if(r.match&&r.match!==event.text&&r.match!==event.gift&&String(r.match).toLowerCase()!==String(event.giftName||'').toLowerCase())continue;
      const key=r.id+':'+event.user;
      if(Date.now()-(this.cooldowns.get(key)||0)<r.cooldown*1000)continue;
      this.cooldowns.set(key,Date.now());
