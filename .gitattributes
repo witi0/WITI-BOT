@@ -1,2 +1,5 @@
 assets/personal/**/*.mp3 binary
 assets/personal/**/*.webp binary
+
+# Preserve downloaded icons byte for byte, including on Windows.
+assets/ui-icons/** -text
