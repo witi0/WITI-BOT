@@ -1,3 +1,13 @@
+# WITI BOT 4.1.0
+
+- Sustituye Euler por PirateTok 0.3.0 en la conexión principal. Basta con el usuario de TikTok; se retiran los campos de sala y API key de la interfaz. El conector anterior solo se conserva como dependencia de desarrollo para regresiones históricas y no se distribuye.
+- Conexión directa desde la PC, sin cuotas propias de firmas o eventos. Esto no garantiza que TikTok acepte todas las conexiones ni evita sus restricciones.
+- Un solo gestor de reconexiones con espera progresiva, cancelación y protección contra estados/eventos de conexiones anteriores. No se marca conectado por el aviso temprano de resolución de sala de PirateTok.
+- Adaptación de comentarios, rachas de regalos (repeatEnd numérico o cadena), suscripciones con sender/user, seguidores, compartidos, likes y espectadores; conserva IDs largos, niveles, roles y nombres de regalo.
+- Evita reproducir mensajes históricos con fecha anterior al inicio de la conexión.
+
+---
+
 # WITI BOT 4.0.2
 
 - Corrige el texto de chat del esquema actual de TikTok: se lee content, con compatibilidad para comment. Los comentarios recuperan su texto en el panel, overlays, TTS y comandos.
