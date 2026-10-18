@@ -8,7 +8,7 @@ test('ajustes TTS heredados no bloquean snapshot, configuración OBS ni conexió
  const main=path.resolve(__dirname,'../src/main.cjs'),realRequire=createRequire(main);
  const connections=[];
  class Reader extends TikTokReader{constructor(options){super({...options,connectionFactory:()=>{const socket=new EventEmitter();socket.connect=async()=>{connected++;return{roomId:'123456789123456789'}};socket.disconnect=async()=>{};connections.push(socket);return socket;}});}}
- const server={playback:{status:()=>({}),wake(){},disconnect(){}},url:id=>'http://127.0.0.1/overlay/'+id,templateUrl:id=>'http://127.0.0.1/template/'+id,ruleUrl:id=>'http://127.0.0.1/rule/'+id,asset:id=>'http://127.0.0.1/asset/'+id,refresh(){},close(){}};
+ const server={playback:{status:()=>({}),wake(){},disconnect(){}},url:id=>'http://127.0.0.1/overlay/'+id,templateUrl:id=>'http://127.0.0.1/template/'+id,ruleUrl:id=>'http://127.0.0.1/rule/'+id,asset:id=>'http://127.0.0.1/asset/'+id,refresh(){},broadcast(){},emit(){},close(){}};
  const fakeRequire=name=>{
   if(name==='electron')return {app,BrowserWindow:Window,ipcMain:{handle:(key,fn)=>handlers.set(key,fn)},dialog:{showErrorBox:(_,message)=>fatal.push(message)},safeStorage:{isEncryptionAvailable:()=>true},shell:{},clipboard:{writeText(){}},Menu:{setApplicationMenu(){}}};
   if(name==='./core.cjs')return {...realRequire(name),Store:{open:async()=>store}};
@@ -33,6 +33,7 @@ test('ajustes TTS heredados no bloquean snapshot, configuración OBS ni conexió
  await assert.rejects(call('tts-settings',{prefixEnabled:true,prefix:''}),/prefijo/);
  const connection=await call('tiktok-connect',{username:'@witimc'});assert.equal(connection.connected,true);assert.equal(connected,1);assert.equal((await call('tiktok-state')).connected,true);
  assert.equal((await call('snapshot')).tiktok.connected,true);
+ store.credit('123','Witi',100,'command-seed');connections[0].emit('chat',{common:{msgId:'chat-content-command'},content:'/puntos',user:{id:'123',nickname:'Witi'}});for(let n=0;n<50&&!store.snapshot().logs.some(l=>l.event==='command-response');n++)await new Promise(setImmediate);assert.ok(store.snapshot().logs.some(l=>l.event==='command-response'&&l.results[0].message.includes('100 puntos')));
  await call('tiktok-disconnect');assert.equal((await call('tiktok-state')).connected,false);
  await call('tts-settings',{prefixEnabled:false,prefix:'',enabled:true});assert.equal((await call('snapshot')).ttsSettings.prefixEnabled,false);
 });

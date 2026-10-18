@@ -1,3 +1,13 @@
+# WITI BOT 4.0.2
+
+- Corrige el texto de chat del esquema actual de TikTok: se lee content, con compatibilidad para comment. Los comentarios recuperan su texto en el panel, overlays, TTS y comandos.
+- Elimina la consulta automática del catálogo remoto al conectar. Esa operación adicional pedía firma de un plan Business y dejaba un error AUTH aunque el socket LIVE siguiera recibiendo eventos. Se utiliza el catálogo local y los metadatos incluidos en regalos recibidos.
+- Separa las advertencias de catálogo de los errores de conexión y mantiene la detección de rechazos reales de autenticación del chat.
+- Corrige los campos count de likes y total de espectadores del esquema actual.
+- Regresiones con mensajes protobuf codificados/decodificados por la dependencia instalada y handlers IPC del programa.
+
+---
+
 # WITI BOT 4.0.1
 
 - Repara la carga de preferencias antiguas con prefijo TTS vacío: el panel general y el editor de overlays pueden abrir sin errores de TTS. La validación estricta se aplica únicamente al guardar la configuración de voz.
