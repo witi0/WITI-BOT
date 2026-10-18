@@ -11,6 +11,7 @@ window.WitiChroma=Object.freeze({
   const brightness=Number.isFinite(Number(o.rgbBrightness))?Math.min(180,Math.max(50,Number(o.rgbBrightness))):100;
   style.setProperty('--chroma-colors',`linear-gradient(${angle}deg,${preset.join(',')})`);
   style.setProperty('--chroma-duration',speed+'s');style.setProperty('--chroma-saturation',saturation+'%');style.setProperty('--chroma-brightness',brightness+'%');
+  style.setProperty('--chroma-direction',['normal','reverse','alternate'].includes(o.rgbDirection)?o.rgbDirection:'normal');
   root.dataset.chroma=o.rgb===false?'off':'on';root.dataset.alpha=o.transparent?'clean':'solid';
  }
 });

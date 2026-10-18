@@ -25,16 +25,23 @@ jobs:
         env:
           CSC_LINK: ${{ secrets.CSC_LINK }}
           CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
-      - name: Check tag and sign update manifest
-        if: startsWith(github.ref, 'refs/tags/v')
+      - name: Prepare release and optional signed update manifest
+        if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main' && startsWith(github.event.head_commit.message, 'release:'))
         shell: pwsh
         env:
           WITI_UPDATE_PRIVATE_KEY: ${{ secrets.WITI_UPDATE_PRIVATE_KEY }}
         run: |
           $version = node -p "require('./package.json').version"
-          if ($env:GITHUB_REF_NAME -ne "v$version") { throw "Tag and package.json versions differ" }
-          node scripts/sign-release.cjs
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          if ($env:GITHUB_REF_TYPE -eq 'tag' -and $env:GITHUB_REF_NAME -ne "v$version") { throw "Tag and package.json versions differ" }
+          if ($env:WITI_UPDATE_PRIVATE_KEY) {
+            node scripts/sign-release.cjs
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          } else {
+            Write-Host 'No update signing key: publishing the manual installer; automatic updates remain signature-verified.'
+          }
+          $setup = Get-Item "dist/WITI_BOT_Setup_v$version.exe"
+          $hash = (Get-FileHash $setup.FullName -Algorithm SHA256).Hash.ToLower()
+          "$hash  $($setup.Name)" | Set-Content -Encoding utf8 'dist/SHA256SUMS.txt'
       - uses: actions/upload-artifact@v4
         with:
           name: WITI-BOT-Windows-x64
@@ -42,13 +49,17 @@ jobs:
             dist/*.exe
             dist/*.blockmap
             dist/witi-update.json
+            dist/SHA256SUMS.txt
           if-no-files-found: error
-      - name: Publish signed release
-        if: startsWith(github.ref, 'refs/tags/v')
+      - name: Publish verified Windows release
+        if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main' && startsWith(github.event.head_commit.message, 'release:'))
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           $setup = Get-ChildItem 'dist/WITI_BOT_Setup_v*.exe' | Select-Object -First 1
-          gh release create "$env:GITHUB_REF_NAME" $setup.FullName 'dist/witi-update.json' --title "WITI BOT $env:GITHUB_REF_NAME" --notes-file CHANGELOG.md --verify-tag
+          $version = node -p "require('./package.json').version"
+          $assets = @($setup.FullName, 'dist/SHA256SUMS.txt')
+          if (Test-Path 'dist/witi-update.json') { $assets += 'dist/witi-update.json' }
+          gh release create "v$version" @assets --target "$env:GITHUB_SHA" --title "WITI BOT v$version" --notes-file CHANGELOG.md
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

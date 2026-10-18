@@ -1,3 +1,24 @@
+# WITI BOT 4.0.0
+
+- Corrección del bloqueo de compilación: npm start/test/dist ya no ejecuta la migración destructiva a 3.4.
+- TikTok: evento de suscripción SUB_NOTIFY compatible con SDK 2.5, lectura de userIdentity, niveles y avatar; catálogo de regalos actualizado después de abrir el socket, sin bloquear la conexión.
+- Conexión directa con reconexión y diagnóstico visible; entrada alternativa desde la Event API de TikFinity para Windows (puerto local 21213). Abrir el puente local no se presenta como un LIVE confirmado.
+- Comandos configurables /play, /puntos, /skip, /voz y respuestas, alias, permisos, recarga y costo. Registro persistente, cobro único y devolución si la acción falla. /play añade la canción a la cola de Spotify, que requiere sesión y dispositivo activo; sujeto a los permisos de la cuenta Spotify.
+- TTS con prefijo opcional; audiencia, club de fans, nivel de donador, top donadores de la sesión, bloqueos, longitud y espera por usuario.
+- TTS y alertas comparten exclusión de audio. Prioridad crítica configurable, pausa, reintento y separación entre audios. Espectro medido de la fuente OBS; Windows TTS local no informa niveles.
+- RGB tipográfico con espectro, colores personalizados, dirección, velocidad de 0.1 a 10 s, ángulo, saturación y brillo; incluye nombre, badges y mensaje. Transparencia sin fondo, bordes ni sombras en modo transparente.
+- Workspace oscuro cyan/verde/rojo, fuentes locales Inter, Space Grotesk y JetBrains Mono, respuesta de controles y reducción de movimiento.
+
+## Instalación y conexión
+
+Descarga WITI_BOT_Setup_v4.0.0.exe en Assets. Cierra WITI BOT antes de actualizar. El instalador conserva la configuración y los puntos existentes.
+
+En Chat & Acciones en LIVE, selecciona conexión directa y escribe tu @usuario. Si TikTok o el proveedor rechaza la firma/conexión, consulta el código y detalle en la consola. La autorización OAuth de identidad no concede por sí sola acceso al chat LIVE. Como alternativa, abre TikFinity para Windows, conecta allí tu LIVE, habilita Event API y selecciona Usar TikFinity local.
+
+La validación automatizada no sustituye una emisión real de tu cuenta ni prueba el instalador mediante una sesión interactiva de Windows. Si no existe clave privada de actualización en GitHub Actions, se publica el instalador manual y su SHA-256; el verificador de actualizaciones automáticas conserva su requisito de firma.
+
+---
+
 # WITI BOT 3.5.0
 
 - Nuevo panel Chat & Acciones en LIVE, conectado al flujo nativo de eventos de Electron, con consola dividida, filtros, estadísticas y pruebas TBT aisladas.

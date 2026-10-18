@@ -64,9 +64,17 @@ async function drainVoices(){if(voiceRunning)return;voiceRunning=true;const gene
 function speak(text){if(typeof text!=='string'||!text.trim())return;voiceQueue.push(text.slice(0,230));if(voiceQueue.length>20)voiceQueue.shift();drainVoices().catch(e=>toast(e.message,true));}
 function stopVoice(){voiceEpoch++;voiceQueue=[];onlinePlayer?.pause();onlinePlayer=null;speechSynthesis.cancel();voiceRunning=false;voiceStatus('Lectura detenida.');}
 $('#voiceEngine').onchange=loadVoices;$('#rate').oninput=()=>$('#rateValue').textContent=Number($('#rate').value).toFixed(1)+'×';$('#pitch').oninput=()=>$('#pitchValue').textContent=Number($('#pitch').value).toFixed(1)+'×';
-$('#ttsPlay').onclick=()=>speak($('#ttsText').value);$('#ttsStop').onclick=stopVoice;$('#ttsPause').onclick=()=>{if(onlinePlayer){if(onlinePlayer.paused)onlinePlayer.play().catch(()=>{});else onlinePlayer.pause();}else speechSynthesis.paused?speechSynthesis.resume():speechSynthesis.pause();};
+$('#ttsPlay').onclick=safe(()=>call('tts-test',$('#ttsText').value));$('#ttsStop').onclick=stopVoice;$('#ttsPause').onclick=()=>{if(onlinePlayer){if(onlinePlayer.paused)onlinePlayer.play().catch(()=>{});else onlinePlayer.pause();}else speechSynthesis.paused?speechSynthesis.resume():speechSynthesis.pause();};
 speechSynthesis.onvoiceschanged=loadVoices;loadVoices();call('voice-list').then(v=>{oldVoices=v;loadVoices();}).catch(()=>{});
 window.witi.on('speak',d=>speak(d.text));window.witi.on('stop',()=>{stopVoice();libraryPlayer?.pause();});
 window.witi.on('update',renderUpdate);window.witi.on('obs-disconnected',()=>{toast('OBS desconectado',true);$('#sceneList').replaceChildren();safe(refresh)();});
 setInterval(()=>{if(!state)return;const t=state.timer;const s=Math.ceil(Math.max(0,t.remaining-(t.running?(Date.now()-t.anchor)/1000:0)));$('#timerValue').textContent=[Math.floor(s/3600),Math.floor(s/60)%60,s%60].map(x=>String(x).padStart(2,'0')).join(':');},250);
 safe(async()=>{await refresh();clearRule();})();// Navigation toggles sections without rebuilding forms or resetting the scroll.
+
+let currentTtsDelivery=null;
+window.witi.on('tts-job',async d=>{
+ if(d.type==='interrupt-action'){if(d.delivery===currentTtsDelivery){stopVoice();currentTtsDelivery=null;}return;}
+ if(d.type!=='queued-action')return;
+ currentTtsDelivery=d.delivery;let status='ended';const timer=setTimeout(()=>{if(currentTtsDelivery===d.delivery){stopVoice();currentTtsDelivery=null;call('tts-ack',{delivery:d.delivery,status:'error'}).catch(()=>{});}},90000);
+ try{if($('#voiceEngine').value==='online'){try{await speakOnline(d.payload.text);}catch(err){if(!voices.length)throw err;await speakLocal(d.payload.text);}}else await speakLocal(d.payload.text);}catch(err){status='error';voiceStatus(err.message);}finally{clearTimeout(timer);if(currentTtsDelivery===d.delivery){currentTtsDelivery=null;await call('tts-ack',{delivery:d.delivery,status}).catch(()=>{});}}
+});

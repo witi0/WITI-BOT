@@ -1,7 +1,13 @@
-# WITI BOT 3.5.0
+# WITI BOT 4
 
-Aplicación Windows 10/11 x64 para gestión de TikTok LIVE, eventos, overlays, Spotify, TTS y OBS Studio. Incluye Chat & Acciones en LIVE, simulador aislado y ajustes independientes de transparencia y Chroma RGB.
+Workspace local para TikTok LIVE, OBS, Spotify, comandos con puntos y TTS configurable.
 
-Para compilar: Node.js 22+, `npm ci`, `npm test`, `npm run dist:win`. La integración con TikTok depende de la conectividad, autenticación y límites del proveedor. Los datos de sandbox nunca son evidencia de una conexión real.
+## Desarrollo
 
-Las actualizaciones publicadas requieren un commit de versión 3.5.0, la etiqueta `v3.5.0` en ese commit y que GitHub Actions complete las pruebas, cree el instalador y firme el manifiesto de actualización. No se publica una release a partir de archivos ZIP de código directamente en la página Releases.
+Requiere Node.js 22 o posterior. Ejecuta `npm ci`, `npm test`, `npm start`. Para Windows: `npm run dist:win`. El build verifica la integridad del instalador y de todos los recursos empaquetados.
+
+## Publicación
+
+El workflow compila y prueba en Windows. Un commit de main cuyo mensaje comience con `release:` publica la versión de package.json como Release, con instalador y SHA-256. Una etiqueta `v*` también publica. La clave opcional `WITI_UPDATE_PRIVATE_KEY` firma el manifiesto de actualización; sin ella el instalador se distribuye manualmente y no se habilitan actualizaciones sin firma.
+
+Consulta CHANGELOG.md para conexión, comandos, permisos TTS y limitaciones verificadas.

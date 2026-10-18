@@ -42,7 +42,7 @@
   };
   $('#restoreAppearance').addEventListener('click',()=>fill(defaults));
 
-  const actions=[
+  const actions=[{page:'livehub',icon:'◉',title:'Chat y acciones LIVE',hint:'Eventos y diagnóstico'},{page:'commands',icon:'⌘',title:'Comandos y puntos',hint:'/play, permisos y costo'},
     {page:'home',icon:'🏠',title:'Inicio',hint:'Panel y estado del estudio'},
     {page:'overlays',icon:'🎬',title:'Overlays',hint:'Galería, edición y enlaces de OBS'},
     {page:'gifts',icon:'🎁',title:'Regalos',hint:'Buscar regalos y crear alertas'},

@@ -12,14 +12,14 @@ class PlaybackQueue{
  key(overlay,preview){return overlay+':'+Number(preview);}
  enqueue({id=crypto.randomUUID(),overlay,preview=false,payload,repeats=1,priority,cooldownMs=0}){
   if(!Number.isSafeInteger(repeats)||repeats<1||repeats>100000)throw Error('Cantidad de reproducciones inválida');
-  if(!this.store.list('overlays').some(o=>o.id===overlay)&&!this.store.list('rules').some(r=>r.id===overlay&&r.trigger==='gift'))throw Error('Pantalla no encontrada');
+  if(overlay!=='__tts__'&&!this.store.list('overlays').some(o=>o.id===overlay)&&!this.store.list('rules').some(r=>r.id===overlay&&r.trigger==='gift'))throw Error('Pantalla no encontrada');
   const level=[1,2,3].includes(Number(priority))?Number(priority):priorityFor(payload?.event||{});
-  const media=String(payload?.media||payload?.sound||'');const audio=/\.(mp3|wav|ogg|mp4|webm)$/i.test(media)?1:0;
+  const media=String(payload?.media||payload?.sound||'');const audio=overlay==='__tts__'||/\.(mp3|wav|ogg|mp4|webm)$/i.test(media)?1:0;
   const cd=Math.max(0,Math.min(60000,Number(cooldownMs)||0));const key=overlay+':'+media+':'+(payload?.name||'');
   if(cd>0&&Date.now()-(this.cooldowns.get(key)||0)<cd)return null;
   if(cd>0)this.cooldowns.set(key,Date.now());
   this.store.db.run('INSERT OR IGNORE INTO playback_jobs(id,overlay,preview,body,total,audio,priority) VALUES(?,?,?,?,?,?,?)',[id,overlay,Number(preview),JSON.stringify(payload),repeats,audio,level]);this.store.flush();
-  if(level===1&&!preview&&this.player(overlay,false))this.preemptLowerPriority();
+  if(level===1&&!preview&&this.store.get('audioSettings')?.interruptCritical!==false&&this.player(overlay,false))this.preemptLowerPriority();
   this.wake();this.changed();return id;
  }
  preemptLowerPriority(){
@@ -36,6 +36,7 @@ class PlaybackQueue{
   for(const job of jobs){
    const key=this.key(job.overlay,!!job.preview);if(this.active.has(key))continue;
    if(job.audio&&this.busyAudio)continue;
+   if(job.audio&&job.priority!==1&&Date.now()<(this.nextAudioAt||0))continue;
    const output=this.player(job.overlay,!!job.preview);if(!output)continue;
    const delivery=crypto.randomUUID();const active={delivery,job:job.id,player:output.id,output,audio:!!job.audio,priority:job.priority||3,preview:!!job.preview};
    this.active.set(key,active);if(job.audio)this.busyAudio=delivery;
@@ -54,7 +55,7 @@ class PlaybackQueue{
    else this.store.db.run("UPDATE playback_jobs SET state='failed' WHERE id=?",[a.job]);
    this.store.db.run('COMMIT');
   }catch(e){this.store.db.run('ROLLBACK');throw e;}
-  this.store.flush();this.active.delete(key);if(this.busyAudio===delivery)this.busyAudio=null;this.wake();this.changed();return true;
+  this.store.flush();this.active.delete(key);if(this.busyAudio===delivery){this.busyAudio=null;const gap=Math.max(0,Math.min(10000,Number(this.store.get('audioSettings')?.gapMs)||0));this.nextAudioAt=Date.now()+gap;if(gap){clearTimeout(this.gapTimer);this.gapTimer=setTimeout(()=>this.wake(),gap);this.gapTimer.unref?.();}}this.wake();this.changed();return true;
  }
  disconnect(playerId){for(const [key,a]of this.active)if(a.player===playerId){this.active.delete(key);if(this.busyAudio===a.delivery)this.busyAudio=null;}this.wake();this.changed();}
  setPaused(value){this.paused=!!value;this.store.set('playbackPaused',this.paused);this.wake();this.changed();return this.status();}
