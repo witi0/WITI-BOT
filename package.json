@@ -1,11 +1,14 @@
 {
   "name": "witi-bot",
-  "version": "3.3.0",
+  "version": "3.4.0",
   "description": "Panel de control de TikTok LIVE con eventos, overlays y automatizaciones",
   "main": "src/main.cjs",
   "scripts": {
+    "prestart": "node scripts/apply-3.4.cjs",
     "start": "electron .",
+    "pretest": "node scripts/apply-3.4.cjs",
     "test": "node --test test/*.test.cjs",
+    "predist:win": "node scripts/apply-3.4.cjs",
     "dist:win": "node scripts/build-windows.cjs",
     "release:win": "npm run dist:win && node scripts/sign-release.cjs"
   },
@@ -24,7 +27,5 @@
     "electron-builder": "26.15.3",
     "jsdom": "30.1.3"
   },
-  "engines": {
-    "node": ">=22.0.0"
-  }
+  "engines": {"node": ">=22.0.0"}
 }

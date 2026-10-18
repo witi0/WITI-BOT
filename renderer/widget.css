@@ -34,3 +34,18 @@ body{font-family:system-ui,'Segoe UI',sans-serif;font-weight:500}.card{isolation
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.ticker span{white-space:normal}.buddy{transform:none!important}}
 @media(prefers-reduced-transparency:reduce){.card:not(.transparent){backdrop-filter:none!important;background:rgb(20 16 30)!important}}
 @media(prefers-reduced-motion:reduce){.card.rgb,.webcam-frame.rgb,.rgb-text .title,.rgb-text .heading,.chat-row,.ticker span,.buddy,.wheel-circle.spinning{animation:none!important;transition:none!important}}
+
+:root{--witi-apple-widget-34:1;--ui-flat:#1c1c1e;--ui-flat-secondary:#2c2c2e;--ui-flat-text:#f2f2f7}
+:root[data-style="glass"] .card,:root[data-style="broadcast"] .card,:root[data-style="clean"] .card,:root[data-style="neon"] .card{background:rgb(28 28 30 / var(--opacity))!important;background-image:none!important;border:2px solid var(--accent);box-shadow:none!important;backdrop-filter:none!important}
+:root[data-style="clean"] .card{border-width:1px;border-color:#48484a}
+:root[data-style="broadcast"] .card{border:0;border-left:5px solid var(--accent)}
+:root[data-style="neon"] .card{box-shadow:0 0 18px color-mix(in srgb,var(--accent),transparent 54%)!important}
+.card,.ticker,.chat-row,.webcam-label,.buddy span,.wheel-circle strong{background-image:none!important}
+.music .progress>i,.progress>i,.jar,.rank-row:first-of-type{background:var(--accent)!important;background-image:none!important}
+.rank-row:first-of-type{background:rgb(44 44 46 / .7)!important}
+.jar{background:rgb(44 44 46 / .2)!important}
+.music .progress{background:rgb(142 142 147 / .22)}
+:root[data-style] .card .cover,:root[data-style] .card .avatar{object-fit:cover}
+.rgb-text .title,.rgb-text .heading{background:none!important;background-image:none!important;color:var(--accent)!important;-webkit-text-fill-color:currentColor!important;animation:witiFlatRgbText var(--rgb-speed,8s) linear infinite!important}
+@keyframes witiFlatRgbText{0%,100%{color:#0a84ff}20%{color:#bf5af2}40%{color:#ff375f}60%{color:#ffd60a}80%{color:#30d158}}
+@media(prefers-reduced-motion:reduce){.rgb-text .title,.rgb-text .heading{animation:none!important;color:var(--accent)!important}}
