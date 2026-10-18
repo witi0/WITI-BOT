@@ -1,3 +1,12 @@
+# WITI BOT 4.0.1
+
+- Repara la carga de preferencias antiguas con prefijo TTS vacío: el panel general y el editor de overlays pueden abrir sin errores de TTS. La validación estricta se aplica únicamente al guardar la configuración de voz.
+- El botón Conectar del panel LIVE inicia la conexión directamente con el usuario indicado, muestra progreso e impide intentos simultáneos. Opciones avanzadas abre la configuración de sala y proveedor.
+- El estado de TikTok se actualiza por su propio canal, sin depender de leer todas las preferencias de la aplicación. Los errores de conexión permanecen visibles y se puede reintentar o desconectar.
+- Pruebas de regresión con preferencias heredadas, handlers IPC reales, conexión del adaptador y editor de overlays. Se conservan puntos, fuentes y reglas al actualizar.
+
+---
+
 # WITI BOT 4.0.0
 
 - Corrección del bloqueo de compilación: npm start/test/dist ya no ejecuta la migración destructiva a 3.4.

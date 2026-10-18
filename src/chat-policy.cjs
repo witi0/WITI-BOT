@@ -1,9 +1,14 @@
 'use strict';
 const number=(v,min,max,fallback)=>Number.isFinite(Number(v))?Math.min(max,Math.max(min,Number(v))):fallback;
-function normalizeTts(s={}){
- const prefix=String(s.prefix??'.').slice(0,10),prefixEnabled=s.prefixEnabled!==false;
- if(prefixEnabled&&!prefix.trim())throw Error('Escribe un prefijo o desactiva el requisito de prefijo');
- return {enabled:!!s.enabled,prefixEnabled,prefix,readName:s.readName!==false,engine:s.engine==='online'?'online':'local',voice:String(s.voice||'').slice(0,150),rate:number(s.rate,.5,2,1),pitch:number(s.pitch,0,2,1),random:!!s.random,audience:['all','moderator','subscriber','topgifter','selected'].includes(s.audience)?s.audience:'all',allowedRoles:(s.allowedRoles||[]).filter(r=>['moderator','subscriber','topgifter'].includes(r)),minMemberLevel:Math.floor(number(s.minMemberLevel,0,100,0)),minGifterLevel:Math.floor(number(s.minGifterLevel,0,100,0)),topDonors:Math.floor(number(s.topDonors,0,20,0)),cooldown:Math.floor(number(s.cooldown,0,300,3)),maxLength:Math.floor(number(s.maxLength,20,500,300)),skipCommands:s.skipCommands!==false,blockedUsers:String(s.blockedUsers||'').slice(0,2000),blockedWords:String(s.blockedWords||'').slice(0,2000)};
+function normalizeTts(s={}, {strict=false}={}){
+ if(!s||typeof s!=='object'||Array.isArray(s))s={};
+ let prefix=String(s.prefix??'.').slice(0,10);const prefixEnabled=s.prefixEnabled!==false;
+ if(prefixEnabled&&!prefix.trim()){
+  if(strict)throw Error('Escribe un prefijo o desactiva el requisito de prefijo');
+  // Loading legacy preferences must never block snapshots, overlays or connections.
+  prefix='.';
+ }
+ return {enabled:!!s.enabled,prefixEnabled,prefix,readName:s.readName!==false,engine:s.engine==='online'?'online':'local',voice:String(s.voice||'').slice(0,150),rate:number(s.rate,.5,2,1),pitch:number(s.pitch,0,2,1),random:!!s.random,audience:['all','moderator','subscriber','topgifter','selected'].includes(s.audience)?s.audience:'all',allowedRoles:(Array.isArray(s.allowedRoles)?s.allowedRoles:[]).filter(r=>['moderator','subscriber','topgifter'].includes(r)),minMemberLevel:Math.floor(number(s.minMemberLevel,0,100,0)),minGifterLevel:Math.floor(number(s.minGifterLevel,0,100,0)),topDonors:Math.floor(number(s.topDonors,0,20,0)),cooldown:Math.floor(number(s.cooldown,0,300,3)),maxLength:Math.floor(number(s.maxLength,20,500,300)),skipCommands:s.skipCommands!==false,blockedUsers:String(s.blockedUsers||'').slice(0,2000),blockedWords:String(s.blockedWords||'').slice(0,2000)};
 }
 function eligible(e,s={},context={}){
  const roles=e.roles||[],audience=s.audience||'all';
