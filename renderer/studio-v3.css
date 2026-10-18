@@ -47,3 +47,6 @@ body.theme-rgb .appearance-preview{background:linear-gradient(110deg,#3d2d76,#1c
 #overlays > :not(#legacy12StudioFrame){display:none!important}
 #overlays #legacy12StudioFrame{display:block;width:100%;height:calc(100vh - 100px);min-height:730px;border:0;background:#0e0a19;border-radius:15px;overflow:auto;box-shadow:0 0 0 1px #46345c}
 #overlays{padding:0!important;overflow:hidden}
+.ui-icon{width:18px;height:18px;flex:0 0 18px;object-fit:contain;filter:brightness(0) invert(1);vertical-align:middle;pointer-events:none}nav [data-page]{display:flex;align-items:center;gap:11px;text-align:left;padding:10px 13px;font-weight:650}nav [data-page] span{min-width:0}.form-footer{flex-wrap:wrap;gap:8px}.tiktok-diagnostics{border:1px solid #594078;border-radius:12px;padding:12px;background:#1e1530}.tiktok-diagnostics strong{line-height:1.45}.tiktok-diagnostics details p{font-family:'Consolas',monospace;font-size:11px}.tiktok-diagnostics small{line-height:1.5}
+#liveConnectionBadge{max-width:245px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px;min-height:34px;cursor:pointer}#liveConnectionBadge[data-state=connected]{color:#9ff7c3;border-color:#489a6a;background:#123b2b}#liveConnectionBadge[data-state=detected]{color:#ffe4a0;border-color:#9a8038;background:#352a15}
+html{scroll-padding-top:90px}.page{scroll-margin-top:90px}

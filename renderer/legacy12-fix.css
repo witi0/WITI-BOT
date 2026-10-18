@@ -10,3 +10,8 @@ html,body{overflow:auto!important;min-height:100%;background:#0e0a19;color:#f7f0
 .overlay-preview iframe{pointer-events:none}
 .overlay-pro-card .overlay-actions button{white-space:nowrap}
 @media(max-width:840px){body{padding:8px!important}.overlay-editor-panel{width:min(100vw,680px)!important}.overlay-metrics{grid-template-columns:repeat(3,1fr)}}
+/* A filter on an ancestor makes fixed dialogs follow the full document height. */
+.view[data-view="overlays"]{animation:none!important;filter:none!important;transform:none!important;opacity:1!important}
+#overlay-editor{animation:none!important;filter:none!important;transform:none!important}
+
+#overlay-editor-preview{position:relative}

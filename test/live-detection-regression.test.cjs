@@ -21,16 +21,16 @@ test('live detected but chat handshake failed does not claim connected',async()=
 });
 test('offline is not confused with blocked transport',async()=>{
  const conn=new EventEmitter();conn.connect=async()=>{throw Error('UserOfflineError')};conn.fetchIsLive=async()=>false;conn.disconnect=async()=>{};
- const {r}=reader({connectionFactory:()=>conn});await assert.rejects(r.connect('witimc'),/no confirma un LIVE activo/);
+ const {r}=reader({connectionFactory:()=>conn});await assert.rejects(r.connect('witimc'),/No hay un LIVE confirmado/);
  assert.equal(r.state.liveDetected,false);assert.equal(r.state.connected,false);r.disconnect();
 });
 test('cancelled connection never reactivates the state',async()=>{
  let resolve;const conn=new EventEmitter();conn.connect=()=>new Promise(r=>{resolve=r});conn.disconnect=async()=>{};
- const {r}=reader({connectionFactory:()=>conn});const pending=r.connect('witimc');r.disconnect();resolve({roomId:'dead'});await pending;
+ const {r}=reader({connectionFactory:()=>conn});const pending=r.connect('witimc');await new Promise(r=>setImmediate(r));r.disconnect();resolve({roomId:'dead'});await pending;
  assert.equal(r.state.connected,false);assert.equal(r.state.status,'Desconectado');
 });
 test('fallback skips room-info preflight and connects when the first method fails',async()=>{
  let attempt=0;const options=[];
  const {r}=reader({connectionFactory:(name,opts)=>{attempt++;options.push(opts);const c=new EventEmitter();c.connect=async()=>{if(attempt===1)throw Error('getRoomInfo unavailable');return {roomId:'live-room'}};c.disconnect=async()=>{};return c;}});
- await r.connect('witimc');assert.equal(attempt,2);assert.equal(options[0].fetchRoomInfoOnConnect,true);assert.equal(options[1].fetchRoomInfoOnConnect,false);assert.equal(r.state.connected,true);r.disconnect();
+ await r.connect('witimc');assert.equal(attempt,2);assert.equal(options[0].fetchRoomInfoOnConnect,false);assert.equal(options[1].fetchRoomInfoOnConnect,false);assert.equal(r.state.connected,true);r.disconnect();
 });

@@ -1,3 +1,13 @@
+# WITI BOT 3.2.0
+
+- Conexion LIVE sin consultas opcionales bloqueantes; tiempo limite, cancelacion y cambio de usuario seguros.
+- Estados de LIVE y chat diferenciados, diagnostico sin credenciales y esperas de reconexion que respetan limites del proveedor.
+- Indicador superior del estado real y opciones avanzadas mas claras.
+- Estudio de overlays v12.2 y tema morado RGB conservados.
+- Iconos originales descargados de Lucide, con licencia incluida.
+- Asistente Windows mejorado; copia de base de datos en actualizacion y desinstalacion con datos conservados por defecto.
+- 82 pruebas automatizadas aprobadas. Conexion LIVE real y pruebas en Windows limpio pendientes.
+
 # WITI BOT 3.1.0 · LIVE Fix + Overlay Studio 12.2
 
 - Lector TikTok: acepta @usuario o URL de perfil/live, clasifica errores por motivo, prueba conexión alternativa y reintenta sin interacción.

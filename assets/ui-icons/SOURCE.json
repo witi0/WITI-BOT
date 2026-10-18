@@ -1,0 +1,109 @@
+{
+  "package": "lucide-static",
+  "version": "0.468.0",
+  "repository": "https://github.com/lucide-icons/lucide",
+  "source": "https://registry.npmjs.org/lucide-static/-/lucide-static-0.468.0.tgz",
+  "license": "ISC / MIT (see LICENSE)",
+  "files": [
+    {
+      "file": "house.svg",
+      "sha256": "2c13f570d9b9727c9b6c23400c95acfa9737e91884ed926332edb18fd47a2a76"
+    },
+    {
+      "file": "zap.svg",
+      "sha256": "7253fd68ffc01a3dedeec0c788711cd41aac308cdcfa675569306a13744518a2"
+    },
+    {
+      "file": "panels-top-left.svg",
+      "sha256": "ab429e5bbb29ab86bdb3085c2d02594418258bbadc113ee515d6310b8e51d40d"
+    },
+    {
+      "file": "music.svg",
+      "sha256": "5a1d5ba0146ec534bf6187a4ced0b77195ae58b98ced558a7ceb537adb62187c"
+    },
+    {
+      "file": "volume-2.svg",
+      "sha256": "915b847fcee9bba25e4b5fbe8f78305ad3d22c903a51c239c57ca1c248c904e5"
+    },
+    {
+      "file": "gift.svg",
+      "sha256": "fdf9245646ea6b715c0a738d2e79bf9578495d07604015a3b5f826ac85aa882c"
+    },
+    {
+      "file": "users.svg",
+      "sha256": "b3ed379df6aea1aa451ff4bbf8b2884c210849ed30fc220484eced85f5d53c2c"
+    },
+    {
+      "file": "timer.svg",
+      "sha256": "05ef0be35f3b298f6845bb6f96f2405422ed88ea41d72b55ebb9f5e6875d4a00"
+    },
+    {
+      "file": "plug.svg",
+      "sha256": "2cb346fd91bbdda3fc21d73625c242c2e96a5f26783fa0c9737cdd57543cc0c5"
+    },
+    {
+      "file": "mic.svg",
+      "sha256": "6b7893c14bc1d1a9f839571ee2119dd8c5b96d7301c87cb6735e43278788f934"
+    },
+    {
+      "file": "activity.svg",
+      "sha256": "df8e413c714521cc3d424bd7af3c1644d63409f7e0a7dec75ff0fa48aa6daedb"
+    },
+    {
+      "file": "settings.svg",
+      "sha256": "ceea1a72d04b112291222ba9ad0779a12d47d816079fe4174900c724f360b55c"
+    },
+    {
+      "file": "keyboard.svg",
+      "sha256": "872f39075c340dd8caa0af57dbea42969ed5c98aded70781922852e9db1264fc"
+    },
+    {
+      "file": "square.svg",
+      "sha256": "c6c07f247abd06d3164a6749e21812da9092908fe0033f8163149b4ee2e31347"
+    },
+    {
+      "file": "search.svg",
+      "sha256": "e11a04d51c122a8a759211424920efc65fa36b7ab06237c34ef90317d920ddf9"
+    },
+    {
+      "file": "copy.svg",
+      "sha256": "6828c476979a7e4d5ae3ac726f8fadbcab066ec53299b7f8422cda321a60a841"
+    },
+    {
+      "file": "refresh-cw.svg",
+      "sha256": "d63b359b0fe05e03cff8aaa7acf82f9569733e83f7fb4742d583a086972c4bb0"
+    },
+    {
+      "file": "circle-check.svg",
+      "sha256": "d48c0901de2262e9f7c0566b5ad3893eafeab509715be6ac4e3b449f15d9260b"
+    },
+    {
+      "file": "circle-alert.svg",
+      "sha256": "2c65a5c03a73d3115ce493779f82af98d94f0d72facf1d97c61ea08566bb401c"
+    },
+    {
+      "file": "download.svg",
+      "sha256": "f68a21e11115edc0aef51ac6f8f4618e14d2b92055f1cb9f5d670efc696bea85"
+    },
+    {
+      "file": "log-in.svg",
+      "sha256": "cacfde26dd3e1f015fc684a37b5b1ef1d7436815d0ca40a899600bcd55980364"
+    },
+    {
+      "file": "unplug.svg",
+      "sha256": "9ac45b7987739d40a17934c1c0b9685d9f4c0e22cff6b10087723f2f0c24b5d4"
+    },
+    {
+      "file": "play.svg",
+      "sha256": "f0cab5b458fdf5e5d5d1a8aeb3d368ccab337cc578b1f8081807b8e39f68f1a1"
+    },
+    {
+      "file": "pause.svg",
+      "sha256": "7babb01e85dae42b66c9b1e399cd1c50380d3d9a586ff025685bcc45e726fea9"
+    },
+    {
+      "file": "sliders-horizontal.svg",
+      "sha256": "995507595c7c24deffef382bacc452a24b40a2efc4aa54908563a0f09b6a75aa"
+    }
+  ]
+}
