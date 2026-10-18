@@ -1,7 +1,7 @@
 'use strict';
 const {test}=require('node:test'),assert=require('node:assert/strict'),{EventEmitter}=require('node:events');const {TikTokReader,classifyError,cleanUsername,errorText}=require('../src/tiktok.cjs');
 const eventTypes={WebcastEvent:{GIFT:'gift',LIKE:'like'},ControlEvent:{ERROR:'error',DISCONNECTED:'disconnected'}};
-function setup(t,opts={}){const statuses=[],events=[],r=new TikTokReader({event:e=>events.push(e),status:s=>statuses.push(s),store:{set(){}},secretGet:()=>'',eventTypes,...opts});t.after(()=>r.disconnect());return {r,statuses,events};}
+function setup(t,opts={}){const statuses=[],events=[],r=new TikTokReader({event:e=>events.push(e),status:s=>statuses.push(s),store:{set(){}},secretGet:()=>'',roomResolver:async()=>null,eventTypes,...opts});t.after(()=>r.disconnect());return {r,statuses,events};}
 function conn(connect=async()=>({roomId:'123456789'})){const c=new EventEmitter();c.connect=connect;c.disconnect=async()=>{};return c;}
 test('conecta sin consultas opcionales ni reproducción del lote histórico',async t=>{let options;const {r}=setup(t,{connectionFactory:(u,o)=>{options=o;return conn();}});await r.connect('@witimc');assert.equal(options.fetchRoomInfoOnConnect,false);assert.equal(options.enableExtendedGiftInfo,false);assert.equal(options.processInitialData,false);assert.equal(r.state.connected,true);});
 test('respeta Retry-After de 120 segundos y no hace dos intentos inmediatos ante 429',async t=>{let n=0;const {r}=setup(t,{connectionFactory:()=>{n++;return conn(async()=>{throw Object.assign(Error('rate limit 429'),{retryAfter:120000});});}});const start=Date.now();await assert.rejects(r.connect('witimc'));assert.equal(n,1);assert.ok(r.state.nextRetryAt>=start+120000);});

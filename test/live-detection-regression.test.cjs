@@ -2,7 +2,7 @@ const {test}=require('node:test');const assert=require('node:assert/strict');con
 const {TikTokReader,cleanUsername,classifyError}=require('../src/tiktok.cjs');
 const eventTypes={WebcastEvent:{CHAT:'chat',GIFT:'gift',FOLLOW:'follow',SHARE:'share',LIKE:'like',SUBSCRIBE:'sub',ROOM_USER:'room_user'},ControlEvent:{ERROR:'error',DISCONNECTED:'disconnected'}};
 function reader(overrides={}){
- const store={set(){}};const changes=[];const r=new TikTokReader({event:()=>{},status:s=>changes.push(s),store,secretGet:()=>'',eventTypes,...overrides});return{r,changes};
+ const store={set(){}};const changes=[];const r=new TikTokReader({event:()=>{},status:s=>changes.push(s),store,secretGet:()=>'',roomResolver:async()=>null,eventTypes,...overrides});return{r,changes};
 }
 test('TikTok username and profile LIVE URL normalized',()=>{
  assert.equal(cleanUsername('@witimc'),'witimc');assert.equal(cleanUsername('https://www.tiktok.com/@witimc/live?lang=es'),'witimc');assert.equal(cleanUsername('https://www.tiktok.com/@witimc'),'witimc');

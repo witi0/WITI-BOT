@@ -1,13 +1,26 @@
-# WITI BOT 3.2.0
+# WITI BOT 3.3.0
 
-Aplicacion Electron para Windows 10/11 x64. El instalador incluye el runtime: el usuario final no necesita herramientas de desarrollo.
+Aplicación para Windows 10/11 x64: eventos TikTok LIVE, overlays locales, Spotify, voces y automatizaciones.
 
-Desde esta carpeta: `npm ci`, `npm test`, `npm run dist:win`.
-El build crea un instalador NSIS asistido y verifica integridad, recursos y correspondencia con las fuentes.
-Los scripts de la carpeta superior permiten preparar/publicar en el repositorio existente y esperar GitHub Actions.
+## Desarrollo
 
-La conexion LIVE evita consultas opcionales bloqueantes y separa deteccion de sala de conexion al chat. Si el proveedor exige una clave autorizada, se configura en Conexiones. OAuth TikTok por si solo no concede acceso al chat LIVE.
+Requiere Node.js 22 o posterior. Ejecutar `npm ci`, `npm test` y `npm start`.
+`npm run dist:win` genera y verifica el instalador asistido de Windows.
 
-Se conserva el estudio visual v12.2 de la fuente 3.1, integrado con el motor actual. Los 25 SVG originales de Lucide incluyen licencia y hashes en assets/ui-icons.
+## Conexión LIVE
 
-Consulta LEER_PRIMERO.txt, CAMBIOS_Y_LIMITACIONES.txt y PRUEBAS_3.2.0.md de la entrega para el alcance de validacion y firmas pendientes. No afirmar conexion real o pruebas en Windows limpio completadas.
+En Conexiones, introducir el @usuario exacto o la URL del directo. Si la resolución habitual falla, se consulta la página pública de TikTok y se vuelve a conectar con la sala encontrada. La detección del LIVE y la apertura del chat se muestran por separado. Los tiempos de espera, la cancelación y los límites del proveedor se respetan.
+
+Una clave Euler puede configurarse si el servicio la requiere. El inicio de identidad de TikTok no concede por sí solo acceso al chat LIVE.
+
+## Overlays
+
+Galería renovada, editor con vista previa, favoritos y URL persistente. Siete composiciones musicales, rankings, metas, alertas y fuentes individuales por regalo. Los datos de demostración quedan identificados y separados del directo.
+
+## Diseño
+
+Se aplicaron las skills `animate` y `apple-design` de Emil Kowalski, revisión `2d228630ba1446365f614a108cb8252f1feda202`: tipografía de sistema, jerarquía visual, materiales oscuros, respuesta al pulsar y movimiento reducido. Referencia: https://github.com/emilkowalski/skills
+
+## Validación
+
+Pruebas automatizadas del núcleo, conector, cola de 1000 regalos, widgets y permisos IPC. Revisión en Chromium de galería, edición, guardado, vista previa SSE y movimiento reducido. La ejecución del instalador en Windows y la conexión al LIVE desde la PC del creador requieren comprobación en ese equipo.
