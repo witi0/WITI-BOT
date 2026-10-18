@@ -1,0 +1,15 @@
+/* Transparent sources only: do not force a solid background or blurred edge. */
+html,body{margin:0;padding:0;overflow:hidden;background:transparent!important}#stage,#main,#actions,#fx{background:transparent}
+:root[data-alpha="clean"] .card,:root[data-alpha="clean"] .card.transparent,:root[data-alpha="clean"] .ticker,:root[data-alpha="clean"] .chat-row{background:transparent!important;box-shadow:none!important;backdrop-filter:none!important;text-shadow:none!important}
+:root[data-alpha="clean"] .webcam-frame,:root[data-alpha="clean"] .avatar,:root[data-alpha="clean"] .cover,:root[data-alpha="clean"] .card{filter:none}
+:root[data-alpha="clean"] .card,:root[data-alpha="clean"] .title,:root[data-alpha="clean"] .message,:root[data-alpha="clean"] .name{isolation:isolate}
+:root[data-chroma="on"] .card :is(.title,.heading,.name,.message,.sub,.score,.rank-name,.gift-spotlight,.spotlight-value),:root[data-chroma="on"] .chat-row :is(.name,.message),:root[data-chroma="on"] .webcam-label,:root[data-chroma="on"] .ticker span{
+ background:var(--chroma-colors)!important;background-size:330% 100%!important;-webkit-background-clip:text!important;background-clip:text!important;-webkit-text-fill-color:transparent!important;color:transparent!important;
+ animation:chroma-letterflow var(--chroma-duration,3s) cubic-bezier(.16,1,.3,1) infinite alternate!important;
+ filter:saturate(var(--chroma-saturation,100%)) brightness(var(--chroma-brightness,100%));
+}
+:root[data-chroma="off"] .card :is(.title,.heading,.name,.message,.sub){animation:none}
+/* GPU promotion only for short-lived animated elements, not the entire DOM. */
+#actions>*,.chat-row,.ticker span{transform:translateZ(0);backface-visibility:hidden;will-change:transform,opacity}
+@keyframes chroma-letterflow{from{background-position:0% 50%}to{background-position:100% 50%}}
+@media(prefers-reduced-motion:reduce){:root[data-chroma="on"] .card :is(.title,.heading,.name,.message,.sub),:root[data-chroma="on"] .chat-row :is(.name,.message){animation:none!important}}

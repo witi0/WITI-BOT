@@ -1,23 +1,15 @@
-# WITI BOT 3.4.0
+# WITI BOT 3.5.0
 
-- Nueva apariencia plana con colores sólidos inspirados en la paleta oscura de Apple.
-- Paneles, navegación, botones, inputs y galería de overlays con jerarquía y contraste consistentes.
-- El estudio de overlays v12 mantiene su motor y su editor, con nueva apariencia integrada.
-- Estilos de fuentes OBS actualizados; conserva marcos, avatares, progreso musical y configuraciones por widget.
-- RGB por elemento con transiciones entre colores sólidos, sin degradados decorativos de la interfaz.
-- Respeto de la preferencia de movimiento reducido y de los ajustes persistentes.
-- Actualización del número de versión y pruebas de integración del parche.
-- Se conserva el motor de TikTok LIVE 3.3.0 y su detección alternativa de sala; no se ha validado en una emisión real con este paquete.
+- Nuevo panel Chat & Acciones en LIVE, conectado al flujo nativo de eventos de Electron, con consola dividida, filtros, estadísticas y pruebas TBT aisladas.
+- Diagnóstico en vivo: EPS, latencia estimada cuando existe timestamp del proveedor, estado del conector y registro limitado.
+- Motor Chroma RGB para todos los textos de overlays: velocidades de 0.1 a 10 s, ángulo, brillo, saturación y paletas editables.
+- Mejoras de transparencia en fuentes de navegador: fondo alfa, eliminación de sombras en modo transparente y capas animadas selectivas. La fidelidad definitiva depende de OBS y GPU.
+- Cola de reproducción SQLite con prioridades (crítico, medio, estándar), serialización de audio y preempción de acciones no críticas para alertas críticas; se conservan confirmaciones de finalización.
+- Nueva estética táctica en negro/cyan/verde/Redstone, con accesibilidad de movimiento reducido.
+- Compatibilidad preservada con la galería WITI BOT v12 y el núcleo existente de TikTok LIVE/Spotify/OBS.
 
-## Base conservada de 3.3.0
+## Validación necesaria antes de afirmar funcionamiento completo
 
-- Resolución alternativa de salas desde los datos públicos actuales de TikTok.
-- Conservación de IDs largos, validación del propietario y cancelación de intentos pendientes.
-- Diagnósticos de errores anidados y reconexión al terminar un LIVE.
-- Galería de overlays renovada y editor modal con navegación por teclado.
-- Siete composiciones musicales con configuración independiente.
-- Vistas previas adaptadas al tamaño de cada tarjeta.
-- Eliminados los reinicios de la galería provocados por cada evento LIVE.
-- Corregidos permisos internos de apariencia, favoritos, imágenes, atajos y controles de reproducción.
-- Fondos transparentes corregidos y RGB sin alterar los colores de las fotografías.
-- Eliminadas migraciones que imponían el tema rojo sobre la apariencia elegida.
+- Probar una sesión LIVE real con la cuenta del creador y su proveedor de conexión. Las restricciones externas de TikTok no pueden resolverse de forma absoluta solo con código cliente.
+- Probar OBS y audio real de salida en Windows: reproducción, interrupciones de prioridad, alfa y antialiasing.
+- Pruebas automatizadas del proyecto completo y empaquetado mediante GitHub Actions antes de generar etiqueta de release.
