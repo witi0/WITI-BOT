@@ -10,7 +10,7 @@ const {LiveHub,priorityFor,LikeThreshold}=require('./live-hub.cjs');let liveHub=
 const release=require('../release.json');const {mergedCatalog}=require('./gifts.cjs');const {normalizeAppearance}=require('./appearance.cjs');const {VOICES,synthesize}=require('./voices.cjs');
 let win,popouts=new Map(),store,server,engine,mediaDir,liveState,spotify,tiktok,identity,updates,obs=new OBSWebSocket(),obsConnected=false,liveLock=false,activeObs=false;const seenLive=new Set();let autoUpdate;
 app.setName('WITI BOT');if(!app.requestSingleInstanceLock())app.quit();app.on('second-instance',()=>{win?.show();win?.focus();});
-function notify(channel,data){for(const w of [win,...popouts.values()])if(w&&!w.isDestroyed()&&!w.webContents.isDestroyed())w.webContents.send(channel,data);}
+function notify(channel,data){for(const w of [win,...popouts.values()])if(w&&!w.isDestroyed()&&!w.webContents.isDestroyed?.())w.webContents.send(channel,data);}
 function secretSet(key,value){if(!safeStorage.isEncryptionAvailable())throw Error('El almacén seguro de Windows no está disponible');store.set('secret:'+key,safeStorage.encryptString(value).toString('base64'));}
 function secretGet(key){const s=store.get('secret:'+key);if(!s)return '';if(!safeStorage.isEncryptionAvailable())throw Error('El almacén seguro de Windows no está disponible');return safeStorage.decryptString(Buffer.from(s,'base64'));}
 function locked(){return liveLock||!!tiktok?.state.connected||!!bridge?.state.connected;}
