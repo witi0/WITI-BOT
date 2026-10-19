@@ -1,0 +1,15 @@
+#screens .screens-list{margin:22px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(315px,1fr));gap:14px}
+#screens .screen-item{background:#131420;border:1px solid #3a3054;border-radius:15px;padding:19px;min-width:0}
+#screens .screen-tag{font-size:10px;color:#c7aaff;text-transform:uppercase;letter-spacing:.11em;font-weight:800}
+#screens .screen-item h3{font-size:18px;margin:9px 0 6px}#screens .screen-item p{color:#aaa5bf;font-size:12px;line-height:1.5;margin:0 0 12px}
+#screens .screen-item input[type=text]{width:100%;min-width:0;font-size:11px;padding:11px;background:#0b0d16;color:#e6e1f2;border:1px solid #493d66;border-radius:8px;user-select:all}
+#screens .screen-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}#screens .screen-actions button{font-size:12px}
+#screens .screens-rgb{padding:24px;margin-bottom:40px;background:#13131f;border:1px solid #514077;border-radius:16px}
+#screens .screens-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:18px 0}#screens .screens-form-grid label{min-width:0;display:grid;gap:8px;font-size:13px}
+#screens input[type=range]{accent-color:#a77aff;width:100%}#screens .screens-palette{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0}
+#screens .screens-palette label{background:#211d32;border:1px solid #5d4680;display:flex;align-items:center;gap:8px;padding:8px;border-radius:9px;font-size:12px}
+#screens .screens-palette input[type=color]{height:33px;width:42px;padding:2px;border:none;background:transparent}
+#screens .screens-swatch{background:linear-gradient(110deg,#9266ff,#e7a8ff,#6f9fff,#9266ff);background-size:300% 100%;background-clip:text;-webkit-background-clip:text;color:transparent;-webkit-text-fill-color:transparent;font-size:clamp(18px,3vw,35px);font-weight:900;letter-spacing:-.025em;margin:20px auto;padding:12px 0;text-align:center;animation:screens-flow var(--screens-speed,3s) linear infinite alternate}
+#screens #screensStatus{font-size:12px;color:#b9a8db}@keyframes screens-flow{to{background-position:100% 50%}}
+@media(max-width:680px){#screens .screens-form-grid{grid-template-columns:1fr}#screens .screens-list{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){#screens .screens-swatch{animation:none}}

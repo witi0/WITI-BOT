@@ -1,3 +1,15 @@
+# WITI BOT 4.2.0
+
+- Reproducción de sonidos de reglas directamente en Windows, sin depender de pantallas o OBS y con confirmación en la cola.
+- Recuperación de sonidos anteriores pendientes y fuentes de acciones nuevas para perfiles ya instalados.
+- Pantallas con enlaces de OBS, botón para añadir fuentes y editor RGB con paletas y colores personalizados por overlay.
+- Chat y regalos desprendibles en dos ventanas siempre encima, con nombre, imagen del regalo y multiplicador.
+- Likes agrupados por hitos de 1,000 sin eventos uno por uno en las consolas.
+- Fuente independiente para /puntos, avisos y errores de comandos.
+- Interfaz morada oscura con efectos RGB reales y opciones de transparencia.
+
+---
+
 # WITI BOT 4.1.0
 
 - Sustituye Euler por PirateTok 0.3.0 en la conexión principal. Basta con el usuario de TikTok; se retiran los campos de sala y API key de la interfaz. El conector anterior solo se conserva como dependencia de desarrollo para regresiones históricas y no se distribuye.

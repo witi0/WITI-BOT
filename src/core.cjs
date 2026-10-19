@@ -56,7 +56,7 @@ function validateRule(r,overlayIds){
  if(!Array.isArray(r.actions)||!r.actions.length||r.actions.length>10)throw Error('Añade de 1 a 10 acciones');
  for(const a of r.actions){
    if(!['alert','media','points','timer','tts','obsScene','sound','wheel'].includes(a.type))throw Error('Acción inválida');
-   if(['alert','media','sound','wheel'].includes(a.type)&&!overlayIds.includes(a.overlay))throw Error('Elige una pantalla válida');
+   if((['alert','wheel'].includes(a.type)||a.type==='media'&&!/\.(mp3|wav|ogg)$/i.test(a.media||''))&&!overlayIds.includes(a.overlay))throw Error('Elige una pantalla válida');
    if(['points','timer'].includes(a.type)&&(!Number.isSafeInteger(a.value)||Math.abs(a.value)>1000000))throw Error('Cantidad inválida');
    if(a.type==='media'&&!/^[a-f0-9]{64}\.(png|jpg|jpeg|webp|gif|mp4|webm|mp3|wav|ogg)$/.test(a.media||''))throw Error('Importa un recurso');
    if(a.type==='sound'&&!/^(?:witi-\d{3}\.wav|[a-f\d]{64}\.(?:mp3|wav|ogg))$/.test(a.sound||''))throw Error('Elige un sonido de la biblioteca');

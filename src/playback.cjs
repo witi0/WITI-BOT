@@ -12,7 +12,7 @@ class PlaybackQueue{
  key(overlay,preview){return overlay+':'+Number(preview);}
  enqueue({id=crypto.randomUUID(),overlay,preview=false,payload,repeats=1,priority,cooldownMs=0}){
   if(!Number.isSafeInteger(repeats)||repeats<1||repeats>100000)throw Error('Cantidad de reproducciones inválida');
-  if(overlay!=='__tts__'&&!this.store.list('overlays').some(o=>o.id===overlay)&&!this.store.list('rules').some(r=>r.id===overlay&&r.trigger==='gift'))throw Error('Pantalla no encontrada');
+  if(!['__tts__','__sound__'].includes(overlay)&&!this.store.list('overlays').some(o=>o.id===overlay)&&!this.store.list('rules').some(r=>r.id===overlay&&r.trigger==='gift'))throw Error('Pantalla no encontrada');
   const level=[1,2,3].includes(Number(priority))?Number(priority):priorityFor(payload?.event||{});
   const media=String(payload?.media||payload?.sound||'');const audio=overlay==='__tts__'||/\.(mp3|wav|ogg|mp4|webm)$/i.test(media)?1:0;
   const cd=Math.max(0,Math.min(60000,Number(cooldownMs)||0));const key=overlay+':'+media+':'+(payload?.name||'');
