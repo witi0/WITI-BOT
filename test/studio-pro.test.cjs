@@ -4,13 +4,13 @@ const fs=require('node:fs');
 const path=require('node:path');
 const {catalog,fromTemplate,validateOverlay,installGallery}=require('../src/gallery.cjs');
 const {LiveState,demoState}=require('../src/live-state.cjs');
-test('49 diseños disponibles; una instalación nueva no crea decenas de overlays automáticamente',()=>{
+test('50 diseños disponibles; una instalación nueva no crea decenas de overlays automáticamente',()=>{
  const stored=new Map(),screens=Array.from({length:8},(_,i)=>({id:i,kind:'actions'}));
  const db={get:key=>stored.get(key),set:(key,val)=>stored.set(key,val),save:(_,item)=>screens.push(item)};
  installGallery(db);installGallery(db);
  assert.equal(screens.length,8);
- assert.equal(stored.get('galleryVersion'),3);
- assert.equal(catalog.length,49);
+ assert.equal(stored.get('galleryVersion'),4);
+ assert.equal(catalog.length,50);
  assert.equal(catalog.filter(x=>x.kind==='topgift').length,1);
  assert.equal(catalog.filter(x=>x.kind==='topstreak').length,1);
 });
