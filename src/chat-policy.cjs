@@ -8,10 +8,10 @@ function normalizeTts(s={}, {strict=false}={}){
   // Loading legacy preferences must never block snapshots, overlays or connections.
   prefix='.';
  }
- return {enabled:!!s.enabled,prefixEnabled,prefix,readName:s.readName!==false,engine:s.engine==='online'?'online':'local',voice:String(s.voice||'').slice(0,150),rate:number(s.rate,.5,2,1),pitch:number(s.pitch,0,2,1),random:!!s.random,audience:['all','moderator','subscriber','topgifter','selected'].includes(s.audience)?s.audience:'all',allowedRoles:(Array.isArray(s.allowedRoles)?s.allowedRoles:[]).filter(r=>['moderator','subscriber','topgifter'].includes(r)),minMemberLevel:Math.floor(number(s.minMemberLevel,0,100,0)),minGifterLevel:Math.floor(number(s.minGifterLevel,0,100,0)),topDonors:Math.floor(number(s.topDonors,0,20,0)),cooldown:Math.floor(number(s.cooldown,0,300,3)),maxLength:Math.floor(number(s.maxLength,20,500,300)),skipCommands:s.skipCommands!==false,blockedUsers:String(s.blockedUsers||'').slice(0,2000),blockedWords:String(s.blockedWords||'').slice(0,2000)};
+ return {enabled:!!s.enabled,prefixEnabled,prefix,readName:s.readName!==false,engine:s.engine==='online'?'online':'local',voice:String(s.voice||'').slice(0,150),rate:number(s.rate,.5,2,1),pitch:number(s.pitch,0,2,1),random:!!s.random,audience:['all','follower','moderator','subscriber','topgifter','selected'].includes(s.audience)?s.audience:'all',allowedRoles:(Array.isArray(s.allowedRoles)?s.allowedRoles:[]).filter(r=>['follower','moderator','subscriber','topgifter'].includes(r)),minMemberLevel:Math.floor(number(s.minMemberLevel,0,100,0)),minGifterLevel:Math.floor(number(s.minGifterLevel,0,100,0)),topDonors:Math.floor(number(s.topDonors,0,20,0)),cooldown:Math.floor(number(s.cooldown,0,300,3)),maxLength:Math.floor(number(s.maxLength,20,500,300)),skipCommands:s.skipCommands!==false,blockedUsers:String(s.blockedUsers||'').slice(0,2000),blockedWords:String(s.blockedWords||'').slice(0,2000)};
 }
 function eligible(e,s={},context={}){
- const roles=e.roles||[],audience=s.audience||'all';
+ const roles=[...new Set([...(e.roles||[]),...(e.follower===true?['follower']:[])])],audience=s.audience||'all';
  if(audience==='selected'&&!(s.allowedRoles||[]).some(r=>roles.includes(r)))return false;
  if(!['all','selected'].includes(audience)&&!roles.includes(audience))return false;
  if(Number(s.minMemberLevel)>0&&!(e.memberLevel>=s.minMemberLevel))return false;

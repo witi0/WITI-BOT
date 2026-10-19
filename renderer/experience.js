@@ -4,7 +4,7 @@
   const defaults={rgb:true,reducedMotion:false,mode:'pulse',accent:'#9464ff',speed:9,intensity:72,font:'segoe',compact:false};
   const inputs={rgb:$('#themeRgb'),reducedMotion:$('#reduceMotion'),mode:$('#rgbMode'),accent:$('#accentColor'),speed:$('#rgbSpeedApp'),intensity:$('#rgbStrength'),font:$('#uiTypeface'),compact:$('#compactUI')};
   let current={...defaults};
-  const appearance=()=>({rgb:inputs.rgb.checked,reducedMotion:inputs.reducedMotion.checked,mode:inputs.mode.value,accent:inputs.accent.value,speed:Number(inputs.speed.value),intensity:Number(inputs.intensity.value),font:inputs.font.value,compact:inputs.compact.checked});
+  const appearance=()=>({rgb:inputs.rgb.checked,reducedMotion:inputs.reducedMotion.checked,mode:inputs.mode.value,accent:inputs.accent.value,speed:Number(inputs.speed.value),intensity:Number(inputs.intensity.value),font:inputs.font.value,compact:inputs.compact.checked,rgbColors:[...document.querySelectorAll('[data-app-palette]')].map(e=>e.value)});
   function apply(settings){
     const a={...defaults,...settings};
     document.body.classList.toggle('theme-rgb',a.rgb);
@@ -17,7 +17,7 @@
     document.body.style.setProperty('--ui-glow-alpha',(Math.round(a.intensity)/100).toFixed(2));
     $('#rgbSpeedValue').textContent=a.speed+' s';
     $('#rgbStrengthValue').textContent=a.intensity+' %';
-    $('#appearancePreview').classList.toggle('preview-static',!a.rgb);
+    $('#appearancePreview').classList.toggle('preview-static',!a.rgb);window.WitiChroma?.apply({rgb:a.rgb&&!a.reducedMotion,textRgb:true,borderRgb:true,rgbColors:a.rgbColors,rgbSpeed:a.speed,color:a.accent});
   }
   function fill(a){
     current={...defaults,...a};
@@ -29,8 +29,9 @@
     inputs.intensity.value=current.intensity;
     inputs.font.value=current.font;
     inputs.compact.checked=current.compact;
-    apply(current);
+    document.querySelectorAll('[data-app-palette]').forEach((e,i)=>e.value=(current.rgbColors||['#9464ff','#f472b6','#38bdf8','#34d399','#fbbf24'])[i%5]);apply(current);
   }
+  for(const input of document.querySelectorAll('[data-app-palette]'))input.addEventListener('input',()=>apply(appearance()));
   for(const input of Object.values(inputs))input.addEventListener(input.type==='range'||input.type==='color'?'input':'change',()=>apply(appearance()));
   $('#appearanceForm').onsubmit=async event=>{
     event.preventDefault();

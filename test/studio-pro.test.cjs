@@ -10,13 +10,13 @@ test('50 diseños disponibles; una instalación nueva no crea decenas de overlay
  installGallery(db);installGallery(db);
  assert.equal(screens.length,8);
  assert.equal(stored.get('galleryVersion'),4);
- assert.equal(catalog.length,50);
+ assert.equal(catalog.length,53);
  assert.equal(catalog.filter(x=>x.kind==='topgift').length,1);
  assert.equal(catalog.filter(x=>x.kind==='topstreak').length,1);
 });
 test('presets visuales normalizados y valores fuera de rango rechazados',()=>{
  const o=validateOverlay({...fromTemplate('witi-36'),stylePreset:'broadcast',rgb:true,rgbSpeed:999});
- assert.equal(o.kind,'topstreak');assert.equal(o.stylePreset,'broadcast');assert.equal(o.rgbSpeed,10);
+ assert.equal(o.kind,'topstreak');assert.equal(o.stylePreset,'broadcast');assert.equal(o.rgbSpeed,60);
  assert.equal(validateOverlay({...o,stylePreset:'javascript:alert(1)'}).stylePreset,'glass');
 });
 test('el regalo de mayor valor y la mayor racha se calculan en el estado en vivo',()=>{

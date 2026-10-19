@@ -1,18 +1,18 @@
 /* Bridge to the source-accurate 12.2 Overlay Studio, without exposing Electron APIs to the child frame. */
 (()=>{
  const frame=document.getElementById('legacy12StudioFrame');if(!frame)return;
- const mapped={nowPlaying:'music',musicMinimal:'music',musicCompact:'music',musicCover:'music',musicTicker:'music',musicVinyl:'music',musicQueue:'music',timer:'timer',extensibleTimer:'timer',topLikes:'toplikes',topDonors:'topgifters',topPoints:'ranking',giftAlert:'actions',followAlert:'actions',subscribeAlert:'actions',latestFollower:'lastfollow',lastGift:'lastgift',recentEvents:'chat',recentGifts:'giftfeed',chat:'chat',commandResponse:'commands',stats:'stats',liveStatus:'stats',viewerCounter:'stats',likeCounter:'stats',coinCounter:'stats',celebrations:'likefountain',likeGoal:'goal',giftGoal:'goal'};
+ const mapped={nowPlaying:'music',musicMinimal:'music',musicCompact:'music',musicCover:'music',musicTicker:'music',musicVinyl:'music',musicQueue:'music',timer:'timer',extensibleTimer:'timer',topLikes:'toplikes',topDonors:'topgifters',topPoints:'ranking',giftAlert:'actions',followAlert:'actions',subscribeAlert:'actions',latestFollower:'lastfollow',lastGift:'lastgift',recentEvents:'chat',recentGifts:'giftfeed',chat:'chat',commandResponse:'commandresponses',stats:'stats',liveStatus:'stats',viewerCounter:'stats',likeCounter:'stats',coinCounter:'stats',celebrations:'likefountain',likeGoal:'goal',giftGoal:'goal'};
  let cache=null;
  async function snapshot(){cache=await window.witi.call('snapshot');return cache;}
  function findSource(def){return(cache?.overlays||[]).find(x=>x.legacy12Key===def)||(cache?.overlays||[]).find(x=>x.name===def);}
  async function ensure(def,description){
-   await snapshot();let found=findSource(def);if(found){if(found.kind==='music'&&!found.musicLayout){const defaults=await window.witi.call('overlay-design-defaults',def);found=await window.witi.call('save-overlay',{...defaults,...found,musicLayout:defaults.musicLayout||'studio'});}return found;}
+   await snapshot();let found=findSource(def);const musicContent=({nowPlaying:'combined',musicCompact:'current',musicQueue:'queue'})[def];if(found&&def==='commandResponse'&&found.kind!=='commandresponses')found=await window.witi.call('save-overlay',{...found,kind:'commandresponses'});if(found&&musicContent&&found.musicContent!==musicContent)found=await window.witi.call('save-overlay',{...found,musicContent,showQueue:musicContent!=='current',showProfile:false});if(found){if(found.kind==='music'&&!found.musicLayout){const defaults=await window.witi.call('overlay-design-defaults',def);found=await window.witi.call('save-overlay',{...defaults,...found,musicLayout:defaults.musicLayout||'studio'});}return found;}
    const kind=mapped[def];if(!kind)throw Error('Esta fuente no está disponible');
-   const template=cache.catalog.find(x=>x.legacy12Key===def)||cache.catalog.find(x=>x.kind===kind&&(def==='giftGoal'?x.metric==='coins':def==='likeGoal'?x.metric==='likes':true));
+   const template=(musicContent&&cache.catalog.find(x=>x.musicContent===musicContent))||cache.catalog.find(x=>x.legacy12Key===def)||cache.catalog.find(x=>x.kind===kind&&(def==='giftGoal'?x.metric==='coins':def==='likeGoal'?x.metric==='likes':true));
    if(!template)throw Error('No hay una plantilla compatible con '+def);
    let created=await window.witi.call('create-template',template.template);
    const overlay={...created,legacy12Key:def,name:description||def,legacy12Origin:'WITI BOT 12.2',...await window.witi.call('overlay-design-defaults',def),...
-      (def==='giftGoal'?{kind:'goal',metric:'coins'}:def==='likeGoal'?{kind:'goal',metric:'likes'}:{})};
+      (musicContent?{musicContent,showQueue:musicContent!=='current',showProfile:false,musicLayout:'studio'}:{}),...(def==='giftGoal'?{kind:'goal',metric:'coins'}:def==='likeGoal'?{kind:'goal',metric:'likes'}:{})};
    try{created=await window.witi.call('save-overlay',overlay);}catch(e){/* Created template is still usable if customization fails. */}
    await snapshot();return created;
  }
@@ -38,6 +38,7 @@
    try{const result=await request(type,data);ev.source.postMessage({channel:'WITI12_RESPONSE',id,ok:true,result},'*');}
    catch(err){ev.source.postMessage({channel:'WITI12_RESPONSE',id,ok:false,error:String(err?.message||err)},'*');}
  });
+ document.querySelectorAll('nav button[data-page]').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.page!=='overlays')frame.contentWindow?.postMessage({channel:'WITI12_PAUSE'},'*');}));
  const signal=async()=>{if(!frame.contentWindow||!document.querySelector('#overlays.page.active'))return;try{frame.contentWindow.postMessage({channel:'WITI12_PUSH',snapshot:await snapshot()},'*');}catch{}};
  window.witi.on('connection',signal);
  document.querySelector('nav [data-page="overlays"]')?.addEventListener('click',()=>setTimeout(signal,180));

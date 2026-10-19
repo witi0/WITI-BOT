@@ -27,7 +27,7 @@ function screensStatus(s){const n=document.getElementById('screensStatus');if(n)
 function chooseScreens(id){
  const o=screensSnapshot?.overlays?.find(o=>o.id===id);if(!o)return;screensSelected=id;
  screensColors=Array.isArray(o.rgbColors)&&o.rgbColors.length>=2?o.rgbColors.slice():['#8652ff','#c292ff','#fcb7fb','#8298ff','#8652ff'];
- const $=id=>document.getElementById(id);$('screensRgbText').checked=o.textRgb!==false;$('screensRgbBorder').checked=o.borderRgb!==false;$('screensRgbTransparent').checked=!!o.transparent;
+ const $=id=>document.getElementById(id);$('screensRgbEnabled').checked=o.rgb!==false;$('screensRgbText').checked=o.textRgb!==false;$('screensRgbBorder').checked=o.borderRgb!==false;$('screensRgbTransparent').checked=!!o.transparent;
  $('screensRgbSpeed').value=Number(o.rgbSpeed)||3;$('screensRgbAngle').value=Number(o.rgbAngle)||90;$('screensRgbDirection').value=o.rgbDirection||'normal';paintScreens();
 }
 function paintScreens(){
@@ -40,6 +40,7 @@ function applyScreensGradient(){const sw=document.getElementById('screensSwatch'
  document.getElementById('screensRgbSpeedOut').textContent=Number(speed.value).toFixed(1)+'s';
 }
 (()=>{const $=id=>document.getElementById(id);if(!$('screensList'))return;
+ const enabled=document.createElement('label');enabled.innerHTML='<input type="checkbox" id="screensRgbEnabled" checked> Activar RGB de esta pantalla';$('screensRgbText').closest('label').before(enabled);
  $('screensRgbTarget').onchange=()=>chooseScreens($('screensRgbTarget').value);
  for(const id of ['screensRgbSpeed','screensRgbAngle','screensRgbDirection'])$(id).addEventListener('input',applyScreensGradient);
  $('screensAddColor').onclick=()=>{if(screensColors.length<12){screensColors.push('#cf9aff');paintScreens();}};
@@ -50,6 +51,6 @@ function applyScreensGradient(){const sw=document.getElementById('screensSwatch'
  $('screensGiftPopout').onclick=()=>window.witi.call('open-live-popout','activity').catch(e=>screensStatus(e.message));
  $('screensRefresh').onclick=()=>window.witi.call('snapshot').then(renderScreens).catch(e=>screensStatus(e.message));
  $('screensSaveRgb').onclick=async()=>{const o=screensSnapshot?.overlays?.find(o=>o.id===$('screensRgbTarget').value);if(!o)return;
-  try{const textRgb=$('screensRgbText').checked,borderRgb=$('screensRgbBorder').checked;const out={...o,rgb:textRgb||borderRgb,textRgb,borderRgb,transparent:$('screensRgbTransparent').checked,rgbColors:screensColors.slice(),rgbSpeed:Number($('screensRgbSpeed').value),rgbAngle:Number($('screensRgbAngle').value),rgbDirection:$('screensRgbDirection').value};await window.witi.call('save-overlay',out);screensStatus('RGB de '+o.name+' guardado. OBS lo recibirá automáticamente.');screensSnapshot=await window.witi.call('snapshot');renderScreens(screensSnapshot);}catch(e){screensStatus('Error: '+e.message);}
+  try{const textRgb=$('screensRgbText').checked,borderRgb=$('screensRgbBorder').checked;const out={...o,rgb:$('screensRgbEnabled').checked,textRgb,borderRgb,transparent:$('screensRgbTransparent').checked,rgbColors:screensColors.slice(),rgbSpeed:Number($('screensRgbSpeed').value),rgbAngle:Number($('screensRgbAngle').value),rgbDirection:$('screensRgbDirection').value};await window.witi.call('save-overlay',out);screensStatus('RGB de '+o.name+' guardado. OBS lo recibirá automáticamente.');screensSnapshot=await window.witi.call('snapshot');renderScreens(screensSnapshot);}catch(e){screensStatus('Error: '+e.message);}
  };
 })();

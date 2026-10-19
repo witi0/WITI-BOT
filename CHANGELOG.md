@@ -1,3 +1,16 @@
+# WITI BOT 4.3.0
+
+- RGB de texto y bordes unificado con paleta personalizada, velocidad e interruptor por pantalla.
+- Cancion actual, proximas tres canciones y diseno combinado como overlays independientes.
+- Rankings compactos con numero de personas configurable, corazon y moneda animados al aumentar valores.
+- Registro y economia para seguidores confirmados que interactuan: alta unica, likes por bloques, compartidos, comentarios y suscripciones.
+- Filtro TTS para seguidores y preescucha con volumen al configurar sonidos.
+- Una sola ventana flotante con regalos y actividad arriba y comentarios abajo.
+- Catalogo de regalos observados persistente con prioridad por ID sobre referencias regionales.
+- Menos trabajo por fotograma, vistas previas descargadas al salir y registro de diagnosticos agrupado.
+
+La conexion a un LIVE real, Spotify real y OBS instalado requieren validacion en la PC del creador.
+
 # WITI BOT 4.2.0
 
 - Reproducción de sonidos de reglas directamente en Windows, sin depender de pantallas o OBS y con confirmación en la cola.

@@ -7,7 +7,7 @@ const {normalizeAppearance,DEFAULT_APPEARANCE}=require('../src/appearance.cjs');
 const root=path.resolve(__dirname,'..');
 test('la apariencia admite personalización sin modificar otros ajustes',()=>{
  const selected=normalizeAppearance({rgb:false,reducedMotion:true,accent:'#52C6F8',mode:'spectrum',speed:6,intensity:90,font:'trebuchet',compact:true});
- assert.deepEqual(selected,{rgb:false,reducedMotion:true,mode:'spectrum',accent:'#52c6f8',speed:6,intensity:90,font:'trebuchet',compact:true});
+ assert.deepEqual(selected,{rgb:false,reducedMotion:true,mode:'spectrum',accent:'#52c6f8',speed:6,intensity:90,font:'trebuchet',compact:true,rgbColors:DEFAULT_APPEARANCE.rgbColors});
  assert.deepEqual(normalizeAppearance(),DEFAULT_APPEARANCE);
 });
 test('los ajustes fuera de rango se normalizan antes de persistir',()=>{

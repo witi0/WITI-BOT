@@ -10,7 +10,7 @@ function priorityFor(event={}){
  return 3;
 }
 function safeEvent(e={}){
- const roles=Array.isArray(e.roles)?e.roles.filter(x=>['moderator','subscriber','topgifter'].includes(x)).slice(0,3):[];
+ const roles=Array.isArray(e.roles)?e.roles.filter(x=>['follower','moderator','subscriber','topgifter'].includes(x)).slice(0,3):[];
  return {uniqueId:String(e.uniqueId||''),memberLevel:Number(e.memberLevel)||0,gifterLevel:Number(e.gifterLevel)||0,id:String(e.id||'').slice(0,150),type:ALLOWED.has(e.type)?e.type:'comment',user:String(e.user||'').slice(0,80),name:String(e.name||'Espectador').slice(0,100),avatar:/^https:\/\//.test(e.avatar||'')?e.avatar:'',text:String(e.text||'').slice(0,500),gift:String(e.gift||'').slice(0,100),giftName:String(e.giftName||'Regalo').slice(0,100),giftImage:(/^https:\/\//.test(e.giftImage||'')||/^http:\/\/127\.0\.0\.1:\d+\/media\/[a-f0-9]{64}\.webp\?token=[a-f0-9]+$/.test(e.giftImage||''))?e.giftImage:'',count:Math.min(100000,Math.max(1,Number(e.count)||1)),coins:Math.min(100000000,Math.max(0,Number(e.coins)||0)),roles,simulated:!!e.simulated,at:Number(e.at)||Date.now(),providerAt:Number(e.providerAt)||null,receivedAt:Date.now()};
 }
 class LiveHub extends EventEmitter{

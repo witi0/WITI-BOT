@@ -1,19 +1,27 @@
-# WITI BOT 4
+# WITI BOT
 
-Workspace local para TikTok LIVE, OBS, Spotify, comandos con puntos y TTS configurable.
-
-## Conexión LIVE
-
-En Conexiones o Chat & Acciones en LIVE, escribe el @usuario y pulsa Conectar al LIVE. El motor principal es PirateTok 0.3.0: conexión directa desde la PC, sin clave API, sin Euler y sin TikFinity abierto. No se impone una cuota propia por hora ni por número de eventos. TikTok puede restringir el acceso o cambiar su protocolo; un fallo se muestra con diagnóstico y reconexión con espera. Una apertura de socket se distingue de la recepción efectiva de eventos en el panel.
-
-Se normalizan comentarios, regalos (al finalizar cada racha), likes, seguidores, compartidos, suscripciones y espectadores para los puntos, comandos, TTS y overlays existentes. No se reproducen mensajes antiguos identificados por su fecha de origen.
+Aplicacion de escritorio para Windows 10/11 x64: TikTok LIVE, puntos, sonidos, TTS, Spotify, OBS y overlays locales.
 
 ## Desarrollo
 
-Requiere Node.js 22.19 o posterior. Ejecuta `npm ci`, `npm test`, `npm start`. Para Windows: `npm run dist:win`. El build verifica la integridad del instalador y de todos los recursos empaquetados.
+Node.js 22.19 o posterior. `npm ci`, `npm test`, `npm start`.
 
-## Publicación
+`npm run dist:win` genera y verifica el instalador de Windows. GitHub Actions ejecuta las pruebas antes de compilar y publicar una Release.
 
-El workflow compila y prueba en Windows. Un commit de main cuyo mensaje comience con `release:` publica la versión de package.json como Release, con instalador y SHA-256. Una etiqueta `v*` también publica. La clave opcional `WITI_UPDATE_PRIVATE_KEY` firma el manifiesto de actualización; sin ella el instalador se distribuye manualmente y no se habilitan actualizaciones sin firma.
+## Overlays
 
-Consulta CHANGELOG.md para conexión, comandos, permisos TTS y limitaciones verificadas.
+Cada pantalla tiene su URL local para una fuente Navegador de OBS. WITI BOT debe permanecer abierto. La paleta RGB tiene cinco colores editables; el interruptor del overlay permite usar colores fijos. Cancion actual, cola de tres canciones y contenido combinado tienen fuentes independientes.
+
+Los rankings cuentan los eventos observados durante la sesion. Las alertas de likes acumulan por usuario y por regla. El simulador no modifica puntos ni controla Spotify u OBS reales.
+
+## Comunidad
+
+El registro automatico requiere seguimiento confirmado e interaccion. Los puntos iniciales se otorgan una vez. Si el proveedor no informa la relacion de seguimiento, el usuario queda sin confirmar y no cumple el filtro de seguidores. Un evento de seguimiento confirma esa relacion; las confirmaciones se conservan localmente.
+
+Los regalos observados tienen prioridad sobre el catalogo de referencia, que puede incluir variantes regionales o retiradas. Se puede filtrar para mostrar solo regalos confirmados en los propios directos.
+
+## Publicacion
+
+Extraer el ZIP completo en una carpeta nueva y abrir `PUBLICAR_WITI_BOT.bat` en su raiz. El publicador usa GitHub CLI oficial con comprobacion SHA-256, solicita iniciar sesion si hace falta, envia solo los archivos modificados y sigue la ejecucion de GitHub Actions. No requiere Git ni Node.js en esa PC. Se detiene si detecta cambios posteriores en los archivos que actualiza; no fuerza ramas ni reemplaza etiquetas.
+
+La publicacion requiere permisos de escritura sobre `witi0/WITI-BOT`. El codigo de inicio de sesion aparece en la consola. La compilacion y el instalador se producen en GitHub; la confirmacion final exige que exista el instalador en la Release.

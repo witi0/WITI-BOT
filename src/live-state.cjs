@@ -1,7 +1,7 @@
 function initial(){return {likes:0,follows:0,shares:0,coins:0,gifts:0,subscribers:0,viewers:0,chat:[],feed:[],people:{},giftCounts:{},giftNameCounts:{},topGift:null,topStreak:null,last:{},votes:{}};}
 class LiveState{
  constructor(store){this.store=store;this.data={...initial(),...(store.get('liveState')||{})};this.music={connected:false,source:'none'};this.dirty=false;this.interval=setInterval(()=>{if(this.dirty){store.set('liveState',this.data);this.dirty=false;}},3000);this.interval.unref();}
- apply(e){const d=this.data;const p=d.people[e.user]||{user:e.user,name:e.name||e.user,avatar:e.avatar||'',likes:0,coins:0,gifts:0};p.name=e.name||p.name;if(e.avatar)p.avatar=e.avatar;d.people[e.user]=p;
+ apply(e){const d=this.data;if(e.type==='viewers'){d.viewers=e.viewers;return;}const p=d.people[e.user]||{user:e.user,name:e.name||e.user,avatar:e.avatar||'',likes:0,coins:0,gifts:0};p.name=e.name||p.name;if(e.avatar)p.avatar=e.avatar;d.people[e.user]=p;
  if(e.type==='like'){const n=Math.max(0,Number(e.count)||1);d.likes+=n;p.likes+=n;}
  if(e.type==='follow')d.follows++;
  if(e.type==='share')d.shares++;

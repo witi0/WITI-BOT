@@ -7,7 +7,7 @@ function validateCommands(input){
   for(const n of [name,...aliases]){if(!/^[!/.][a-z0-9_áéíóúñ-]{1,30}$/i.test(n)||names.has(n))throw Error('Comando inválido o duplicado: '+n);names.add(n);}
   if(!['play','points','skip','tts','reply'].includes(c.action))throw Error('Acción desconocida');
   if(!Number.isSafeInteger(Number(c.cost))||c.cost<0||c.cost>1000000)throw Error('Costo de puntos inválido');
-  return {name,aliases,action:c.action,cost:Number(c.cost),cooldown:Math.min(3600,Math.max(0,Number(c.cooldown)||0)),enabled:!!c.enabled,audience:['all','moderator','subscriber','topgifter'].includes(c.audience)?c.audience:'all',text:String(c.text||'').slice(0,500)};
+  return {name,aliases,action:c.action,cost:Number(c.cost),cooldown:Math.min(3600,Math.max(0,Number(c.cooldown)||0)),enabled:!!c.enabled,audience:['all','follower','moderator','subscriber','topgifter'].includes(c.audience)?c.audience:'all',text:String(c.text||'').slice(0,500)};
  });
 }
 class Commands{
@@ -23,7 +23,7 @@ class Commands{
   const last=this.store.all("SELECT at FROM command_runs WHERE user=? AND command=? AND state IN ('reserved','done') ORDER BY at DESC LIMIT 1",[e.user,cmd.name])[0];
   if(last&&Date.now()-last.at<cmd.cooldown*1000)throw Error('Espera el tiempo de recarga de '+cmd.name);
   const balance=()=>this.store.all('SELECT balance FROM users WHERE id=?',[e.user])[0]?.balance||0;
-  if(balance()<cmd.cost)throw Error(`Necesitas ${cmd.cost} puntos; tienes ${balance()}`);
+  if(balance()<cmd.cost)throw Error(`${e.name||e.user}, no tienes suficientes puntos. Necesitas ${cmd.cost} y tienes ${balance()}`);
   const args=words.join(' ');let song;
   if(['play','skip'].includes(cmd.action)&&!this.spotify.status.connected)throw Error('Conecta Spotify antes de usar este comando');
   if(cmd.action==='play'){if(args.length<2||args.length>150)throw Error('Ejemplo: /play la chona');song=(await this.spotify.search(args))[0];if(!song)throw Error('No encontré esa canción');}
@@ -34,7 +34,7 @@ class Commands{
   }catch(err){this.store.db.run('ROLLBACK');throw err;}
   let message;
   try{
-   if(cmd.action==='play'){await this.spotify.enqueue(song.uri);message=`${song.name} · ${song.artist} añadida a Spotify (${cmd.cost} puntos)`;}
+   if(cmd.action==='play'){await this.spotify.enqueue(song.uri);message=`${e.name}, tu canción ${song.name} · ${song.artist} se agregó a la cola de Spotify (${cmd.cost} puntos)`;}
    if(cmd.action==='skip'){await this.spotify.playback('next');message='Canción saltada';}
    if(cmd.action==='points')message=`${e.name}, tienes ${balance()} puntos`;
    if(cmd.action==='tts'){this.speak(args.slice(0,300),e);message='Lectura añadida a la cola';}

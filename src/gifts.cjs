@@ -14,8 +14,8 @@ function normalizeLive(input){
  return [...result.values()];
 }
 function mergedCatalog(online,images={}){
- const live=normalizeLive(online);const names=new Set(live.map(x=>x.name.toLowerCase()+'|'+x.coins));
- const offline=fallback.gifts.filter(g=>!names.has(g.name.toLowerCase()+'|'+g.coins)).map(g=>({...g,displayName:displayGiftName(g.name),source:'reference',image:images[g.imageFile]||''}));
+ const live=normalizeLive(online);const names=new Set(live.map(x=>x.name.toLowerCase()+'|'+x.coins));const ids=new Set(live.map(x=>x.id));
+ const offline=fallback.gifts.filter(g=>!ids.has(String(g.id))&&!names.has(g.name.toLowerCase()+'|'+g.coins)).map(g=>({...g,displayName:displayGiftName(g.name),source:'reference',image:images[g.imageFile]||''}));
  return {source:live.length?'live+reference':'reference',updatedAt:fallback.updatedAt,totalLive:live.length,gifts:live.concat(offline)};
 }
 module.exports={normalizeLive,mergedCatalog};

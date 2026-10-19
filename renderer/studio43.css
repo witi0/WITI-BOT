@@ -1,0 +1,10 @@
+.palette-controls{display:grid;grid-template-columns:repeat(5,minmax(60px,1fr));gap:10px}.palette-controls input[type=color]{width:100%;height:36px;padding:3px;border-radius:8px}
+html[data-chroma="on"] body.theme-rgb{--ui-accent:var(--witi-chroma)!important}
+html[data-chroma-text="on"] body.theme-rgb :is(h1,h2,h3,.eyebrow,.studio-tag,.brand-name,.hb-entry b,.hb-panel-head,.screen-tag,.command-config legend,.stats strong){background:none!important;-webkit-text-fill-color:currentColor!important;color:var(--witi-chroma)!important;animation:none!important}
+html[data-chroma="on"] body.theme-rgb :is(.primary,button.primary){background:var(--witi-chroma)!important;border-color:var(--witi-chroma)!important;animation:none!important;color:#100b19!important}
+html[data-chroma-border="on"] body.theme-rgb :is(.panel,.sound-card,.studio-design-card,.screen-item,.hb-panel,.appearance-preview){border-color:var(--witi-chroma)!important}
+body:not(.theme-rgb) :is(h1,h2,h3,.eyebrow){-webkit-text-fill-color:currentColor!important}
+#pointSettingsForm{display:grid;grid-template-columns:repeat(3,minmax(140px,1fr));align-items:end}#pointSettingsForm p,#pointSettingsForm>label:first-child{grid-column:1/-1}
+.live-popout-button{white-space:nowrap}
+
+html[data-chroma-text=on] body.theme-rgb :is(nav button span,.panel label,.panel legend,.overlay-title-row b,.overlay-cat,.kicker){color:var(--witi-chroma)!important;-webkit-text-fill-color:currentColor!important}
