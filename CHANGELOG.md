@@ -1,3 +1,21 @@
+# WITI BOT 5.0.1
+
+- Colaboradores rediseñado: WITI en rojo fijo, composición de mayor presencia, retrato destacado y descripción ampliada del creador.
+- Felipino-FLD con presentación dedicada y descripción ampliada de su papel como beta tester.
+- Enlaces y fotografías originales conservados; distribución adaptable y animaciones que respetan movimiento reducido.
+- Corregida la sintaxis del puente de Electron para cargar correctamente las funciones de escritorio.
+
+# WITI BOT 5.0.0
+
+- Simulación de regalos con nombres originales y traducidos compatibles con las reglas reales, misma cola de sonido y sin cobros o puntos permanentes.
+- Respuestas de comandos con nombre, avatar, saldo, confirmaciones y errores. Compatibilidad con las fuentes antiguas y recuperación breve del último mensaje al abrir la fuente.
+- Atajos configurables y globales de Windows: añadir, editar y eliminar combinaciones; restauración si Windows rechaza una tecla ocupada. Conserva las combinaciones anteriores al actualizar.
+- Desactivar TTS corta el sintetizador y audio online, cancela su cola y evita que una síntesis en curso reactive la voz. Corte de voz independiente del resto de sonidos.
+- Colaboradores: Witi, fundador y dueño; Felipino-FLD, beta tester. Fotografías facilitadas, enlaces oficiales y marcas vectoriales de TikTok, Discord y GitHub.
+- Menos actualizaciones de progreso en fuentes que no muestran música, estado compartido por ciclo del servidor de overlays y cola de respuestas acotada. Se conserva el RGB existente.
+
+---
+
 # WITI BOT 4.4.0
 
 - TTS de seguidores: estado 0 interpretado como no seguidor; se elimina la herencia de permisos anteriores cuando falta confirmacion actual. Sin consulta remota por comentario.

@@ -7,7 +7,7 @@ function buildSimulationEvent(input={},gifts=[]){
  const gift=input.type==='gift'?gifts.find(g=>String(g.id)===String(input.gift)||g.name===input.gift):null;
  if(input.type==='gift'&&!gift)throw Error('Selecciona un regalo del catálogo');
  const follower=input.type==='follow'?true:typeof input.follower==='boolean'?input.follower:null;
- return {id:'simulation:'+crypto.randomUUID(),type:input.type,user:String(input.user||'usuario-prueba').slice(0,100),name:String(input.name||'Usuario de prueba').slice(0,100),avatar:'',follower,roles:[...(follower===true?['follower']:[])],text:String(input.text||'').slice(0,500),gift:String(gift?.id||''),giftName:gift?.displayName||gift?.name||'',giftImage:gift?.image||'',count,coins:(Number(gift?.coins)||0)*count,simulated:true,at:Date.now()};
+ return {id:'simulation:'+crypto.randomUUID(),type:input.type,user:String(input.user||'usuario-prueba').slice(0,100),name:String(input.name||'Usuario de prueba').slice(0,100),avatar:'',follower,roles:[...(follower===true?['follower']:[])],text:String(input.text||'').slice(0,500),gift:String(gift?.id||''),giftName:gift?.name||'',giftDisplayName:gift?.displayName||gift?.name||'',giftAliases:gift?[gift.name,gift.displayName].filter(Boolean):[],giftImage:gift?.image||'',count,coins:(Number(gift?.coins)||0)*count,simulated:true,at:Date.now()};
 }
 class Simulation{
  constructor(options){Object.assign(this,options);this.state=new LiveState({get:()=>null,set:()=>{}});this.state.close();this.active=false;}

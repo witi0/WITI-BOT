@@ -1,4 +1,4 @@
-# WITI BOT 4.4.0
+# WITI BOT 5
 
 Aplicacion de escritorio para Windows 10/11 x64: TikTok LIVE, puntos, sonidos, TTS, Spotify, OBS y overlays locales.
 
@@ -33,3 +33,11 @@ Los umbrales de likes solo aparecen en reglas de likes. Una regla admite hasta d
 Extraer el ZIP completo en una carpeta nueva y abrir `PUBLICAR_WITI_BOT.bat` en su raiz. El publicador usa GitHub CLI oficial con comprobacion SHA-256, solicita iniciar sesion si hace falta, envia solo los archivos modificados y sigue la ejecucion de GitHub Actions. No requiere Git ni Node.js en esa PC. Se detiene si detecta cambios posteriores en los archivos que actualiza; no fuerza ramas ni reemplaza etiquetas.
 
 La publicacion requiere permisos de escritura sobre `witi0/WITI-BOT`. El codigo de inicio de sesion aparece en la consola. La compilacion y el instalador se producen en GitHub; la confirmacion final exige que exista el instalador en la Release.
+
+## Versión 5
+
+El simulador compara ID, nombre original y nombre traducido del regalo. Usa la misma cola de sonidos que el LIVE, sin modificar puntos reales. Las fuentes de respuestas reciben nombre, avatar y resultado real de los comandos; las URLs anteriores se conservan.
+
+En Atajos se pueden añadir y eliminar combinaciones. Ctrl+Alt+T activa/desactiva todo el TTS y corta la voz actual; Ctrl+Alt+M corta únicamente la voz y la cola de TTS. Windows puede reservar algunas combinaciones para otra aplicación: se informa el conflicto y se conservan los atajos anteriores.
+
+Colaboradores presenta a Witi como fundador y dueño y a Felipino-FLD como beta tester, con sus enlaces oficiales.

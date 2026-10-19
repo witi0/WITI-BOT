@@ -16,7 +16,7 @@ class Commands{
  save(c){const out=validateCommands(c);this.store.set('commands',out);return out;}
  receive(e){const job=this.tail.then(()=>this.run(e));this.tail=job.catch(()=>{});return job;}
  async run(e){
-  if(e.simulated)return {message:'Simulación: no consume puntos ni controla Spotify'};
+
   const [word,...words]=String(e.text||'').trim().split(/\s+/),cmd=this.settings().find(c=>c.enabled&&[c.name,...(c.aliases||[])].includes(word.toLowerCase()));if(!cmd)return null;
   if(this.store.all('SELECT id FROM command_runs WHERE id=?',[e.id]).length)return {duplicate:true};
   if(!eligible(e,cmd,this.context()))throw Error('No tienes el rol requerido para '+cmd.name);
@@ -24,7 +24,7 @@ class Commands{
   if(last&&Date.now()-last.at<cmd.cooldown*1000)throw Error('Espera el tiempo de recarga de '+cmd.name);
   const balance=()=>this.store.all('SELECT balance FROM users WHERE id=?',[e.user])[0]?.balance||0;
   if(balance()<cmd.cost)throw Error(`${e.name||e.user}, no tienes suficientes puntos. Necesitas ${cmd.cost} y tienes ${balance()}`);
-  const args=words.join(' ');let song;
+  const args=words.join(' ');let song;if(e.simulated){if(cmd.action==='points')return {message:`${e.name}, tienes ${balance()} puntos (prueba)`};return {message:`${e.name}, simulación de ${cmd.name}: saldo suficiente; no se descuenta ni controla Spotify`};}
   if(['play','skip'].includes(cmd.action)&&!this.spotify.status.connected)throw Error('Conecta Spotify antes de usar este comando');
   if(cmd.action==='play'){if(args.length<2||args.length>150)throw Error('Ejemplo: /play la chona');song=(await this.spotify.search(args))[0];if(!song)throw Error('No encontré esa canción');}
   if(cmd.action==='tts'&&!args.trim())throw Error('Escribe el texto después del comando');

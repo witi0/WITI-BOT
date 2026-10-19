@@ -1,0 +1,1 @@
+(()=>{'use strict';document.querySelectorAll('[data-community-link]').forEach(button=>button.addEventListener('click',async()=>{try{await window.witi.call('open-community-link',button.dataset.communityLink);}catch(e){document.getElementById('contributorsStatus').textContent=e.message;}}));})();

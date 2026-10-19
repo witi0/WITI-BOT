@@ -2,13 +2,13 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),os=require('node:os'),path=require('node:path'),vm=require('node:vm'),{createRequire}=require('node:module'),{EventEmitter}=require('node:events');
 const {Store}=require('../src/core.cjs'),{TikTokReader}=require('../src/tiktok.cjs');
 test('ajustes TTS heredados no bloquean snapshot, configuración OBS ni conexión por IPC real',async t=>{
- const dir=fs.mkdtempSync(path.join(os.tmpdir(),'witi-legacy-ipc-')),store=await Store.open(dir);store.set('tiktokUsername','witimc');store.set('ttsSettings',{enabled:true,prefix:'',allowedRoles:'legacy'});let win,connected=0;const handlers=new Map(),fatal=[],timers=[],speech=[];
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'witi-legacy-ipc-')),store=await Store.open(dir);store.set('tiktokUsername','witimc');store.set('ttsSettings',{enabled:true,prefix:'',allowedRoles:'legacy'});let win,connected=0;const handlers=new Map(),fatal=[],timers=[],speech=[],sounds=[],emitted=[];
  const app=new EventEmitter();Object.assign(app,{setName(){},requestSingleInstanceLock:()=>true,whenReady:()=>Promise.resolve(),getPath:()=>dir,getVersion:()=> '4.0.1',quit(){}});
  class Window{constructor(){win=this;this.webContents=new EventEmitter();Object.assign(this.webContents,{send(){},setWindowOpenHandler(){},session:{setPermissionRequestHandler(){}}});}isDestroyed(){return false;}removeMenu(){}setMenuBarVisibility(){}setAutoHideMenuBar(){}async loadFile(){} }
  const main=path.resolve(__dirname,'../src/main.cjs'),realRequire=createRequire(main);
  const connections=[];
  class Reader extends TikTokReader{constructor(options){super({...options,connectionFactory:()=>{const socket=new EventEmitter();socket.connect=async()=>{connected++;return{roomId:'123456789123456789'}};socket.disconnect=async()=>{};connections.push(socket);return socket;}});}}
- const server={playback:{status:()=>({}),enqueue(job){speech.push(job);},wake(){},disconnect(){}},url:id=>'http://127.0.0.1/overlay/'+id,templateUrl:id=>'http://127.0.0.1/template/'+id,ruleUrl:id=>'http://127.0.0.1/rule/'+id,asset:id=>'http://127.0.0.1/asset/'+id,refresh(){},broadcast(){},emit(){},close(){}};
+ const server={playback:{cancelOverlay(){},status:()=>({}),enqueue(job){speech.push(job);},wake(){},disconnect(){}},url:id=>'http://127.0.0.1/overlay/'+id,templateUrl:id=>'http://127.0.0.1/template/'+id,ruleUrl:id=>'http://127.0.0.1/rule/'+id,asset:id=>'http://127.0.0.1/asset/'+id,refresh(){},preview(){},previewAll(){},broadcast(){},emit(id,data){emitted.push({id,...data});},close(){}};
  const fakeRequire=name=>{
   if(name==='electron')return {app,BrowserWindow:Window,ipcMain:{handle:(key,fn)=>handlers.set(key,fn)},dialog:{showErrorBox:(_,message)=>fatal.push(message)},safeStorage:{isEncryptionAvailable:()=>true},shell:{},clipboard:{writeText(){}},Menu:{setApplicationMenu(){}}};
   if(name==='./core.cjs')return {...realRequire(name),Store:{open:async()=>store}};
@@ -33,7 +33,7 @@ test('ajustes TTS heredados no bloquean snapshot, configuración OBS ni conexió
  await assert.rejects(call('tts-settings',{prefixEnabled:true,prefix:''}),/prefijo/);
  const connection=await call('tiktok-connect',{username:'@witimc'});assert.equal(connection.connected,true);assert.equal(connected,2);assert.equal((await call('tiktok-state')).connected,true);
  assert.equal((await call('snapshot')).tiktok.connected,true);
- store.credit('123','Witi',100,'command-seed');connections.at(-1).emit('chat',{common:{msgId:'chat-content-command'},content:'/puntos',user:{id:'123',nickname:'Witi'}});for(let n=0;n<50&&!store.snapshot().logs.some(l=>l.event==='command-response');n++)await new Promise(setImmediate);assert.ok(store.snapshot().logs.some(l=>l.event==='command-response'&&l.results[0].message.includes('100 puntos')));
+ store.credit('123','Witi',100,'command-seed');connections.at(-1).emit('chat',{common:{msgId:'chat-content-command'},content:'/puntos',user:{id:'123',nickname:'Witi'}});for(let n=0;n<50&&!store.snapshot().logs.some(l=>l.event==='command-response');n++)await new Promise(setImmediate);assert.ok(store.snapshot().logs.some(l=>l.event==='command-response'&&l.results[0].message.includes('100 puntos')));assert.ok(emitted.some(d=>d.type==='command-response'&&d.response.name==='Witi'&&d.response.text.includes('100 puntos')));
  await call('tts-settings',{enabled:true,audience:'follower',prefix:'.',cooldown:0});
  for(const [id,status]of [['following',1],['unfollowed',0],['unknown',null]]){
   connections.at(-1).emit('chat',{common:{msgId:id},content:'.Hola',user:{id:'123',nickname:'𝓨𝓐𝓔𝓛',...(status===null?{}:{followInfo:{followStatus:String(status)}})}});
