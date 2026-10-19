@@ -29,3 +29,23 @@ html,body{margin:0;padding:0;overflow:hidden;background:transparent!important;-w
 .queue-only .queue{border:0;margin:0;padding:0}.queue-item{align-items:center;min-width:0}.queue-item img{width:36px;height:36px;object-fit:cover;border-radius:6px}.queue-item .track-detail{display:grid;gap:3px;min-width:0}.queue-item strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.queue-item span{font-size:.9em}
 
 .rank-row{min-height:var(--rank-row-height,50px);padding:3px 0!important;box-sizing:border-box}.rank-row .avatar{width:min(var(--avatar-size,45px),var(--rank-avatar,45px));height:min(var(--avatar-size,45px),var(--rank-avatar,45px))}.rank-row .rank-name,.rank-row .score{font-size:var(--rank-font,22px)!important}.medal{font-size:var(--rank-font,22px);width:1.5em;height:1.5em;display:inline-grid;place-items:center;flex:none;font-weight:800;border-radius:50%}.medal-1{background:#e9ba48;color:#322006}.medal-2{background:#bfc5d2;color:#212536}.medal-3{background:#b9835d;color:#2b1a12}:root .ticker span{animation:marquee 20s linear infinite!important}
+[hidden]{display:none!important}
+:root[data-kind=music] #stage{justify-content:flex-start}
+:root[data-kind=music] #main{flex:none;min-height:0}
+:root[data-kind=music] .card{border-width:3px;padding:18px;overflow:hidden}
+:root[data-kind=music] .music{gap:16px}
+:root[data-kind=music] .music .cover{max-width:35%;object-fit:cover}
+:root[data-kind=music] .sub{white-space:nowrap}
+.supporter-ranking{padding:16px 20px!important}
+.supporter-ranking>.heading{font-size:.43em;letter-spacing:.08em;margin-bottom:16px}
+.supporter-ranking .rank-row{border:0;white-space:nowrap;background:none!important;gap:var(--rank-gap,8px)!important}
+.supporter-ranking .rank-row:first-of-type{padding-left:0!important;padding-right:0!important}
+.supporter-ranking .rank-name{font-weight:700;letter-spacing:-.02em;text-shadow:0 1px 3px #0008}
+.supporter-ranking .score{font-weight:800}
+.supporter-ranking .medal{position:relative;border:2px solid #ffffff38;box-shadow:inset 0 1px 3px #ffffff55}
+.supporter-ranking .medal-1{background:linear-gradient(135deg,#ffed9b,#d39927);color:#563307}
+.supporter-ranking .medal-2{background:linear-gradient(135deg,#fafbff,#929fb0);color:#303b4a}
+.supporter-ranking .medal-3{background:linear-gradient(135deg,#f2c3a0,#ac683a);color:#4c2813}
+.rank-crown{position:absolute;top:-.8em;left:50%;transform:translateX(-50%);font-size:1em;color:#ffce54;line-height:1}
+.supporter-ranking .metric-icon.coin{border:2px solid #ffe6a1;border-radius:50%;width:1em;height:1em;display:inline-grid;place-items:center;font-size:.85em;background:#bc8420;color:#ffdc72;line-height:1}
+.supporter-ranking .metric-icon.heart{filter:drop-shadow(0 1px 2px #0006)}

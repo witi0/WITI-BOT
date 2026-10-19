@@ -1,3 +1,4 @@
+const {speechName}=require('./speech-name.cjs');const {Simulation}=require('./simulation.cjs');let simulation;
 const {Commands}=require('./commands.cjs');const {normalizeTts,TtsPolicy}=require('./chat-policy.cjs');let commands,bridge,liveSource='direct';const {TikfinityBridge}=require('./tikfinity-bridge.cjs');const ttsPolicy=new TtsPolicy();
 const {app,BrowserWindow,ipcMain,dialog,safeStorage,shell,clipboard,Menu}=require('electron');
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
@@ -25,22 +26,22 @@ async function runAction(a,e,context={}){
  const text=(a.text||'{user}').replaceAll('{user}',e.name||e.user).replaceAll('{text}',e.text||'');
  if(['alert','media','sound'].includes(a.type)){server.playback.enqueue({id:context.id,overlay:(a.type==='sound'||a.type==='media'&&/\.(mp3|wav|ogg)$/i.test(a.media||''))?'__sound__':context.individualOverlay?context.rule:a.overlay,preview:!!e.simulated,repeats:context.repeats||1,priority:priorityFor(e),payload:{text,...audioPayload(a),...((a.type==='sound'||a.type==='media'&&/\.(mp3|wav|ogg)$/i.test(a.media||''))?{audioUrl:server.asset(a.type==='sound'?a.sound:a.media,a.type==='sound'&&/^witi-\d{3}\.wav$/.test(a.sound||'')),volume:Math.max(0,Math.min(1,Number(a.volume??0.8)))}:{}),name:e.name,avatar:e.avatar,simulated:!!e.simulated,event:{type:e.type,coins:e.coins}}});return {status:'En cola · '+(context.repeats||1)+' reproducción(es)'};}
  if(a.type==='timer'){if(e.simulated)throw Error('Temporizador real omitido en simulación');store.changeTimer('add',a.value);}
- if(a.type==='tts'){queueSpeech(text,{...e,id:context.id});return {status:'TTS añadido a la cola de audio compartida'};}
+ if(a.type==='tts'){queueSpeech((a.text||'{user}').replaceAll('{user}',speechName(e.name||e.user)).replaceAll('{text}',e.text||''),{...e,id:context.id});return {status:'TTS añadido a la cola de audio compartida'};}
  if(a.type==='obsScene'){if(e.simulated)throw Error('OBS real omitido en simulación');if(!obsConnected)throw Error('OBS desconectado');await obs.call('SetCurrentProgramScene',{sceneName:a.text});}
- if(a.type==='wheel'){const o=store.list('overlays').find(o=>o.id===a.overlay);if(!o)throw Error('Elige la pantalla de ruleta');const winner=pickPrize(o.prizes);server.emit(o.id,{type:'wheel',winner,spinning:true});store.log({event:'wheel',user:e.user,simulated:!!e.simulated,results:[{action:'wheel',status:winner}]});}
+ if(a.type==='wheel'){const o=store.list('overlays').find(o=>o.id===a.overlay);if(!o)throw Error('Elige la pantalla de ruleta');const winner=pickPrize(o.prizes);(e.simulated?server.preview:server.emit)(o.id,{type:'wheel',winner,spinning:true});store.log({event:'wheel',user:e.user,simulated:!!e.simulated,results:[{action:'wheel',status:winner}]});}
 }
 async function receive(e){
  if(seenLive.has(e.id))return;seenLive.add(e.id);if(seenLive.size>15000)seenLive.delete(seenLive.values().next().value);
  community?.observe(e);if(e.type==='gift'){if(!e.giftImage)e.giftImage=localGiftImage(e);if(!e.simulated&&/^\d+$/.test(e.gift)&&e.giftName&&e.giftName!=='Regalo'){const known=store.get('observedGifts')||{};const g={id:e.gift,name:e.giftName,coins:Math.round(e.coins/Math.max(1,e.count)),image:e.giftImage||''};if(JSON.stringify(known[e.gift])!==JSON.stringify(g)){known[e.gift]=g;store.set('observedGifts',known);}}}liveState.apply(e);liveHub?.ingest(e);server.broadcast({type:'live',event:e});notify('live-event',e);
  if(e.type==='viewers')return;
  community?.award(e);
+ const spoken=ttsPolicy.text(e,store.get('ttsSettings')||{},liveState.snapshot());if(spoken)queueSpeech(spoken,e);
  await engine.receive(e);
  if(e.type==='comment'&&/^[!/.]/.test(e.text)){const command={...e,id:e.id+':command',type:'command'};await engine.receive(command);await commandHandler(command);}
- const spoken=ttsPolicy.text(e,store.get('ttsSettings')||{},liveState.snapshot());if(spoken)queueSpeech(spoken,e);
 }
 async function commandHandler(e){let text;try{const result=await commands.receive(e);if(!result||result.duplicate)return;text=result.message;}catch(err){text=err.message;}
  notify('command-result',{user:e.user,name:e.name,text,at:Date.now()});
- for(const o of store.list('overlays').filter(o=>o.kind==='commandresponses'))server.emit(o.id,{type:'action',text,name:e.name,avatar:e.avatar,commandResponse:true});
+ for(const o of store.list('overlays').filter(o=>o.kind==='commandresponses'))(e.simulated?server.preview:server.emit)(o.id,{type:'action',text,name:e.name,avatar:e.avatar,commandResponse:true});
  store.log({event:'command-response',user:e.user,results:[{action:'overlay',status:'Respuesta local',message:text}]});
 }
 
@@ -50,7 +51,7 @@ app.whenReady().then(async()=>{
  const dir=app.getPath('userData');mediaDir=path.join(dir,'media');fs.mkdirSync(mediaDir,{recursive:true});store=await Store.open(dir);
  {const a=store.get('appearance');if(a&&a.accent==='#d93d56'&&a.font==='gothic'){store.set('appearance',normalizeAppearance({...a,accent:'#9464ff',font:'segoe'}));}}
  if(!store.get('v2SoundMigration')){for(const rule of store.list('rules'))if(rule.actions?.some(a=>a.type==='sound'&&/^witi-\d{3}\.wav$/.test(a.sound||'')))store.save('rules',{...rule,enabled:false});store.set('v2SoundMigration',true);}installBundledMedia(store,mediaDir);installGallery(store);community=new Community(store);liveState=new LiveState(store);liveHub=new LiveHub({push:s=>notify('live-hub',s)});
- server=await startOverlayServer(store,mediaDir,{state:stateNow,audioMeter:d=>notify('audio-meter',d),playbackChange:s=>notify('playback',s),ttsPlayer:()=>win&&!win.isDestroyed()?{id:'desktop-tts',send:d=>win.webContents.send('tts-job',d)}:null,soundPlayer:()=>win&&!win.isDestroyed()&&!win.webContents.isLoading()?{id:'desktop-sound',send:d=>win.webContents.send('sound-job',d)}:null});recoverSoundQueue();engine=new Engine(store,runAction);
+ server=await startOverlayServer(store,mediaDir,{state:stateNow,previewState:()=>simulation?.snapshot()||demoState(),audioMeter:d=>notify('audio-meter',d),playbackChange:s=>notify('playback',s),ttsPlayer:()=>win&&!win.isDestroyed()?{id:'desktop-tts',send:d=>win.webContents.send('tts-job',d)}:null,soundPlayer:()=>win&&!win.isDestroyed()&&!win.webContents.isLoading()?{id:'desktop-sound',send:d=>win.webContents.send('sound-job',d)}:null});recoverSoundQueue();engine=new Engine(store,runAction);simulation=new Simulation({store,engine,ttsPolicy,speech:queueSpeech,command:commandHandler,server,hub:()=>liveHub,giftImage:localGiftImage});
  updates=new Updates({config:release,version:app.getVersion(),dir:path.join(dir,'updates'),change:s=>notify('update',s)});
  spotify=new Spotify({store,secretGet,secretSet,open:u=>shell.openExternal(u),change:(s,m)=>{if(m)liveState.music=m;notify('connection',{kind:'spotify',state:s});}});
  commands=new Commands({store,spotify,speak:queueSpeech,context:()=>liveState.snapshot()});
@@ -73,7 +74,7 @@ app.whenReady().then(async()=>{
  handle('export-overlay',async id=>{const o=store.list('overlays').find(o=>o.id===id);if(!o)throw Error('Pantalla no encontrada');const r=await dialog.showSaveDialog(win,{defaultPath:'WITI_Overlay.json'});if(!r.canceled)fs.writeFileSync(r.filePath,JSON.stringify({...o,id:undefined},null,2));});
  handle('import-overlay',async()=>{const r=await dialog.showOpenDialog(win,{properties:['openFile'],filters:[{name:'Overlay JSON',extensions:['json']}]});if(r.canceled)return;const f=r.filePaths[0];if(fs.statSync(f).size>100000)throw Error('Archivo demasiado grande');const o=validateOverlay({...JSON.parse(fs.readFileSync(f,'utf8')),id:crypto.randomUUID()});store.save('overlays',o);return o;});
  handle('copy-overlay',id=>{if(!store.list('overlays').some(o=>o.id===id))throw Error('Pantalla desconocida');clipboard.writeText(server.url(id));});
- handle('simulate',async e=>{if(!e||!['follow','share','gift','like','comment','command','manual','subscription'].includes(e.type))throw Error('Evento inválido');const event={id:crypto.randomUUID(),type:e.type,user:'usuario-prueba',name:'Usuario de prueba',avatar:'',roles:Array.isArray(e.roles)?e.roles:[],memberLevel:Number(e.memberLevel)||0,gifterLevel:Number(e.gifterLevel)||0,text:String(e.text||'').slice(0,500),gift:String(e.gift||'').slice(0,100),giftName:String(e.giftName||'Regalo').slice(0,100),count:Number(e.count)||1,coins:Number(e.coins)||0,simulated:true,at:Date.now()};liveHub?.ingest(event);server.broadcast({type:'live',event});return engine.receive(event);});
+ handle('simulate',e=>simulation.send(e));handle('simulation-reset',()=>simulation.reset());
  handle('preview-overlay',id=>{const o=store.list('overlays').find(x=>x.id===id);if(!o)throw Error('Overlay no encontrado');server.preview(id,{type:'demo',state:demoState()});if(o.kind==='actions')server.playback.enqueue({overlay:id,preview:true,payload:{name:'Witi',text:'¡Gracias por el regalo!',simulated:true}});});
  handle('open-overlay',async(id,preview=false)=>{if(!store.list('overlays').some(x=>x.id===id))throw Error('Overlay no encontrado');await shell.openExternal(server.url(id,!!preview));});
  handle('credit',d=>store.credit(String(d.user||'').slice(0,100),String(d.user||'').slice(0,100),d.amount,'manual:'+crypto.randomUUID()));handle('timer',(op,value)=>store.changeTimer(op,value));
@@ -136,7 +137,7 @@ app.whenReady().then(async()=>{
  win=new BrowserWindow({width:1480,height:980,minWidth:1050,minHeight:720,title:'WITI BOT',backgroundColor:'#06080d',icon:path.join(__dirname,'../build/icon.png'),webPreferences:{backgroundThrottling:true,autoplayPolicy:'no-user-gesture-required',preload:path.join(__dirname,'preload.cjs'),contextIsolation:true,nodeIntegration:false,sandbox:true,webSecurity:true}});
  win.webContents.on('did-finish-load',()=>{server.playback.disconnect('desktop-tts');server.playback.wake();});win.webContents.on('render-process-gone',()=>server.playback.disconnect('desktop-tts'));win.removeMenu();win.setMenuBarVisibility(false);win.setAutoHideMenuBar(true);
  win.webContents.setWindowOpenHandler(()=>({action:'deny'}));win.webContents.on('will-navigate',e=>e.preventDefault());win.webContents.session.setPermissionRequestHandler((wc,p,cb)=>cb(false));
- await win.loadFile(path.join(__dirname,'../renderer/index.html'));spotify.restore();identity.restore();
+ await win.loadFile(path.join(__dirname,'../renderer/index.html'));spotify.restore();identity.restore();const savedUsername=store.get('tiktokUsername');if(savedUsername)tiktok.connect(savedUsername).catch(()=>{});
  autoUpdate=setTimeout(()=>updates.check().catch(()=>{}),5000);autoUpdate.unref();const period=setInterval(()=>updates.check().catch(()=>{}),6*3600000);period.unref();
 }).catch(e=>{dialog.showErrorBox('WITI BOT no pudo iniciar',e.message);app.quit();});
 app.on('window-all-closed',()=>app.quit());app.on('before-quit',()=>{clearTimeout(autoUpdate);spotify?.close();identity?.close();tiktok?.disconnect();bridge?.disconnect();liveState?.close();server?.close();for(const w of popouts.values())try{w.destroy();}catch{}try{store?.flush();}catch{}});

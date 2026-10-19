@@ -63,7 +63,7 @@ function validateRule(r,overlayIds){
    if(a.type==='sound'&&!/^(?:witi-\d{3}\.wav|[a-f\d]{64}\.(?:mp3|wav|ogg))$/.test(a.sound||''))throw Error('Elige un sonido de la biblioteca');
    if(a.text&&a.text.length>500)throw Error('Texto demasiado largo');
  }
- return {...r,id:typeof r.id==='string'?r.id:crypto.randomUUID(),likeThreshold:Number(r.likeThreshold??1000),enabled:r.enabled!==false,repeatGiftAudio:r.repeatGiftAudio!==false,cooldown:Math.min(3600,Math.max(0,Number(r.cooldown)||0))};
+ return {...r,id:typeof r.id==='string'?r.id:crypto.randomUUID(),likeThreshold:r.trigger==='like'?Number(r.likeThreshold??1000):undefined,enabled:r.enabled!==false,repeatGiftAudio:r.repeatGiftAudio!==false,cooldown:Math.min(3600,Math.max(0,Number(r.cooldown)||0))};
 }
 class Engine{
  constructor(store,execute){this.store=store;this.execute=execute;this.seen=new Map();this.cooldowns=new Map();this.likes=new Map();}
@@ -75,7 +75,7 @@ class Engine{
    for(const r of this.store.list('rules')){
      if(!r.enabled||r.trigger!==event.type)continue;
      if(r.match&&r.match!==event.text&&r.match!==event.gift&&String(r.match).toLowerCase()!==String(event.giftName||'').toLowerCase())continue;
-     const key=r.id+':'+event.user;let hits=1;let threshold=0,baseHit=0;if(event.type==='like'){threshold=Math.max(1,Number(r.likeThreshold)||500);const old=this.likes.get(key)||0,total=old+Math.max(0,Math.floor(Number(event.count)||1));this.likes.delete(key);this.likes.set(key,total);if(this.likes.size>10000)this.likes.delete(this.likes.keys().next().value);baseHit=Math.floor(old/threshold);hits=Math.floor(total/threshold)-baseHit;}
+     const key=r.id+':'+(event.simulated?'test:':'live:')+event.user;let hits=1;let threshold=0,baseHit=0;if(event.type==='like'){threshold=Math.max(1,Number(r.likeThreshold)||500);const old=this.likes.get(key)||0,total=old+Math.max(0,Math.floor(Number(event.count)||1));this.likes.delete(key);this.likes.set(key,total);if(this.likes.size>10000)this.likes.delete(this.likes.keys().next().value);baseHit=Math.floor(old/threshold);hits=Math.floor(total/threshold)-baseHit;}
      for(let hit=0;hit<hits;hit++){const fired=threshold?{...event,count:threshold,likeMilestone:(baseHit+hit+1)*threshold}:event;
      const cooling=Date.now()-(this.cooldowns.get(key)||0)<r.cooldown*1000;
      if(!cooling){this.cooldowns.delete(key);this.cooldowns.set(key,Date.now());if(this.cooldowns.size>10000)this.cooldowns.delete(this.cooldowns.keys().next().value);}

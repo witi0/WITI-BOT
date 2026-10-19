@@ -1,3 +1,17 @@
+# WITI BOT 4.4.0
+
+- TTS de seguidores: estado 0 interpretado como no seguidor; se elimina la herencia de permisos anteriores cuando falta confirmacion actual. Sin consulta remota por comentario.
+- Nombres hablados en minusculas con normalizacion Unicode, limpieza de emojis y separadores; nombre visible original conservado.
+- Contenido musical ajustado al alto disponible para conservar el contorno completo de las tres fuentes.
+- Rankings con corona, medallas y valores junto al nombre; corazones y monedas animados.
+- Bordes RGB mas visibles conservando la paleta y el interruptor existentes.
+- Umbrales exclusivos de likes y multiples acciones por evento.
+- Conexion automatica al abrir con usuario guardado, reintento de cinco segundos tras fallos recuperables y respeto de limites remotos.
+- Nuevo simulador con catalogo de regalos, cantidades, identidad, estado de seguidor y vistas de prueba. Contadores de pruebas separados de los reales.
+- Se retiran las referencias comerciales de los textos visibles; integracion local compatible conservada.
+
+Validacion local: pruebas automatizadas y navegador. La conexion al LIVE real, audio de Windows, Spotify y OBS instalados requieren validacion en la PC del creador.
+
 # WITI BOT 4.3.0
 
 - RGB de texto y bordes unificado con paleta personalizada, velocidad e interruptor por pantalla.

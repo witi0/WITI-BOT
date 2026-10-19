@@ -1,4 +1,4 @@
-# WITI BOT
+# WITI BOT 4.4.0
 
 Aplicacion de escritorio para Windows 10/11 x64: TikTok LIVE, puntos, sonidos, TTS, Spotify, OBS y overlays locales.
 
@@ -16,9 +16,17 @@ Los rankings cuentan los eventos observados durante la sesion. Las alertas de li
 
 ## Comunidad
 
-El registro automatico requiere seguimiento confirmado e interaccion. Los puntos iniciales se otorgan una vez. Si el proveedor no informa la relacion de seguimiento, el usuario queda sin confirmar y no cumple el filtro de seguidores. Un evento de seguimiento confirma esa relacion; las confirmaciones se conservan localmente.
+El registro automatico requiere seguimiento confirmado e interaccion. Los puntos iniciales se otorgan una vez. Si el proveedor no informa la relacion de seguimiento, el usuario queda sin confirmar y no cumple el filtro de seguidores. El TTS decide con la confirmacion del evento actual, sin consultar la red por comentario. Un estado 0 o una negacion explicita bloquean la lectura; un estado desconocido nunca hereda el permiso guardado de una sesion anterior. El nombre hablado normaliza letras decorativas y mayusculas, conservando el nombre visible original.
 
 Los regalos observados tienen prioridad sobre el catalogo de referencia, que puede incluir variantes regionales o retiradas. Se puede filtrar para mostrar solo regalos confirmados en los propios directos.
+
+## Simulador y conexion
+
+El apartado Simulador permite elegir regalo, cantidad, usuario y estado de seguimiento, ademas de likes, follows, comentarios, comandos, compartidos y suscripciones. Los resultados visuales se ven en las URLs de prueba; el audio se reproduce en la PC. Las simulaciones usan contadores separados y no entregan puntos ni controlan Spotify, OBS o el temporizador real.
+
+Al iniciar con un usuario TikTok guardado, se intenta conectar automaticamente. Tras un fallo recuperable se reintenta a los cinco segundos, sin conexiones simultaneas; se respetan los bloqueos y tiempos de espera del servidor. Desconectar detiene los reintentos hasta conectar de nuevo.
+
+Los umbrales de likes solo aparecen en reglas de likes. Una regla admite hasta diez acciones: sonido, TTS y alerta pueden convivir.
 
 ## Publicacion
 

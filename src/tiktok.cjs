@@ -91,7 +91,7 @@ class TikTokReader{
  }
  schedule(g){
   if(!this.active||g!==this.generation||this.retry||this.state.requiresAuthorization||this.state.errorCode==='ACCOUNT')return;
-  const minimum=this.state.errorCode==='ACCESS'?60000:this.state.errorCode==='OFFLINE'||this.state.errorCode==='LIMIT'?30000:Math.min(60000,3000*2**Math.min(5,this.attempt++));const delay=Math.max(minimum,Number(this.state.retryAfterMs)||0);this.change({nextRetryAt:Date.now()+delay});this.retry=setTimeout(()=>{this.retry=null;if(this.active&&g===this.generation)this.dial(g).catch(()=>{});},delay);this.retry.unref?.();
+  const minimum=this.state.errorCode==='ACCESS'?60000:this.state.errorCode==='LIMIT'?30000:5000;const delay=Math.max(minimum,Number(this.state.retryAfterMs)||0);this.change({nextRetryAt:Date.now()+delay});this.retry=setTimeout(()=>{this.retry=null;if(this.active&&g===this.generation)this.dial(g).catch(()=>{});},delay);this.retry.unref?.();
  }
  async gifts(){if(!this.state.connected)throw Error('Conecta primero un LIVE');return [...this.giftMetadata.values()].map(g=>({id:String(g.id),name:g.name||g.giftName||'Regalo',coins:Number(g.diamond_count||g.diamondCount)||0,image:g.image?.urlList?.[0]||g.image?.url_list?.[0]||''}));}
  disconnect(){this.active=false;this.generation++;this.abort?.abort();clearTimeout(this.retry);this.retry=null;this.inFlight=null;const c=this.connection;this.connection=null;if(c)try{Promise.resolve(c.disconnect()).catch(()=>{});}catch{}this.change({status:'Desconectado',phase:'idle',connected:false,liveDetected:false,liveStatus:'unknown',roomId:'',errorCode:'',lastError:'',nextRetryAt:null,requiresAuthorization:false,connectedAt:null,resolutionSource:'',catalogWarning:''});}

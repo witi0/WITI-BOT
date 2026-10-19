@@ -24,7 +24,7 @@ label{display:block;color:#c9bad7;font-size:11px;margin:12px 0}label>span{displa
 .queue-row .tag{max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.note{color:#9e8bad;font-size:10px;line-height:1.55}.overlay-style-card{overflow:visible}.overlay-preview{isolation:isolate}.overlay-preview iframe{pointer-events:none}
 @media(max-width:1400px){.style-grid{grid-template-columns:repeat(3,minmax(150px,1fr))}}@media(max-width:1050px){.style-grid,.slider-grid,.online-sources{grid-template-columns:1fr 1fr}}
 
-/* WITI BOT 4.0 — TikFinity-inspired layout, WITI identity */
+/* WITI BOT 4.0 — servicio local-inspired layout, WITI identity */
 :root{--bg:#111013;--bg2:#17141b;--panel:rgba(35,31,38,.96);--panel2:rgba(42,36,47,.97);--line:rgba(199,112,255,.20);--line2:rgba(221,148,255,.34);--txt:#fbf9fc;--muted:#aaa0ad;--purple:#ae4cff;--purple2:#7d39e8;--pink:#e93d87;--cyan:#50d8ff;--shadow:0 18px 48px rgba(0,0,0,.30)}
 .ambient{background:radial-gradient(circle at 86% 2%,rgba(170,70,255,.10),transparent 30%),radial-gradient(circle at 9% 100%,rgba(233,61,135,.065),transparent 29%),linear-gradient(145deg,#111013,#17131b 54%,#111013)}
 .sidebar{background:linear-gradient(180deg,rgba(23,20,25,.99),rgba(16,14,18,.99));box-shadow:12px 0 42px rgba(0,0,0,.18)}
