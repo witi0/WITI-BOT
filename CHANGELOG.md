@@ -1,3 +1,27 @@
+# WITI BOT 5.2.1
+
+- Galería con 29 miniaturas SVG locales, fijas y sin RGB.
+- Vista previa bajo demanda con la configuración persistida del overlay, dimensiones, colores y animaciones. Al cerrar o salir del apartado se restaura la miniatura.
+
+# WITI BOT 5.2.0
+
+- Las reglas de regalos específicos tienen prioridad sobre las reglas generales, incluidos sus sonidos. Un regalo sin regla específica usa las reglas generales habilitadas.
+- Estadísticas por sala LIVE y reinicio al detectar un nuevo directo. Las reconexiones a la misma sala conservan la sesión; el saldo permanente de Comunidad no se borra. Top Puntos muestra puntos ganados durante el directo.
+- Los rankings completan los puestos configurados con USUARIO EJEMPLO y cero puntos, likes o monedas. Los eventos reales sustituyen esos puestos.
+- Solicitudes musicales por orden de llegada antes de las recomendaciones de Spotify, con nombre y foto de quien solicitó cada canción. La atribución acompaña a la canción actual.
+- Tres estilos persistentes por overlay: Minimalista, RGB WITI y PRO. Texto de color configurable o RGB, animaciones por cambios de contenido y reducción de movimiento.
+- Reconexión OBS: actualización de fuentes de navegador y alertas individuales, conservando sus URL estables.
+
+Validación local con eventos simulados y servidor de overlays. Las conexiones reales con Spotify, TikTok y OBS requieren comprobarse en Windows durante un directo.
+
+# WITI BOT 5.1.1
+
+- Comunidad y puntos: registro automático exclusivo para seguidores confirmados que acumulan 100 likes, envían un regalo o escriben 10 comentarios. Puntos por tap-tap, monedas, compartir, comentar, seguir, suscripción y tiempo activo estimado configurable.
+- Panel de miembros con saldo, likes, comentarios, regalos, altas y bajas de puntos, eliminación individual o reinicio confirmado.
+- Simulación de comandos con respuesta visible y vista integrada del overlay de prueba, sin alterar el saldo real ni Spotify.
+- OBS: reconexión local cuando se habilitó previamente y recarga de fuentes del navegador de WITI BOT al recuperar el WebSocket, conservando la URL estable y las escenas.
+- Moneda animada cuando aumenta el total de donadores y apariencia más simple en los demás widgets, respetando la configuración RGB.
+
 # WITI BOT 5.1.0
 
 - Overlays de referencia: música con portada, título y artista en una línea, tiempo y tres siguientes con portadas y solicitante cuando está disponible.

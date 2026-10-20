@@ -9,9 +9,9 @@ class TikfinityBridge{
   socket.addEventListener('open',()=>{if(!current())return;this.attempt=0;this.change({bridgeConnected:true,phase:'waiting',status:'servicio local local abierto. Esperando un evento del LIVE.',errorCode:''});});
   socket.addEventListener('message',message=>{if(!current())return;let packet;try{packet=JSON.parse(String(message.data));}catch{return;}
    const types={chat:'comment',gift:'gift',follow:'follow',share:'share',like:'like',subscribe:'subscription',subNotify:'subscription'};const type=types[packet.event],d=packet.data||{};
-   if(packet.event==='disconnected'||packet.event==='streamEnd'){this.change({connected:false,liveDetected:false,phase:'waiting',status:'servicio local informa que el LIVE está desconectado'});return;}
+   if(packet.event==='disconnected'||packet.event==='streamEnd'){this.change({connected:false,liveDetected:false,streamEnded:packet.event==='streamEnd',phase:'waiting',status:'servicio local informa que el LIVE está desconectado'});return;}
    if(!type||type==='gift'&&!finalGift(d))return;
-   const e=normalize(type,d);this.change({connected:true,liveDetected:true,bridgeConnected:true,phase:'connected',status:'Recibiendo eventos LIVE desde servicio local',lastEventAt:Date.now()});Promise.resolve(this.event(e)).catch(()=>{});
+   const e=normalize(type,d);this.change({connected:true,liveDetected:true,streamEnded:false,roomId:String(d.roomId||d.room_id||this.state.roomId||''),bridgeConnected:true,phase:'connected',status:'Recibiendo eventos LIVE desde servicio local',lastEventAt:Date.now()});Promise.resolve(this.event(e)).catch(()=>{});
   });
   socket.addEventListener('error',()=>{if(current())this.change({errorCode:'LOCAL_API',status:'No se pudo abrir la Event API. Abre servicio local para Windows, conecta tu LIVE y habilita la Event API.'});});
   socket.addEventListener('close',()=>{if(!current())return;const delay=Math.min(30000,2000*2**Math.min(4,this.attempt++));this.change({connected:false,bridgeConnected:false,phase:'waiting',status:'servicio local local desconectado. Reintentando…',nextRetryAt:Date.now()+delay});this.retry=setTimeout(()=>this.dial(g),delay);this.retry.unref?.();});

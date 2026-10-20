@@ -15,3 +15,16 @@ html,body{overflow:auto!important;min-height:100%;background:#0e0a19;color:#f7f0
 #overlay-editor{animation:none!important;filter:none!important;transform:none!important}
 
 #overlay-editor-preview{position:relative}
+
+.overlay-preset-btn[aria-pressed="true"]{outline:2px solid #a678ff;outline-offset:2px;background:#a678ff25!important}
+
+.overlay-static-thumbnail{display:block;width:100%;max-width:400px;height:auto;max-height:180px;object-fit:contain;filter:none!important;animation:none!important;transition:none!important}
+.overlay-preview-placeholder:has(.overlay-static-thumbnail){gap:8px;padding:12px!important}
+.overlay-preview-placeholder:has(.overlay-static-thumbnail)>b,.overlay-preview-placeholder:has(.overlay-static-thumbnail)>small{display:none}
+.overlay-preview:has(.overlay-static-thumbnail){animation:none!important;background:#141b26!important;filter:none!important}
+.overlay-preview.is-live .overlay-static-thumbnail{visibility:hidden}
+.overlay-preview.is-live .preview-toggle{position:absolute;bottom:8px;right:8px;z-index:5}
+
+.overlay-preview>.preview-toggle{position:absolute;right:8px;bottom:8px;z-index:6;pointer-events:auto}
+.overlay-preview .overlay-static-thumbnail{max-height:140px;margin-bottom:25px;flex-shrink:1;min-height:0}
+.overlay-preview.is-live:after{content:"VISTA PREVIA"!important}

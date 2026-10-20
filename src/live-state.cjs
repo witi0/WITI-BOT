@@ -1,7 +1,16 @@
 function initial(){return {likes:0,follows:0,shares:0,coins:0,gifts:0,subscribers:0,viewers:0,chat:[],feed:[],people:{},giftCounts:{},giftNameCounts:{},topGift:null,topStreak:null,last:{},votes:{}};}
 class LiveState{
- constructor(store){this.store=store;this.data={...initial(),...(store.get('liveState')||{})};this.music={connected:false,source:'none'};this.dirty=false;this.interval=setInterval(()=>{if(this.dirty){store.set('liveState',this.data);this.dirty=false;}},3000);this.interval.unref();}
- apply(e){const d=this.data;if(e.type==='viewers'){d.viewers=e.viewers;return;}const p=d.people[e.user]||{user:e.user,name:e.name||e.user,avatar:e.avatar||'',likes:0,coins:0,gifts:0};p.name=e.name||p.name;if(e.avatar)p.avatar=e.avatar;for(const key of ['gifterLevel','memberLevel'])if(Number(e[key])>0)p[key]=Number(e[key]);d.people[e.user]=p;
+ constructor(store){this.store=store;this.createdAt=Date.now();this.session=store.get('liveSession')||null;this.data=this.session?{...initial(),...(store.get('liveState')||{})}:initial();if(!this.session)store.set('liveState',this.data);this.music={connected:false,source:'none'};this.dirty=false;this.interval=setInterval(()=>{if(this.dirty){store.set('liveState',this.data);if(this.session)this.store.set('liveSession',this.session);this.dirty=false;}},3000);this.interval.unref();}
+ connectSession(status,source='direct'){
+  if(status.liveStatus==='offline'||status.streamEnded){if(this.session&&!this.session.ended){this.session.ended=true;this.store.set('liveSession',this.session);}return false;}
+  if(!status.connected)return false;
+  const room=String(status.roomId||''),account=String(status.username||'');
+  if(!this.session||this.session.ended||this.session.source!==source||(!room&&Date.now()-(this.session.lastSeenAt||this.session.startedAt)>1800000)||(room&&this.session.room&&room!==this.session.room)||(account&&this.session.account&&account!==this.session.account)){
+   this.reset();this.session={source,room,account,startedAt:Date.now(),id:require('node:crypto').randomUUID(),ended:false};this.store.set('liveSession',this.session);return true;
+  }
+  if(room&&!this.session.room){this.session.room=room;this.store.set('liveSession',this.session);}return false;
+ }
+ apply(e){if(this.session)this.session.lastSeenAt=Date.now();const d=this.data;if(e.type==='viewers'){d.viewers=e.viewers;return;}const p=d.people[e.user]||{user:e.user,name:e.name||e.user,avatar:e.avatar||'',likes:0,coins:0,gifts:0};p.name=e.name||p.name;if(e.avatar)p.avatar=e.avatar;for(const key of ['gifterLevel','memberLevel'])if(Number(e[key])>0)p[key]=Number(e[key]);d.people[e.user]=p;
  if(e.type==='like'){const n=Math.max(0,Number(e.count)||1);d.likes+=n;p.likes+=n;}
  if(e.type==='follow')d.follows++;
  if(e.type==='share')d.shares++;
@@ -12,9 +21,9 @@ class LiveState{
  const people=Object.keys(d.people);if(people.length>5000){const oldest=people.slice(0,people.length-5000);for(const id of oldest)delete d.people[id];}
  this.dirty=true;
  }
- snapshot(){return {...this.data,topgifters:Object.values(this.data.people).filter(p=>p.coins>0).sort((a,b)=>b.coins-a.coins).slice(0,20),toplikes:Object.values(this.data.people).filter(p=>p.likes>0).sort((a,b)=>b.likes-a.likes).slice(0,20),music:this.music};}
- reset(){this.data=initial();this.dirty=true;}
- close(){clearInterval(this.interval);if(this.dirty)this.store.set('liveState',this.data);}
+ snapshot(){return {...this.data,sessionId:this.session?.id||'',sessionStartedAt:this.session?.startedAt||this.createdAt,topgifters:Object.values(this.data.people).filter(p=>p.coins>0).sort((a,b)=>b.coins-a.coins).slice(0,20),toplikes:Object.values(this.data.people).filter(p=>p.likes>0).sort((a,b)=>b.likes-a.likes).slice(0,20),music:this.music};}
+ reset(){this.data=initial();if(this.session){this.session={...this.session,id:require('node:crypto').randomUUID(),startedAt:Date.now()};this.store.set('liveSession',this.session);}this.store.set('liveState',this.data);if(this.session)this.store.set('liveSession',this.session);this.dirty=false;}
+ close(){clearInterval(this.interval);if(this.dirty){this.store.set('liveState',this.data);if(this.session)this.store.set('liveSession',this.session);}}
 }
 function demoState(kind){const avatar='/avatar.svg',user={user:'demo',name:'Witi · Vista previa',avatar};const chat=[{...user,text:'¡Vamos por esa meta!',type:'comment'},{...user,user:'demo2',name:'Sher',text:'Qué buen directo 💜'}];return {simulated:true,likes:735,follows:28,shares:17,coins:360,gifts:46,subscribers:3,viewers:84,chat,feed:[{...user,giftName:'Regalo de muestra',count:5,coins:50}],giftCounts:{demo:25},topGift:{...user,giftName:'León',coins:29999,count:1},topStreak:{...user,giftName:'Rosa',coins:150,count:150},people:{demo:{...user,likes:735,coins:360}},topgifters:[{...user,coins:360},{...user,name:'Sher',coins:200},{...user,name:'Comunidad',coins:150}],toplikes:[{...user,likes:735},{...user,name:'Sher',likes:500}],votes:{a:'A',b:'B',c:'A'},last:{follow:user,share:user,subscription:user,gift:{...user,giftName:'Regalo de muestra',count:5,coins:50},comment:chat[0]},music:{connected:true,source:'demo',title:'Vista previa musical',artist:'WITI BOT · Datos de demostración',cover:'/cover.svg',avatar,profile:'Witi',progress:67000,duration:210000,playing:true,at:Date.now(),queue:[{name:'Siguiente canción',artist:'Artista de ejemplo'},{name:'Otra solicitud',artist:'Artista de ejemplo'},{name:'La tercera',artist:'Artista de ejemplo'}]}};}
-module.exports={LiveState,demoState};
+module.exports={LiveState,demoState,initial};

@@ -1,0 +1,35 @@
+@font-face{font-family:WitiUI;src:url('/reference-font.ttf?token=__TOKEN__')} 
+:root #main{font-family:WitiUI,'Segoe UI',sans-serif}
+:root .reference-requester{display:flex;align-items:center;gap:7px;margin-top:7px;font-size:.6em;color:var(--text);min-width:0}
+:root .reference-requester .avatar{width:24px!important;height:24px!important;border-radius:50%;object-fit:cover;flex:none}
+:root .reference-requester span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+:root .track-detail{flex:1;min-width:0;display:grid;gap:4px}
+:root .queue-item .reference-requester{font-size:.85em}
+:root .queue-cover{width:46px;height:46px;object-fit:cover;border-radius:8px}
+:root .rank-row{min-width:0}
+:root[data-mode=minimal] .card,:root[data-mode=minimal] .card.transparent{background:transparent!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important;padding:0!important;border-radius:0!important}
+:root[data-mode=minimal] .chat-row{background:transparent!important;border:0!important}
+:root[data-mode=minimal][data-chroma-text=off] #main :is(.title,.rank-name,.score,.metric-value,.heading,.time,.sub,.name,.message,.reference-position,.reference-artist,.queue-item strong,.queue-item span,.reference-start,.goal-value,.big,.stat,.reference-requester){color:var(--text)!important;-webkit-text-fill-color:currentColor!important}
+:root[data-mode=minimal] .reference-crown{display:none}
+:root[data-mode=minimal] .reference-avatar{width:var(--avatar-size);height:var(--avatar-size)}
+:root[data-mode=minimal] .reference-overlay .rank-row:first-child{padding-top:0!important}
+:root[data-mode=minimal] .reference-overlay .rank-row{margin-bottom:var(--rank-gap)!important}
+:root[data-mode=witi] .card:not(.transparent){background:linear-gradient(135deg,rgb(26 12 49 / var(--opacity)),rgb(10 17 32 / var(--opacity)))!important;border:2px solid var(--witi-chroma,var(--accent))!important;border-radius:var(--radius)!important;box-shadow:0 0 22px color-mix(in srgb,var(--witi-chroma) 26%,transparent),inset 0 0 22px #a855f70a!important;padding:24px!important}
+:root[data-mode=witi] .rank-row{background:linear-gradient(90deg,#a855f718,transparent)!important;border-radius:12px!important;padding:12px!important;margin:7px 0!important;border:1px solid #ffffff12!important}
+:root[data-mode=witi] .rank-row:first-of-type{background:linear-gradient(90deg,#a855f73b,#24dbff12)!important}
+:root[data-mode=witi] .avatar{border-color:var(--witi-chroma)!important;box-shadow:0 0 12px color-mix(in srgb,var(--witi-chroma) 30%,transparent)}
+:root[data-mode=pro] .card:not(.transparent){background:linear-gradient(135deg,rgb(17 24 39 / var(--opacity)),rgb(6 10 19 / var(--opacity)))!important;border:1px solid #ffffff26!important;border-radius:18px!important;box-shadow:0 18px 50px #0005!important;overflow:hidden;padding:24px!important;border-top:3px solid var(--accent)!important}
+:root[data-mode=pro] .heading{font-size:.4em;letter-spacing:.2em;color:#98a8c2;margin-bottom:20px}
+:root[data-mode=pro] .rank-row{border:0!important;border-radius:10px!important;padding:12px 14px!important;margin:6px 0!important;background:#ffffff06!important}
+:root[data-mode=pro] .rank-row:first-of-type{background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 24%,transparent),#ffffff06)!important;box-shadow:inset 3px 0 var(--accent)}
+:root[data-mode=pro] .score{font-variant-numeric:tabular-nums;color:#e9eef7;letter-spacing:-.03em}
+:root[data-mode=pro] .cover{border-radius:14px;box-shadow:0 10px 24px #0006}
+:root[data-mode=pro] .queue-item{padding:10px;background:#ffffff07;border-radius:9px;align-items:center}
+:root[data-mode=pro] .progress{height:4px}
+:root .metric-icon.coin.is-active{animation:witiCoinSpin .7s ease-in-out 2!important}
+:root .metric-icon.points.is-active{animation:pointSpark .6s ease-out 2!important}
+@keyframes pointSpark{50%{transform:rotate(90deg) scale(1.35);filter:brightness(1.7)}}
+:root .event-enter{animation:eventArrival .48s cubic-bezier(.16,1,.3,1)}
+@keyframes eventArrival{from{opacity:.35;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+:root[data-motion=off] .event-enter,:root[data-motion=off] .metric-icon{animation:none!important}
+@media(prefers-reduced-motion:reduce){.event-enter,.metric-icon,.chat-row{animation:none!important}}

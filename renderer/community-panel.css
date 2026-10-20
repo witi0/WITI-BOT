@@ -1,0 +1,24 @@
+#community .community-intro{display:grid;gap:12px;background:linear-gradient(125deg,#211b36,#171727);border:1px solid #a586ff55;border-radius:20px;padding:24px;margin-bottom:20px}
+#community .community-intro h2{margin:0;font-size:23px;letter-spacing:-.03em}
+#community .community-intro p{margin:0;color:#c6c1d6;line-height:1.55}
+#community .community-requirements{display:flex;flex-wrap:wrap;gap:8px}
+#community .community-requirements span{padding:7px 12px;border:1px solid #ac86ff45;background:#9464ff12;border-radius:100px;color:#e8ddff;font-size:12px}
+#community .community-toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+#community #userList{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,370px),1fr));gap:12px}
+#community .community-member-card{min-width:0;display:grid;grid-template-columns:44px minmax(0,1fr);column-gap:13px;row-gap:12px;align-items:start;background:#191827;border:1px solid #ffffff15;border-radius:16px;padding:15px}
+#community .community-member-card>img,#community .community-empty-avatar{height:44px;width:44px;object-fit:cover;border-radius:50%;border:2px solid #9472e1;display:grid;place-items:center;color:#bda7fd}
+#community .community-member-info{display:flex;min-width:0;flex-direction:column;gap:5px;overflow:hidden}
+#community .community-member-info strong{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#community .community-user-id{font-size:11px;color:#a79dbf;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#community .community-member-info small{color:#bdb7cb;font-size:11px;line-height:1.5}
+#community .community-point-value{color:#a8f2e3;font-size:13px}
+#community .community-member-controls{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px}
+#community .community-member-controls input{min-width:68px;max-width:95px;flex:1}
+#community .community-member-controls button{flex:1;white-space:nowrap;padding:8px 10px}
+#community .community-member-controls .community-remove{color:#ffadb8;border-color:#f27a8450}
+#community .community-ledger-row{display:flex;gap:12px;justify-content:space-between;align-items:center;border-bottom:1px solid #ffffff16;padding:10px 0;flex-wrap:wrap}
+#community .community-ledger-row span{max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#community .community-ledger-row strong{color:#9ee8b7}
+#community .community-ledger-row small{color:#aaa2b8}
+#community #communityDeleteAll{border-color:#e55a684d;color:#f0adb5}
+#community .community-time-info{font-size:12px;color:#aeb3c3}

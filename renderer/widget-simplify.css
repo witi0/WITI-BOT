@@ -1,0 +1,11 @@
+:root:not([data-reference="on"]) .card:not(.transparent){border-radius:var(--radius,16px);padding:18px 20px;background:rgb(19 18 29 / var(--opacity,.82))!important;box-shadow:0 8px 25px #0003!important;backdrop-filter:none!important}
+:root:not([data-reference="on"]) .card .heading{font-size:.44em;letter-spacing:.065em;margin-bottom:12px}
+:root:not([data-reference="on"]) .card .row{gap:12px}
+:root:not([data-reference="on"]) .card .rank-row{border-bottom:1px solid #ffffff12!important;border-radius:0!important;background:transparent!important}
+:root:not([data-reference="on"]) .card .rank-row:last-child{border-bottom:0!important}
+:root[data-alpha="clean"] .card:not(.reference-overlay){background:transparent!important;box-shadow:none!important;backdrop-filter:none!important}
+.reference-topgifters .metric-icon.coin,.reference-ranking .metric-icon.coin{width:1.1em;height:1.1em;display:inline-grid;place-items:center;flex:none;background:linear-gradient(135deg,#fff3a9,#ffbd2e 40%,#a66b03);border:2px solid #ffe8a1;border-radius:50%;font-size:1em;color:#83531a!important;text-shadow:0 1px 1px #fff6!important;box-shadow:0 0 12px #f9bd3d44!important;transform-style:preserve-3d}
+.reference-overlay .metric-icon.coin.is-active{animation:witiCoinSpin .7s cubic-bezier(.25,.7,.3,1.1) 2!important}
+@keyframes witiCoinSpin{0%{transform:perspective(80px) rotateY(0) scale(1)}50%{transform:perspective(80px) rotateY(180deg) scale(1.25)}100%{transform:perspective(80px) rotateY(360deg) scale(1)}}
+:root[data-chroma-text="on"] .reference-overlay .metric-icon.coin{color:#83531a!important}
+@media(prefers-reduced-motion:reduce){.reference-overlay .metric-icon.coin.is-active{animation:none!important}}

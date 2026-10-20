@@ -72,9 +72,9 @@ class Engine{
    if(this.seen.has(event.id))return {duplicate:true};this.seen.set(event.id,Date.now());
    if(this.seen.size>10000)this.seen.delete(this.seen.keys().next().value);
    const results=[];
-   for(const r of this.store.list('rules')){
+   for(const r of require('./gift-priority.cjs').selectRules(this.store.list('rules'),event)){
      if(!r.enabled||r.trigger!==event.type)continue;
-     const canonical=v=>String(v||'').normalize('NFKC').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLocaleLowerCase('es');if(r.match&&r.match!==event.text&&r.match!==event.gift&&![event.giftName,event.giftDisplayName,...(event.giftAliases||[])].some(name=>name&&canonical(r.match)===canonical(name)))continue;
+
      const key=r.id+':'+(event.simulated?'test:':'live:')+event.user;let hits=1;let threshold=0,baseHit=0;if(event.type==='like'){threshold=Math.max(1,Number(r.likeThreshold)||500);const old=this.likes.get(key)||0,total=old+Math.max(0,Math.floor(Number(event.count)||1));this.likes.delete(key);this.likes.set(key,total);if(this.likes.size>10000)this.likes.delete(this.likes.keys().next().value);baseHit=Math.floor(old/threshold);hits=Math.floor(total/threshold)-baseHit;}
      for(let hit=0;hit<hits;hit++){const fired=threshold?{...event,count:threshold,likeMilestone:(baseHit+hit+1)*threshold}:event;
      const cooling=Date.now()-(this.cooldowns.get(key)||0)<r.cooldown*1000;

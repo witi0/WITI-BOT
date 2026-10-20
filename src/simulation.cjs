@@ -18,7 +18,7 @@ class Simulation{
   const event=buildSimulationEvent(input,gifts);if(event.type==='gift'&&!event.giftImage)event.giftImage=this.giftImage?.(event)||'';
   this.active=true;this.state.apply(event);this.hub?.()?.ingest(event);this.server.refresh();this.server.previewAll?.({type:'live',event});
   const results=await this.engine.receive(event);
-  if(event.type==='command'||event.type==='comment'&&/^[!/.]/.test(event.text))await this.command({...event,type:'command',id:event.id+':command'});
+  if(event.type==='command'||event.type==='comment'&&/^[!/.]/.test(event.text)){const answer=await this.command({...event,type:'command',id:event.id+':command'});if(answer?.text)results.push({action:'command',status:'Respuesta entregada al overlay de pruebas',message:answer.text});else results.push({action:'command',status:'No coincide con ningún comando habilitado'});}
   const spoken=this.ttsPolicy.text(event,this.store.get('ttsSettings')||{},{...this.state.snapshot(),simulation:true});
   if(spoken){this.speech(spoken,event);results.push({action:'tts',status:'Comentario aceptado por el filtro TTS'});}
   else if(event.type==='comment')results.push({action:'tts',status:'Comentario omitido por la configuración TTS'});
