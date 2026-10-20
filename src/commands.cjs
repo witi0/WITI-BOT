@@ -34,7 +34,7 @@ class Commands{
   }catch(err){this.store.db.run('ROLLBACK');throw err;}
   let message;
   try{
-   if(cmd.action==='play'){await this.spotify.enqueue(song.uri);message=`${e.name}, tu canción ${song.name} · ${song.artist} se agregó a la cola de Spotify (${cmd.cost} puntos)`;}
+   if(cmd.action==='play'){await this.spotify.enqueue(song.uri);try{const requests=(this.store.get('spotifyRequests')||[]).filter(r=>Date.now()-r.at<21600000);requests.push({uri:song.uri,requestedBy:e.name||e.user,requestedByAvatar:e.avatar||'',at:Date.now()});this.store.set('spotifyRequests',requests.slice(-100));}catch{}message=`${e.name}, tu canción ${song.name} · ${song.artist} se agregó a la cola de Spotify (${cmd.cost} puntos)`;}
    if(cmd.action==='skip'){await this.spotify.playback('next');message='Canción saltada';}
    if(cmd.action==='points')message=`${e.name}, tienes ${balance()} puntos`;
    if(cmd.action==='tts'){this.speak(args.slice(0,300),e);message='Lectura añadida a la cola';}

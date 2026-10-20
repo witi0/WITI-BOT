@@ -1,0 +1,59 @@
+@font-face{font-family:WitiReference;src:url('/reference-font.ttf?token=__TOKEN__') format('truetype');font-weight:100 900;font-style:normal;font-display:swap}
+/* Transparent reference layouts for music and live rankings. */
+:root[data-reference=on] #stage{padding:18px;overflow:hidden}
+:root[data-reference=on] #main{isolation:isolate;font-family:WitiReference,'Segoe UI',Arial,sans-serif;font-weight:400}
+:root[data-reference=on] .card.reference-overlay{padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;backdrop-filter:none!important;overflow:visible!important}
+.reference-overlay,.reference-overlay *{text-shadow:none!important;box-shadow:none!important;backface-visibility:hidden}
+.reference-overlay .heading{display:none!important}
+:root .reference-overlay .rank-row,:root .reference-overlay .rank-row:first-of-type{background:transparent!important;border:0!important;border-radius:0!important;padding:0!important;display:flex;align-items:center;gap:var(--rank-gap,8px)!important;min-height:0!important;height:auto!important;margin:0 0 26px!important;white-space:nowrap}
+.reference-overlay .rank-row:first-child{padding-top:22px!important}
+.reference-position{display:inline-flex;align-items:center;justify-content:center;flex:none;width:34px;font-size:calc(var(--font)*1.12);color:#fff;font-weight:500;line-height:1}
+.reference-avatar{position:relative;width:var(--reference-avatar,90px);height:var(--reference-avatar,90px);flex:none}
+:root .reference-overlay .avatar{display:block;width:100%!important;height:100%!important;max-width:none!important;border-radius:50%!important;object-fit:cover;border:2px solid #ffffffb8!important;background:#151a22}
+.reference-crown{position:absolute;left:50%;top:-24%;transform:translateX(-50%);width:76%;height:40%;z-index:2;display:block}
+.reference-crown svg{display:block;width:100%;height:100%;overflow:visible}
+.reference-person{min-width:0;flex:1;padding-left:8px}
+.reference-name-line{display:flex;align-items:baseline;gap:13px;min-width:0;line-height:1.25}
+:root .reference-overlay .rank-name{font-size:calc(var(--font)*1.05)!important;font-weight:700!important;letter-spacing:0;white-space:nowrap;min-width:0;overflow:hidden;text-overflow:ellipsis;flex:initial;color:#f2f4fa!important;line-height:1.2}
+.reference-level{color:#d43865;font-size:calc(var(--font)*1.28);font-weight:650;flex:none;font-variant-numeric:tabular-nums}
+:root .reference-overlay .score{display:flex;align-items:center;gap:9px;margin-top:10px;font-size:calc(var(--font)*.9)!important;line-height:1.1;font-weight:500!important;color:#5d80a9!important;font-variant-numeric:tabular-nums}
+.reference-overlay .metric-value{color:inherit;overflow:hidden;text-overflow:ellipsis}
+.reference-toplikes .rank-row{margin-bottom:18px!important}
+:root .reference-toplikes .rank-name{font-size:calc(var(--font)*.66)!important;color:#3693b9!important;font-weight:650!important}
+:root .reference-toplikes .score{font-size:calc(var(--font)*.6)!important;color:#d5deea!important;margin-top:6px;gap:8px}
+.reference-toplikes .reference-position{font-size:calc(var(--font)*.8);width:28px}
+.reference-toplikes .reference-person{padding-left:5px}
+.reference-toplikes .reference-medal{position:relative;align-self:center;width:24px!important;height:24px;border-radius:50%;border:3px solid #f9d76e;color:#b27c0f;background:#ffed9e;font-size:13px;font-weight:800}
+.reference-medal:before,.reference-medal:after{content:'';position:absolute;top:17px;width:7px;height:11px;background:#d9a631;z-index:-1}
+.reference-medal:before{left:0;transform:rotate(20deg)}.reference-medal:after{right:0;transform:rotate(-20deg)}
+.reference-toplikes .reference-medal-2{background:#e0e5ee;border-color:#adbaca;color:#596d83}.reference-medal-2:before,.reference-medal-2:after{background:#a6b3c6}
+.reference-toplikes .reference-medal-3{background:#ffdd9a;border-color:#d48c38;color:#ad6418}.reference-medal-3:before,.reference-medal-3:after{background:#cd8b38}
+.reference-toplikes .heart{color:#ff274f!important;font-size:1.05em}
+:root .reference-music .music{display:flex;align-items:flex-start;gap:24px!important}
+:root .reference-music .cover{width:120px!important;height:120px!important;max-width:none!important;flex:none;border:0!important;border-radius:5px!important}
+.reference-music .detail{min-width:0;flex:1;padding-top:8px}
+:root .reference-music .title{font-size:1em;line-height:1.3;font-weight:650;letter-spacing:.01em;color:#f5f5f8!important;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+.reference-music .reference-artist{font-weight:550}
+.reference-music .time{display:flex!important;justify-content:flex-start;gap:0;font-size:.82em;color:#b7c1d4!important;margin-top:20px;line-height:1.3;letter-spacing:.01em}
+.reference-music .time[hidden]{display:none!important}
+.reference-music .queue{display:grid!important;gap:24px!important;border:0!important;padding:0!important;margin-top:26px!important}
+.reference-music .queue-item{display:flex;align-items:flex-start;gap:24px!important;padding:0!important;border:0!important;margin:0;font-size:1em!important;color:#e2e6f2!important}
+:root .reference-music .queue-cover{display:block;width:104px!important;height:104px!important;border:0!important;border-radius:5px!important;object-fit:cover;flex:none}
+.reference-music .track-detail{min-width:0;flex:1;padding-top:7px;display:grid;gap:6px}
+:root .reference-music .queue-item strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:.86em!important;font-weight:650;line-height:1.3;color:#f1f3f8!important}
+.reference-requester{display:flex;align-items:center;gap:5px;color:#aab8ce;font-size:.78em;line-height:1.2}
+:root .reference-music .reference-requester .avatar{width:22px!important;height:22px!important;border:0!important}
+.reference-start{font-size:.78em;color:#aab8ce;line-height:1.25;font-variant-numeric:tabular-nums}
+.reference-music .queue:empty{display:none!important}
+:root[data-chroma-text=on] .reference-overlay :is(.title,.rank-name,.reference-level,.metric-value,.score,.time,.time span,.reference-start,.reference-requester,.reference-requester span,.reference-artist,.queue-item strong,.queue-item strong span,.music-profile span,.reference-position){color:var(--witi-chroma)!important;-webkit-text-fill-color:currentColor!important;filter:saturate(var(--chroma-saturation)) brightness(var(--chroma-brightness))!important}
+:root[data-chroma-border=on] .reference-overlay .reference-avatar>.avatar{border-color:var(--witi-chroma)!important}
+.reference-overlay .is-active{animation:referenceHeart 400ms cubic-bezier(.16,1,.3,1) 2!important}
+@keyframes referenceHeart{50%{transform:scale(1.3)}}
+@media(prefers-reduced-motion:reduce){.reference-overlay .is-active{animation:none!important}}
+
+:root .card.reference-overlay .rank-name,:root .card.reference-overlay .title,:root .card.reference-overlay .queue-item strong{font-family:WitiReference,'Segoe UI',Arial,sans-serif!important}
+:root .card.reference-toplikes .rank-name{color:#3693b9!important}
+:root .card.reference-overlay .score{color:#5d80a9!important}
+:root .card.reference-toplikes .score{color:#d5deea!important}
+:root .card.reference-overlay .score .metric-value{color:inherit!important}
+:root[data-chroma-text=on] .card.reference-overlay .rank-name,:root[data-chroma-text=on] .card.reference-overlay .score,:root[data-chroma-text=on] .card.reference-overlay .score .metric-value{color:var(--witi-chroma)!important}

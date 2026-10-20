@@ -1,3 +1,10 @@
+# WITI BOT 5.1.0
+
+- Overlays de referencia: música con portada, título y artista en una línea, tiempo y tres siguientes con portadas y solicitante cuando está disponible.
+- Tops de likes, puntos y donadores sin paneles, con fotos, corona para el primer lugar y valores bajo el nombre. Niveles reales si el proveedor los informa.
+- RGB y paletas configurables; composición clásica disponible. URLs de OBS conservadas al actualizar.
+- Avatares del LIVE incorporados al ranking de puntos y niveles conservados en el estado del directo.
+
 # WITI BOT 5.0.1
 
 - Colaboradores rediseñado: WITI en rojo fijo, composición de mayor presencia, retrato destacado y descripción ampliada del creador.

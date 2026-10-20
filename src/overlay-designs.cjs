@@ -9,5 +9,5 @@ const designs={
  nowPlaying:{musicLayout:'studio',width:800,height:450},
  topLikes:{width:700,height:520,fontSize:28,top:5},topDonors:{width:700,height:520,fontSize:28,top:5}
 };
-function designDefaults(key){return {...(designs[key]||{})};}
+function designDefaults(key){return {...(designs[key]||{}),...(['nowPlaying','musicQueue','topLikes','topDonors','topPoints'].includes(key)?{referenceLayout:'reference',transparent:true,showTitle:false,showCover:true,showAvatar:true,showProfile:false,avatarSize:key==='topLikes'?64:90,width:key==='topLikes'?420:800,height:key==='topLikes'?1000:800}: {})};}
 module.exports={designs,designDefaults};
