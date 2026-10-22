@@ -1,3 +1,12 @@
+# WITI BOT 5.3.1 — Creator Workspace integrado en Electron
+
+- Se integra directamente al ejecutable Electron el diseño industrial del HTML Creator Workspace: navegación lateral agrupada, cabecera, telemetría de conexiones, dashboard y paleta titanio/obsidiana con acento esmeralda.
+- El nuevo shell conserva las páginas y los identificadores originales, y se conecta a los comandos reales de TikTok LIVE, OBS, música, comunidad, sonidos, simulador y TTS que ya existen. No es una vista previa desconectada.
+- Transiciones de secciones calculadas mediante resorte amortiguado; admite reducir movimiento y evita renderizado 3D continuo mientras el juego está abierto.
+- Se mantiene sin cambios el formato y URL de las fuentes Navegador de OBS, evitando que haya que agregarlas de nuevo.
+- Incluye nuevas pruebas de integración para exigir el shell y verificar que las 18 páginas siguen disponibles.
+- Los módulos Tauri 2 continúan como proyecto experimental independiente; este instalador es una actualización de la app Electron que ya usas.
+
 # WITI BOT 5.3.0
 
 - Puntos automáticos desde la primera interacción con audiencia explícita: todos, seguidores confirmados o requisitos de comunidad. Se conservan las cantidades y los tiempos de espera configurados.

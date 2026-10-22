@@ -1,6 +1,10 @@
-# WITI BOT 5.3.0
+# WITI BOT 5.3.1 — Creator Workspace (Electron)
 
 Aplicacion de escritorio para Windows 10/11 x64: TikTok LIVE, puntos, sonidos, TTS, Spotify, OBS y overlays locales.
+
+## Nueva interfaz
+
+La interfaz industrial del HTML de referencia se integra en la misma aplicación Electron. No hace falta instalar Tauri ni abrir otro ejecutable. Las fuentes Navegador OBS conservan sus URL locales y los módulos funcionales anteriores se mantienen. El diseño es ligero para transmitir y jugar Minecraft Bedrock con OBS.
 
 ## Desarrollo
 
