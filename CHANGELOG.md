@@ -1,3 +1,14 @@
+# WITI BOT 5.3.3 — Estabilidad de conexión TikTok LIVE
+
+- Se conserva el dashboard y el chat LIVE de la 5.3.2.
+- Se recupera el esquema de eventos del conector PirateTok de la 5.3.1, evitando que eventos experimentales afecten la apertura de sesión.
+- Las notificaciones de la interfaz y el procesamiento de telemetría no pueden hacer fallar el handshake de TikTok: el estado LIVE es independiente de las ventanas.
+- Una excepción del chat flotante ya no interrumpe el proceso de conexión.
+- Se añaden pruebas de regresión para errores de observadores de estado.
+- Los regalos y comentarios siguen disponibles; los cofres y entradas siguen sujetos a los eventos que realmente exponga el proveedor conectado.
+
+> La recepción de un LIVE real requiere validación en la PC y cuenta del creador; GitHub Actions valida el código, no la disponibilidad de TikTok.
+
 # WITI BOT 5.3.2
 
 - Rediseño final del chat LIVE: panel compacto inspirado en TikTok, anclado al Inicio y Chat & LIVE, con el mismo contenido en la ventana desprendible.

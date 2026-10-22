@@ -11,7 +11,16 @@ const {LiveHub,priorityFor,LikeThreshold}=require('./live-hub.cjs');let liveHub=
 const {Community,normalizePoints}=require('./community.cjs');const {refreshBrowserSources}=require('./obs-reconnect.cjs');let community,obsReconnectTimer;const release=require('../release.json');const {mergedCatalog}=require('./gifts.cjs');const {normalizeAppearance}=require('./appearance.cjs');const {VOICES,synthesize}=require('./voices.cjs');
 let shortcuts;let win,popouts=new Map(),store,server,engine,mediaDir,liveState,spotify,tiktok,identity,updates,obs=new OBSWebSocket(),obsConnected=false,liveLock=false,activeObs=false;const seenLive=new Set();let autoUpdate;
 app.setName('WITI BOT');if(!app.requestSingleInstanceLock())app.quit();app.on('second-instance',()=>{win?.show();win?.focus();});
-function notify(channel,data){if(channel==='live-hub')data={...data,liveState:stateNow(),appearance:normalizeAppearance(store?.get('appearance')||{})};for(const w of [win,...popouts.values()])if(w&&!w.isDestroyed()&&!w.webContents.isDestroyed?.())w.webContents.send(channel,data);}
+function notify(channel,data){
+ if(channel==='live-hub'){
+  try{data={...data,liveState:stateNow(),appearance:normalizeAppearance(store?.get('appearance')||{})};}
+  catch(err){console.warn('[WITI-LIVE] La telemetría visual no se pudo preparar:',err?.message||String(err));}
+ }
+ for(const w of [win,...popouts.values()]){
+  try{if(w&&!w.isDestroyed()&&!w.webContents.isDestroyed?.())w.webContents.send(channel,data);}
+  catch(err){console.warn('[WITI-LIVE] No se pudo actualizar una ventana:',err?.message||String(err));}
+ }
+}
 function secretSet(key,value){if(!safeStorage.isEncryptionAvailable())throw Error('El almacén seguro de Windows no está disponible');store.set('secret:'+key,safeStorage.encryptString(value).toString('base64'));}
 function secretGet(key){const s=store.get('secret:'+key);if(!s)return '';if(!safeStorage.isEncryptionAvailable())throw Error('El almacén seguro de Windows no está disponible');return safeStorage.decryptString(Buffer.from(s,'base64'));}
 function locked(){return liveLock||!!tiktok?.state.connected||!!bridge?.state.connected;}
@@ -31,7 +40,14 @@ async function runAction(a,e,context={}){
  if(a.type==='obsScene'){if(e.simulated)throw Error('OBS real omitido en simulación');if(!obsConnected)throw Error('OBS desconectado');await obs.call('SetCurrentProgramScene',{sceneName:a.text});}
  if(a.type==='wheel'){const o=store.list('overlays').find(o=>o.id===a.overlay);if(!o)throw Error('Elige la pantalla de ruleta');const winner=pickPrize(o.prizes);(e.simulated?server.preview:server.emit)(o.id,{type:'wheel',winner,spinning:true});store.log({event:'wheel',user:e.user,simulated:!!e.simulated,results:[{action:'wheel',status:winner}]});}
 }
-function syncLiveSession(s,source){if(s.connected)sessionVisible=true;else if(s.liveStatus==='offline'||s.streamEnded)sessionVisible=false;if(liveState?.connectSession(s,source)){liveHub?.resetSession();seenLive.clear();engine?.likes.clear();engine?.cooldowns.clear();lastCommandResponse=null;server?.refresh();}}
+function syncLiveSession(s,source){
+ if(s.connected)sessionVisible=true;
+ else if(s.liveStatus==='offline'||s.streamEnded)sessionVisible=false;
+ if(liveState?.connectSession(s,source)){
+  try{liveHub?.resetSession();}catch(err){console.warn('[WITI-LIVE] El reinicio visual no afectará el socket:',err?.message||String(err));}
+  seenLive.clear();engine?.likes.clear();engine?.cooldowns.clear();lastCommandResponse=null;server?.refresh();
+ }
+}
 async function receive(e){
  if(seenLive.has(e.id))return;seenLive.add(e.id);if(seenLive.size>15000)seenLive.delete(seenLive.values().next().value);
  community?.observe(e);if(e.type==='gift'){if(!e.giftImage)e.giftImage=localGiftImage(e);if(!e.simulated&&/^\d+$/.test(e.gift)&&e.giftName&&e.giftName!=='Regalo'){const known=store.get('observedGifts')||{};const g={id:e.gift,name:e.giftName,coins:Math.round(e.coins/Math.max(1,e.count)),image:e.giftImage||''};if(JSON.stringify(known[e.gift])!==JSON.stringify(g)){known[e.gift]=g;store.set('observedGifts',known);}}}if(['chest','member'].includes(e.type)){liveHub?.ingest(e);notify('live-event',e);return;}liveState.apply(e);liveHub?.ingest(e);server.broadcast({type:'live',event:e});notify('live-event',e);

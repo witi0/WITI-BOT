@@ -1,4 +1,4 @@
-# WITI BOT 5.3.2
+# WITI BOT 5.3.3
 
 La 5.3.2 integra el mismo chat estilo TikTok LIVE en Inicio, Chat & LIVE y en una ventana desprendible. El chat recibe fotos y eventos reales cuando el proveedor los entrega; las imágenes de regalos vienen del evento o del catálogo local importado. Excluye likes y compartidos del panel pero no del sistema de automatizaciones. La conexión actual de TikTok es de solo lectura. Los contadores no representan cifras reales mientras no haya un LIVE conectado.
  — Creator Workspace (Electron)
