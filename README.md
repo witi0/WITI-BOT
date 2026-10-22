@@ -1,4 +1,4 @@
-# WITI BOT 5.2.1
+# WITI BOT 5.3.0
 
 Aplicacion de escritorio para Windows 10/11 x64: TikTok LIVE, puntos, sonidos, TTS, Spotify, OBS y overlays locales.
 
@@ -41,3 +41,11 @@ El simulador compara ID, nombre original y nombre traducido del regalo. Usa la m
 En Atajos se pueden añadir y eliminar combinaciones. Ctrl+Alt+T activa/desactiva todo el TTS y corta la voz actual; Ctrl+Alt+M corta únicamente la voz y la cola de TTS. Windows puede reservar algunas combinaciones para otra aplicación: se informa el conflicto y se conservan los atajos anteriores.
 
 Colaboradores presenta a Witi como fundador y dueño y a Felipino-FLD como beta tester, con sus enlaces oficiales.
+
+## Puntos automáticos (5.3.0)
+
+Activa Puntos automáticos en Comunidad y selecciona Todos los participantes para premiar desde la primera interacción. También puedes exigir seguimiento confirmado o los requisitos de comunidad. Se conservan tus cantidades configuradas. El bono inicial se suma a la recompensa de la primera acción; los eventos repetidos no duplican puntos.
+
+Para dar puntos por cada like, configura Likes por bloque en 1. Para premiar cada comentario, configura Espera entre comentarios en 0. Los valores mayores conservan el límite elegido. El panel muestra la última acreditación y el motivo cuando no suma.
+
+Cada overlay muestra los controles que corresponden a su contenido. Activar animaciones controla todo el movimiento, incluido RGB; Colores RGB y Corazón / moneda permiten ajustes independientes mientras el interruptor general esté activo. Top Donadores muestra medallas de oro, plata y bronce.

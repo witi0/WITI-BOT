@@ -33,3 +33,10 @@
 @keyframes eventArrival{from{opacity:.35;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 :root[data-motion=off] .event-enter,:root[data-motion=off] .metric-icon{animation:none!important}
 @media(prefers-reduced-motion:reduce){.event-enter,.metric-icon,.chat-row{animation:none!important}}
+
+:root[data-motion=off],:root[data-motion=off] *,:root[data-motion=off] *::before,:root[data-motion=off] *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+:root[data-reference=on] .reference-overlay .heading{display:block!important;margin-bottom:18px;font-size:.48em}
+.reference-topgifters .reference-medal{position:relative;align-self:center;width:30px!important;height:30px;border-radius:50%;border:3px solid #f9d76e;color:#77500a!important;background:#ffed9e;font-size:15px;font-weight:800}
+.reference-topgifters .reference-medal-2{background:#e0e5ee;border-color:#adbaca;color:#435269!important}
+.reference-topgifters .reference-medal-3{background:#e7b184;border-color:#bc7d45;color:#6c3915!important}
+.reference-topgifters .reference-medal:before,.reference-topgifters .reference-medal:after{top:22px;height:12px}

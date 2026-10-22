@@ -1,3 +1,12 @@
+# WITI BOT 5.3.0
+
+- Puntos automáticos desde la primera interacción con audiencia explícita: todos, seguidores confirmados o requisitos de comunidad. Se conservan las cantidades y los tiempos de espera configurados.
+- El bono de alta se suma a la recompensa del evento; los bloques de likes y las fracciones por moneda conservan sus excedentes. Detección persistente de eventos duplicados.
+- Panel de Comunidad actualizado al recibir eventos, con última acreditación y motivo de cero puntos.
+- Controles de overlays según contenido y estilo. Interruptor general de animaciones que también detiene RGB, transiciones y partículas.
+- Top Donadores con medallas de oro, plata y bronce. Se mantienen las miniaturas fijas y la vista previa bajo demanda.
+- Validación: 152 pruebas automatizadas y comprobación en Chromium de medallas y activación/desactivación real de animaciones y RGB. Pendiente prueba con TikTok, Spotify y OBS reales en Windows.
+
 # WITI BOT 5.2.1
 
 - Galería con 29 miniaturas SVG locales, fijas y sin RGB.

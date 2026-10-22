@@ -8,7 +8,7 @@ test('registro automático exige seguimiento confirmado y una de tres formas de 
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'witi-comunidad-'));
  const store=await Store.open(dir),community=new Community(store);
  try{
-  store.set('pointSettings',{...normalizePoints(),enabled:true,perCoin:3,perLike:2,perShare:5});
+  store.set('pointSettings',{...normalizePoints(),enabled:true,audience:'community',perCoin:3,perLike:2,perShare:5});
   const send=e=>{community.observe(e);community.award(e);};
   send(evt('a','follow'));
   assert.equal(community.summary().registered,0);

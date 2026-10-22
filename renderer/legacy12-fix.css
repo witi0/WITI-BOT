@@ -28,3 +28,6 @@ html,body{overflow:auto!important;min-height:100%;background:#0e0a19;color:#f7f0
 .overlay-preview>.preview-toggle{position:absolute;right:8px;bottom:8px;z-index:6;pointer-events:auto}
 .overlay-preview .overlay-static-thumbnail{max-height:140px;margin-bottom:25px;flex-shrink:1;min-height:0}
 .overlay-preview.is-live:after{content:"VISTA PREVIA"!important}
+
+#overlay-editor-controls [hidden]{display:none!important}
+#overlay-editor-controls input:disabled{opacity:.45}

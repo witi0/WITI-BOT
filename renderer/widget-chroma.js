@@ -8,7 +8,7 @@ window.WitiChroma=Object.freeze({
   const stops=[...palette,palette[0]].map((c,i)=>`${i/palette.length*100}%{--witi-chroma:${c}}`).join('');
   const rules=`@property --witi-chroma{syntax:'<color>';inherits:true;initial-value:#9464ff}@keyframes witiPalette{${stops}}`;
   if(sheet.textContent!==rules)sheet.textContent=rules;
-  const active=options.rgb!==false,style=root.style;
+  const active=options.rgb!==false&&options.animations!==false,style=root.style;
   const seconds=Math.min(60,Math.max(.2,Number(options.rgbSpeed)||3));
   style.setProperty('--chroma-duration',seconds+'s');
   style.setProperty('--chroma-colors',`linear-gradient(${Number(options.rgbAngle)||90}deg,${[...palette,palette[0]].join(',')})`);
