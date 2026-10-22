@@ -32,3 +32,8 @@ test('El diseño mantiene el contraste industrial y respeta las preferencias de 
  assert.match(js,/new MutationObserver\(updateLive\)/);
  assert.doesNotMatch(js,/\bfetch\(/);
 });
+
+test('Creator Workspace evita fallos de navegacion en entornos sin APIs de animacion y desplazamiento',()=>{
+ assert.match(js,/typeof window\.matchMedia===.function./);
+ assert.match(js,/typeof main\.scrollTo===.function./);
+});

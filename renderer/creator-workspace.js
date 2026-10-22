@@ -4,7 +4,7 @@ const sidebar=document.querySelector('aside.cw-sidebar');
 const nav=sidebar?.querySelector('nav.cw-nav');
 const main=document.querySelector('main.cw-main');
 if(!nav||!main)return;
-const reduce=matchMedia('(prefers-reduced-motion: reduce)');
+const reduce=typeof window.matchMedia==='function'?window.matchMedia('(prefers-reduced-motion: reduce)'):{matches:false};
 const navButtons=[...nav.querySelectorAll('button[data-page]')];
 const labels=new Map(navButtons.map(b=>[b.dataset.page,b.querySelector('span')?.textContent||b.dataset.page]));
 const badge=document.getElementById('liveConnectionBadge');
@@ -60,7 +60,7 @@ function sync(){
  lockChrome();
  if(page.id===lastPage)return;
  lastPage=page.id;
- main.scrollTo({top:0,behavior:'instant'});
+ if(typeof main.scrollTo==='function')main.scrollTo({top:0,behavior:'instant'});else main.scrollTop=0;
  if(!reduce.matches&&page.animate)page.animate(bounceFrames,{duration:420,easing:'linear'});
 }
 function updateLive(){
