@@ -32,7 +32,7 @@ function soundList(){const meta=store.get('soundMetadata')||{};return (store.get
 function queueSpeech(text,e={}){
  if(store.get('ttsMuted'))return null;
  const isComment=e.type==='comment'&&!e.simulated;
- if(isComment){
+ if(isComment&&typeof server.playback.active?.values==='function'){
   const active=new Set([...server.playback.active.values()].map(a=>a.job));
   const older=store.all("SELECT id,body FROM playback_jobs WHERE overlay='__tts__' AND state='pending' ORDER BY rowid ASC").filter(row=>{
    if(active.has(row.id))return false;
