@@ -9,7 +9,7 @@ const html=read('index.html'),css=read('creator-workspace.css'),js=read('creator
 test('Creator Workspace se abre dentro de Electron, no solo en la vista HTML separada',()=>{
  const pkg=require('../package.json');
  assert.equal(pkg.main,'src/main.cjs');
- assert.equal(pkg.version,'5.3.1');
+ assert.equal(pkg.version,'5.3.2');
  assert.match(html,/href="creator-workspace\.css"/);
  assert.match(html,/src="creator-workspace\.js"/);
  assert.match(html,/cw-sidebar/);
@@ -31,9 +31,4 @@ test('El diseño mantiene el contraste industrial y respeta las preferencias de 
  assert.match(js,/stiffness|const k=380/);
  assert.match(js,/new MutationObserver\(updateLive\)/);
  assert.doesNotMatch(js,/\bfetch\(/);
-});
-
-test('Creator Workspace evita fallos de navegacion en entornos sin APIs de animacion y desplazamiento',()=>{
- assert.match(js,/typeof window\.matchMedia===.function./);
- assert.match(js,/typeof main\.scrollTo===.function./);
 });

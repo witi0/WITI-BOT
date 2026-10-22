@@ -1,3 +1,22 @@
+# WITI BOT 5.3.2
+
+- Rediseño final del chat LIVE: panel compacto inspirado en TikTok, anclado al Inicio y Chat & LIVE, con el mismo contenido en la ventana desprendible.
+- Cronología más reciente primero, nombres, avatares, niveles y roles; filtros de todos, regalos, suscripciones, seguidores, mensajes y cofres.
+- Cada regalo usa su imagen real de TikTok o su imagen importada cuando está disponible; un icono local sustituye los regalos sin imagen. Se muestran nombre, cantidad y hora.
+- Likes y compartidos excluidos de la visualización del chat, sin alterar puntos ni reglas; el envío al chat permanece en solo lectura.
+- Nuevo resumen LIVE, accesos a comandos, eventos y economía; conserva la experiencia Electron y el icono elegido.
+ — Chat LIVE e identidad WITI
+
+- Icono de aplicación actualizado al emblema W de la referencia proporcionada por el creador (barra lateral, splash, ventana e instalador Windows).
+- Ventana flotante LIVE con una sola cronología, avatares, regalos con imagen y cantidad, insignias de nivel/moderación, seguimiento, suscripciones, comandos y respuestas del bot.
+- Likes y compartidos ocultos en el chat flotante y el resumen del Inicio, sin modificar su contabilización ni sus reglas.
+- Filtros y preferencias individuales, seguimiento automático opcional, acceso al evento más reciente y tamaño/posición conservados.
+- Estadísticas reales de la sesión y top de donadores, sin cifras de demostración. Los eventos de cofres o miembros solo aparecen si el conector realmente los proporciona.
+- Nuevo resumen LIVE en Inicio, con actividad reciente y acceso directo al chat flotante.
+- Mantiene Electron y las funciones de la versión 5.3.1; no migra todavía a Tauri.
+
+---
+
 # WITI BOT 5.3.1 — Creator Workspace integrado en Electron
 
 - Se integra directamente al ejecutable Electron el diseño industrial del HTML Creator Workspace: navegación lateral agrupada, cabecera, telemetría de conexiones, dashboard y paleta titanio/obsidiana con acento esmeralda.

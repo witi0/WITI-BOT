@@ -2,7 +2,7 @@
 const {EventEmitter}=require('node:events');
 // Import the ESM package lazily: Electron's main process is CommonJS.
 const loadPirateTok=()=>import('piratetok-live-js');
-const WebcastEvent={CHAT:'chat',GIFT:'gift',FOLLOW:'follow',SHARE:'share',LIKE:'like',SUB_NOTIFY:'subNotify',ROOM_USER:'roomUserSeq',STREAM_END:'liveEnded'};
+const WebcastEvent={CHAT:'chat',GIFT:'gift',FOLLOW:'follow',SHARE:'share',LIKE:'like',SUB_NOTIFY:'subNotify',ROOM_USER:'roomUserSeq',TREASURE_BOX:'treasureBox',TREASURE_BOX_OPEN:'treasureBoxOpen',MEMBER_JOIN:'memberJoin',STREAM_END:'liveEnded'};
 const ControlEvent={ERROR:'error',DISCONNECTED:'disconnected'};
 class TikTokLiveConnection extends EventEmitter{
  constructor(username,{loader=loadPirateTok}={}){super();this.username=username;this.loader=loader;this.cancelled=false;this.client=null;this.roomId='';this.startedAt=0;this.ended=false;}
