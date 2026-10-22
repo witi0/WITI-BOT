@@ -2,7 +2,7 @@
 const {test}=require('node:test');const assert=require('node:assert/strict');const fs=require('node:fs'),path=require('node:path');const {LiveHub,safeEvent}=require('../src/live-hub.cjs');
 const root=path.resolve(__dirname,'..');const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 test('5.3.2 conserva la app Electron con popout independiente y resumen real',()=>{
- const pkg=require('../package.json');assert.equal(pkg.version,'5.3.2');assert.equal(pkg.main,'src/main.cjs');
+ const pkg=require('../package.json');assert.equal(pkg.version,require('../package-lock.json').version);assert.equal(pkg.main,'src/main.cjs');
  const html=read('renderer/index.html');const main=read('src/main.cjs');
  for(const name of ['cw-open-chat','cw-recent-events','cw-top-donors','cw-viewers','cw-gifts'])assert.ok(html.includes('id="'+name+'"'));
  assert.match(html,/live-dashboard-5\.3\.2\.js/);assert.match(html,/class="cw-logo-img" src="app-icon\.png"/);

@@ -9,7 +9,7 @@ const html=read('index.html'),css=read('creator-workspace.css'),js=read('creator
 test('Creator Workspace se abre dentro de Electron, no solo en la vista HTML separada',()=>{
  const pkg=require('../package.json');
  assert.equal(pkg.main,'src/main.cjs');
- assert.equal(pkg.version,'5.3.2');
+ assert.equal(pkg.version,require('../package-lock.json').version);
  assert.match(html,/href="creator-workspace\.css"/);
  assert.match(html,/src="creator-workspace\.js"/);
  assert.match(html,/cw-sidebar/);
