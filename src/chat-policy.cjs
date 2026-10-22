@@ -1,6 +1,8 @@
 'use strict';
 const {followerStatus}=require('./follower.cjs');
 const {speechName}=require('./speech-name.cjs');
+const {VOICES}=require('./voices.cjs');
+const WITI_IDS=new Set(VOICES.map(v=>v.id));
 const number=(v,min,max,fallback)=>Number.isFinite(Number(v))?Math.min(max,Math.max(min,Number(v))):fallback;
 function normalizeTts(s={}, {strict=false}={}){
  if(!s||typeof s!=='object'||Array.isArray(s))s={};
@@ -10,7 +12,7 @@ function normalizeTts(s={}, {strict=false}={}){
   // Loading legacy preferences must never block snapshots, overlays or connections.
   prefix='.';
  }
- return {enabled:!!s.enabled,prefixEnabled,prefix,readName:s.readName!==false,engine:s.engine==='online'?'online':'local',voice:String(s.voice||'').slice(0,150),rate:number(s.rate,.5,2,1),pitch:number(s.pitch,0,2,1),random:!!s.random,audience:['all','follower','moderator','subscriber','topgifter','selected'].includes(s.audience)?s.audience:'all',allowedRoles:(Array.isArray(s.allowedRoles)?s.allowedRoles:[]).filter(r=>['follower','moderator','subscriber','topgifter'].includes(r)),minMemberLevel:Math.floor(number(s.minMemberLevel,0,100,0)),minGifterLevel:Math.floor(number(s.minGifterLevel,0,100,0)),topDonors:Math.floor(number(s.topDonors,0,20,0)),cooldown:Math.floor(number(s.cooldown,0,300,3)),maxLength:Math.floor(number(s.maxLength,20,500,300)),skipCommands:s.skipCommands!==false,blockedUsers:String(s.blockedUsers||'').slice(0,2000),blockedWords:String(s.blockedWords||'').slice(0,2000)};
+ return {enabled:!!s.enabled,prefixEnabled,prefix,readName:s.readName!==false,engine:s.engine==='online'||WITI_IDS.has(String(s.voice||''))?'online':s.engine==='local'?'local':'online',voice:String(s.voice||'').slice(0,150),rate:number(s.rate,.5,2,1),pitch:number(s.pitch,0,2,1),random:!!s.random,audience:['all','follower','moderator','subscriber','topgifter','selected'].includes(s.audience)?s.audience:'all',allowedRoles:(Array.isArray(s.allowedRoles)?s.allowedRoles:[]).filter(r=>['follower','moderator','subscriber','topgifter'].includes(r)),minMemberLevel:Math.floor(number(s.minMemberLevel,0,100,0)),minGifterLevel:Math.floor(number(s.minGifterLevel,0,100,0)),topDonors:Math.floor(number(s.topDonors,0,20,0)),cooldown:Math.floor(number(s.cooldown,0,300,3)),maxLength:Math.floor(number(s.maxLength,20,500,300)),skipCommands:s.skipCommands!==false,blockedUsers:String(s.blockedUsers||'').slice(0,2000),blockedWords:String(s.blockedWords||'').slice(0,2000)};
 }
 function eligible(e,s={},context={}){
  const following=followerStatus(e);const roles=[...new Set([...(e.roles||[]).filter(r=>r!=='follower'),...(following===true?['follower']:[])])],audience=s.audience||'all';

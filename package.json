@@ -1,6 +1,6 @@
 {
   "name": "witi-bot",
-  "version": "5.3.3",
+  "version": "5.3.4",
   "description": "Panel de control de TikTok LIVE con eventos, overlays y automatizaciones",
   "main": "src/main.cjs",
   "scripts": {

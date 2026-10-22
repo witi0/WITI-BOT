@@ -1,3 +1,12 @@
+# WITI BOT 5.3.4 — WitiVoces y lectura rápida
+
+- Se vuelven a mostrar explícitamente las siete voces originales de WitiVoces; la opción Windows se conserva como respaldo local. Si una voz antigua estaba guardada, se restaura su motor online.
+- Se reducen los límites de espera remota por comentario de hasta 17 segundos a 4.4 segundos como máximo para los dos intentos, más el tiempo normal de red y reproducción.
+- Cuando los proveedores comunitarios fallan se usa temporalmente Windows, sin repetir esperas remotas por cada comentario durante 30 segundos; se muestra el estado real al usuario.
+- La cola de comentarios TTS evita acumular lecturas antiguas: conserva la lectura activa y como máximo una lectura en espera; no cancela sonidos, comandos o pruebas manuales.
+- Se corrigen cancelaciones y límites de tiempo de la reproducción para impedir que un audio atascado bloquee toda la cola.
+- No se modifican TikTok LIVE, OBS, el diseño del chat ni los datos de Comunidad.
+
 # WITI BOT 5.3.3 — Estabilidad de conexión TikTok LIVE
 
 - Se conserva el dashboard y el chat LIVE de la 5.3.2.

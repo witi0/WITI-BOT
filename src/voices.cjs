@@ -10,37 +10,67 @@ const VOICES = Object.freeze([
   {id:'es_mx_female_supermom',name:'Super Mamá',gender:'Femenina',locale:'México'},
   {id:'es_mx_male_transformer',name:'Optimus MX',gender:'Personaje',locale:'México'},
 ]);
-const ENDPOINTS = ['https://tiktok-tts.weilnet.workers.dev/api/generation','https://tiktoktts.com/api/tiktok-tts'];
-let lastAttempt = 0;
+const ENDPOINTS = Object.freeze([
+ 'https://tiktoktts.com/api/tiktok-tts',
+ 'https://tiktok-tts.weilnet.workers.dev/api/generation'
+]);
+// WitiVoces are remote TikTok-style voices. No server is guaranteed to be online.
+const FAILED_BACKOFF_MS=30000;
+const TIMEOUTS_MS=[2400,2000];
+let unavailableUntil=0;
+let preferredEndpoint=0;
 function normalizeTtsText(value){
  if(typeof value!=='string')throw Error('Texto inválido');
  const clean=value.replace(/https?:\/\/\S+/gi,' ').replace(/(^|\s)@[\p{L}\p{N}._-]+/gu,'$1').replace(/\s+/g,' ').trim().slice(0,200);
  if(!clean)throw Error('Escribe un texto para probar la voz');return clean;
 }
-async function synthesize({voice,text}, options={}){
+function extractAudio(body){
+ if(!body||typeof body!=='object'||body.success===false)return null;
+ let b64=body.data||body.audio||body.audioBase64||body.audio_base64||body.base64||body?.data?.v_str;
+ if(typeof b64!=='string')return null;
+ b64=b64.replace(/^data:audio\/[\w.+-]+;base64,/, '').replace(/\s+/g,'');
+ if(!/^[a-zA-Z0-9+/]+={0,2}$/.test(b64))return null;
+ const bytes=Buffer.from(b64,'base64');
+ if(bytes.length<500||bytes.length>2000000)return null;
+ return bytes;
+}
+async function requestAudio(fetcher,url,voice,text,timeout){
+ const controller=new AbortController();
+ let timer;
+ const deadline=new Promise((_,reject)=>{timer=setTimeout(()=>{controller.abort();reject(Error('Tiempo agotado'));},timeout);});
+ try{
+  const response=await Promise.race([
+   fetcher(url,{method:'POST',headers:{'content-type':'application/json','accept':'application/json'},body:JSON.stringify({text,voice}),signal:controller.signal}),
+   deadline
+  ]);
+  if(!response?.ok)throw Error(`Proveedor respondió ${response?.status||'sin respuesta'}`);
+  const raw=await Promise.race([
+   response.text(),
+   deadline
+  ]);
+  if(typeof raw!=='string'||raw.length>4000000)throw Error('Respuesta demasiado grande');
+  let body;try{body=JSON.parse(raw);}catch{throw Error('Respuesta no compatible');}
+  const bytes=extractAudio(body);
+  if(!bytes)throw Error('El proveedor no entregó audio válido');
+  return bytes;
+ }finally{clearTimeout(timer);controller.abort();}
+}
+async function synthesize({voice,text},options={}){
  if(!VOICES.some(v=>v.id===voice))throw Error('La voz no pertenece al catálogo antiguo');
  const clean=normalizeTtsText(text), fetcher=options.fetcher||fetch;
- if(Date.now()-lastAttempt<1200 && !options.fetcher)throw Error('Espera un momento antes de generar otra voz');
- if(!options.fetcher)lastAttempt=Date.now();
+ const injected=!!options.fetcher;
+ if(!injected&&Date.now()<unavailableUntil)throw Error('WitiVoces temporalmente sin respuesta. Se utilizará voz local de Windows.');
  let lastError='Proveedor no disponible';
- for(const url of ENDPOINTS){
-  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),8500);
+ const order=preferredEndpoint===0?[0,1]:[1,0];
+ for(let i=0;i<order.length;i++){
+  const index=order[i],url=ENDPOINTS[index];
   try{
-   const response=await fetcher(url,{method:'POST',headers:{'content-type':'application/json','accept':'application/json'},body:JSON.stringify({text:clean,voice}),signal:controller.signal});
-   if(!response.ok){lastError=`Proveedor respondió ${response.status}`;continue;}
-   const raw=await response.text();if(raw.length>4000000)throw Error('Audio demasiado grande');
-   let body;try{body=JSON.parse(raw);}catch{lastError='Respuesta no compatible';continue;}
-   let b64=body.data||body.audio||body.audioBase64||body.audio_base64||body.base64;
-   if(body.success===false){lastError=String(body.error||'Audio no generado').slice(0,140);continue;}
-   if(typeof b64!=='string')continue;
-   b64=b64.replace(/^data:audio\/[\w.+-]+;base64,/,'');
-   if(!/^[a-zA-Z0-9+/\s]+={0,2}$/.test(b64))continue;
-   const bytes=Buffer.from(b64,'base64');
-   if(bytes.length<500||bytes.length>2000000)continue;
-   return {mime:'audio/mpeg',data:bytes.toString('base64'),provider:'Comunitario no oficial',voice};
-  }catch(e){lastError=e.name==='AbortError'?'Tiempo agotado':String(e.message||e).slice(0,140);}
-  finally{clearTimeout(timer);}
+   const bytes=await requestAudio(fetcher,url,voice,clean,Math.max(100,Number(options.timeouts?.[i]||TIMEOUTS_MS[i])));
+   if(!injected){preferredEndpoint=index;unavailableUntil=0;}
+   return {mime:'audio/mpeg',data:bytes.toString('base64'),provider:'WitiVoces · comunidad (no oficial)',voice};
+  }catch(e){lastError=String(e?.message||e).slice(0,120);}
  }
- throw Error(`No se pudo generar la voz online: ${lastError}. Usa una voz instalada en Windows como alternativa.`);
+ if(!injected)unavailableUntil=Date.now()+FAILED_BACKOFF_MS;
+ throw Error(`WitiVoces sin respuesta: ${lastError}. Se utilizará voz local de Windows.`);
 }
 module.exports={VOICES,normalizeTtsText,synthesize};
