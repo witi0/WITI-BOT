@@ -43,7 +43,7 @@ class Community{
   const name=String(e.name||existing?.name||user).slice(0,100),avatar=String(e.avatar||existing?.avatar||'').slice(0,2048);
   s.db.run('INSERT OR IGNORE INTO community_members(user,follower,registered,likes,commentAt,shareAt,name,avatar,comments,gifts,shares,joinedAt,seenAt) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)',[user,follower,registered?1:0,likes,existing?.commentAt||0,existing?.shareAt||0,name,avatar,comments,gifts,shares,newlyRegistered?now:(existing?.joinedAt||0),now]);
   s.db.run('UPDATE community_members SET follower=?,registered=?,likes=?,name=?,avatar=?,comments=?,gifts=?,shares=?,joinedAt=?,seenAt=? WHERE user=?',[follower,registered?1:0,likes,name,avatar,comments,gifts,shares,newlyRegistered?now:(existing?.joinedAt||0),now,user]);
-  e.follower=raw===null?(follower===1?true:follower===0?false:null):raw;
+  e.follower=raw;
   e.roles=[...new Set([...(e.roles||[]).filter(x=>x!=='follower'),...(e.follower===true?['follower']:[])])];
   e.communityJustRegistered=newlyRegistered;if(e.id)s.db.run('INSERT OR IGNORE INTO community_observations VALUES(?)',[e.id]);
   if(newlyRegistered){s.db.run('INSERT OR IGNORE INTO users(id,name) VALUES(?,?)',[user,name]);s.db.run('UPDATE users SET name=? WHERE id=?',[name,user]);s.flush();}else this.delayedFlush();
