@@ -1,3 +1,11 @@
+## 5.3.6 · Corrección de /play y respuestas Spotify
+
+- El comando /play confirma correctamente el alta de una canción cuando Spotify acepta la petición HTTP sin devolver un cuerpo JSON.
+- Los controles de reproducción (siguiente, anterior, pausa, reanudar) también aceptan respuestas sin contenido.
+- Las consultas que sí necesitan datos JSON mantienen su validación y muestran errores de formato solo cuando corresponde.
+- Ante errores HTTP reales, /play conserva la devolución de puntos y proporciona mensajes concretos de sesión, Premium o dispositivo activo.
+- Se conserva la atribución del solicitante y la lista de Siguientes 3 al confirmarse el alta.
+
 ## 5.3.5 · WitiVoces y cola LIVE
 
 - WitiVoces no sustituye silenciosamente las voces elegidas por Microsoft; informa fallas del proveedor.
