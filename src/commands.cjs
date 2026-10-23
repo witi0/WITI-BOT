@@ -11,7 +11,7 @@ function validateCommands(input){
  });
 }
 class Commands{
- constructor({store,spotify,speak=()=>{},context=()=>({})}){Object.assign(this,{store,spotify,speak,context});this.tail=Promise.resolve();store.db.run('CREATE TABLE IF NOT EXISTS command_runs(id TEXT PRIMARY KEY,user TEXT NOT NULL,command TEXT NOT NULL,state TEXT NOT NULL,cost INTEGER NOT NULL,at INTEGER NOT NULL)');}
+ constructor({store,spotify,speak=()=>{},context=()=>({}),queueChanged=()=>{}}){Object.assign(this,{store,spotify,speak,context,queueChanged});this.tail=Promise.resolve();store.db.run('CREATE TABLE IF NOT EXISTS command_runs(id TEXT PRIMARY KEY,user TEXT NOT NULL,command TEXT NOT NULL,state TEXT NOT NULL,cost INTEGER NOT NULL,at INTEGER NOT NULL)');}
  settings(){return this.store.get('commands')||defaults;}
  save(c){const out=validateCommands(c);this.store.set('commands',out);return out;}
  receive(e){const job=this.tail.then(()=>this.run(e));this.tail=job.catch(()=>{});return job;}
@@ -32,15 +32,15 @@ class Commands{
    if(cmd.cost){this.store.db.run('UPDATE users SET balance=balance-? WHERE id=? AND balance>=?',[cmd.cost,e.user,cmd.cost]);if(this.store.db.getRowsModified()!==1)throw Error('Saldo insuficiente');this.store.db.run('INSERT INTO ledger VALUES(?,?,?,?,?,?)',[require('node:crypto').randomUUID(),'command:'+e.id,e.user,-cmd.cost,balance(),new Date().toISOString()]);}
    this.store.db.run('INSERT INTO command_runs VALUES(?,?,?,?,?,?)',[e.id,e.user,cmd.name,'reserved',cmd.cost,Date.now()]);this.store.db.run('COMMIT');this.store.flush();
   }catch(err){this.store.db.run('ROLLBACK');throw err;}
-  let message;
+  let message,spotifyQueued=false;
   try{
-   if(cmd.action==='play'){await this.spotify.enqueue(song.uri);require('./music-requests.cjs').rememberRequest(this.store,song,e);message=`${e.name}, tu canción ${song.name} · ${song.artist} se agregó a la cola de Spotify (${cmd.cost} puntos)`;}
+   if(cmd.action==='play'){const music=require('./music-requests.cjs');const requestId=music.rememberRequest(this.store,song,e);try{await this.spotify.enqueue(song.uri);}catch(err){try{music.forgetRequest(this.store,requestId);}catch{}throw err;}spotifyQueued=true;try{this.queueChanged();}catch{}message=`${e.name||e.user}, ${song.name} · ${song.artist} añadida a Spotify y a Siguientes 3 (${cmd.cost} puntos)`;}
    if(cmd.action==='skip'){await this.spotify.playback('next');message='Canción saltada';}
    if(cmd.action==='points')message=`${e.name}, tienes ${balance()} puntos`;
    if(cmd.action==='tts'){this.speak(args.slice(0,300),e);message='Lectura añadida a la cola';}
    if(cmd.action==='reply')message=cmd.text.replaceAll('{user}',e.name).replaceAll('{args}',args).replaceAll('{points}',String(balance()));
    this.store.db.run("UPDATE command_runs SET state='done' WHERE id=?",[e.id]);this.store.flush();return {message};
-  }catch(err){if(cmd.cost)this.store.credit(e.user,e.name,cmd.cost,'refund:'+e.id);this.store.db.run("UPDATE command_runs SET state='failed' WHERE id=?",[e.id]);this.store.flush();throw Error(err.message+(cmd.cost?' · puntos devueltos':''));}
+  }catch(err){if(spotifyQueued){try{this.store.db.run("UPDATE command_runs SET state='done' WHERE id=?",[e.id]);this.store.flush();}catch{}return {message:`Spotify confirmó ${song?.name||'la canción'} para ${e.name||e.user}; hubo un error al guardar el estado local. No se devolverán puntos porque la canción ya fue enviada.`};}if(cmd.cost)this.store.credit(e.user,e.name,cmd.cost,'refund:'+e.id);this.store.db.run("UPDATE command_runs SET state='failed' WHERE id=?",[e.id]);this.store.flush();throw Error(err.message+(cmd.cost?' · puntos devueltos':''));}
  }
 }
 module.exports={Commands,validateCommands,defaults};

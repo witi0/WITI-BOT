@@ -1,3 +1,11 @@
+## 5.3.5 · WitiVoces y cola LIVE
+
+- WitiVoces no sustituye silenciosamente las voces elegidas por Microsoft; informa fallas del proveedor.
+- Síntesis comunitaria concurrente con límites de espera acotados y colas de comentarios recientes.
+- Preserva el estado de seguidor entre eventos y exige seguimiento + 100 likes, un regalo o 10 comentarios para aparecer en Comunidad. Aísla fallos de puntos de los comandos.
+- /play registra atribución antes del envío a Spotify, revierte solicitudes fallidas y actualiza Siguientes 3 inmediatamente.
+- El overlay musical muestra las solicitudes de WITI BOT con quién las pidió y su avatar cuando existe.
+
 # WITI BOT 5.3.4 — WitiVoces y lectura rápida
 
 - Se vuelven a mostrar explícitamente las siete voces originales de WitiVoces; la opción Windows se conserva como respaldo local. Si una voz antigua estaba guardada, se restaura su motor online.

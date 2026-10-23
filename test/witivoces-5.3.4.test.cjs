@@ -44,7 +44,8 @@ test('el TTS de los comentarios reduce cola antigua sin cancelar mensajes manual
 test('playback tiene límites de espera, permite cortar el audio y conserva live + OBS',()=>{
  const renderer=read('renderer/app.js');
  assert.match(renderer,/abortActiveVoice/);
- assert.match(renderer,/remoteUnavailableUntil=Date\.now\(\)\+30000/);
+ assert.match(renderer,/remoteUnavailableUntil=Date\.now\(\)\+10000/);
+ assert.doesNotMatch(renderer,/Usando voz de Windows/);
  assert.match(renderer,/WitiVoces no disponible/);
  assert.match(read('src/main.cjs'),/new TikTokReader/);
  assert.match(read('src/main.cjs'),/refreshBrowserSources/);

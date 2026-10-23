@@ -15,8 +15,8 @@ const ENDPOINTS = Object.freeze([
  'https://tiktok-tts.weilnet.workers.dev/api/generation'
 ]);
 // WitiVoces are remote TikTok-style voices. No server is guaranteed to be online.
-const FAILED_BACKOFF_MS=30000;
-const TIMEOUTS_MS=[2400,2000];
+const FAILED_BACKOFF_MS=10000;
+const TIMEOUTS_MS=[1300,1700];
 let unavailableUntil=0;
 let preferredEndpoint=0;
 function normalizeTtsText(value){
@@ -59,18 +59,15 @@ async function synthesize({voice,text},options={}){
  if(!VOICES.some(v=>v.id===voice))throw Error('La voz no pertenece al catálogo antiguo');
  const clean=normalizeTtsText(text), fetcher=options.fetcher||fetch;
  const injected=!!options.fetcher;
- if(!injected&&Date.now()<unavailableUntil)throw Error('WitiVoces temporalmente sin respuesta. Se utilizará voz local de Windows.');
+ if(!injected&&Date.now()<unavailableUntil)throw Error('WitiVoces temporalmente sin respuesta. Elige Windows manualmente si deseas voz local.');
  let lastError='Proveedor no disponible';
  const order=preferredEndpoint===0?[0,1]:[1,0];
- for(let i=0;i<order.length;i++){
-  const index=order[i],url=ENDPOINTS[index];
-  try{
-   const bytes=await requestAudio(fetcher,url,voice,clean,Math.max(100,Number(options.timeouts?.[i]||TIMEOUTS_MS[i])));
-   if(!injected){preferredEndpoint=index;unavailableUntil=0;}
-   return {mime:'audio/mpeg',data:bytes.toString('base64'),provider:'WitiVoces · comunidad (no oficial)',voice};
-  }catch(e){lastError=String(e?.message||e).slice(0,120);}
- }
+ try{
+  const result=await Promise.any(order.map((index,i)=>requestAudio(fetcher,ENDPOINTS[index],voice,clean,Math.max(100,Number(options.timeouts?.[i]||TIMEOUTS_MS[i]))).then(bytes=>({bytes,index}))));
+  if(!injected){preferredEndpoint=result.index;unavailableUntil=0;}
+  return {mime:'audio/mpeg',data:result.bytes.toString('base64'),provider:'WitiVoces · comunidad (no oficial)',voice};
+ }catch(err){lastError=String(err.errors?.map(e=>e.message||e).join(' / ')||err.message||err).slice(0,150);}
  if(!injected)unavailableUntil=Date.now()+FAILED_BACKOFF_MS;
- throw Error(`WitiVoces sin respuesta: ${lastError}. Se utilizará voz local de Windows.`);
+ throw Error(`WitiVoces sin respuesta: ${lastError}. Elige Windows manualmente si deseas voz local.`);
 }
 module.exports={VOICES,normalizeTtsText,synthesize};

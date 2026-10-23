@@ -37,13 +37,13 @@ class Community{
   const gifts=(existing?.gifts||0)+(e.type==='gift'?Math.max(1,Math.floor(Number(e.count)||1)):0);
   const shares=(existing?.shares||0)+(e.type==='share'?1:0);
   const policy=normalizePoints(s.get('pointSettings')||{}),requirements=follower===1&&(likes>=100||gifts>=1||comments>=10);
-  const qualifies=requirements||(policy.enabled&&(policy.audience==='all'||policy.audience==='follower'&&follower===1));
+  const qualifies=requirements;
   const registered=existing?.registered===1||qualifies;
   const newlyRegistered=!existing?.registered&&qualifies;
   const name=String(e.name||existing?.name||user).slice(0,100),avatar=String(e.avatar||existing?.avatar||'').slice(0,2048);
   s.db.run('INSERT OR IGNORE INTO community_members(user,follower,registered,likes,commentAt,shareAt,name,avatar,comments,gifts,shares,joinedAt,seenAt) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)',[user,follower,registered?1:0,likes,existing?.commentAt||0,existing?.shareAt||0,name,avatar,comments,gifts,shares,newlyRegistered?now:(existing?.joinedAt||0),now]);
   s.db.run('UPDATE community_members SET follower=?,registered=?,likes=?,name=?,avatar=?,comments=?,gifts=?,shares=?,joinedAt=?,seenAt=? WHERE user=?',[follower,registered?1:0,likes,name,avatar,comments,gifts,shares,newlyRegistered?now:(existing?.joinedAt||0),now,user]);
-  e.follower=raw;
+  e.follower=raw===null?(follower===1?true:follower===0?false:null):raw;
   e.roles=[...new Set([...(e.roles||[]).filter(x=>x!=='follower'),...(e.follower===true?['follower']:[])])];
   e.communityJustRegistered=newlyRegistered;if(e.id)s.db.run('INSERT OR IGNORE INTO community_observations VALUES(?)',[e.id]);
   if(newlyRegistered){s.db.run('INSERT OR IGNORE INTO users(id,name) VALUES(?,?)',[user,name]);s.db.run('UPDATE users SET name=? WHERE id=?',[name,user]);s.flush();}else this.delayedFlush();
@@ -78,7 +78,7 @@ class Community{
     }
     if(m.lastEligibleAt&&now>=m.lastEligibleAt&&now-m.lastEligibleAt<=120000)m.activeMs=(m.activeMs||0)+(now-m.lastEligibleAt);
     const mins=Math.floor((m.activeMs||0)/60000);amount+=Math.max(0,mins-(m.creditedMinutes||0))*p.perMinute;m.creditedMinutes=mins;m.lastEligibleAt=now;
-    s.db.run('UPDATE community_members SET registered=1,joinedAt=CASE WHEN joinedAt=0 THEN ? ELSE joinedAt END WHERE user=?',[now,e.user]);
+    if(m.registered===1)s.db.run('UPDATE community_members SET joinedAt=CASE WHEN joinedAt=0 THEN ? ELSE joinedAt END WHERE user=?',[now,e.user]);
    }
    if(!Number.isSafeInteger(amount)||amount>1000000000)throw Error('Recompensa fuera de rango');
    if(amount>0){
@@ -93,7 +93,7 @@ class Community{
  }
 
  list(){return this.store.all('SELECT m.user,m.name,m.avatar,m.follower,m.registered,m.likes,m.comments,m.gifts,m.shares,m.joinedAt,m.seenAt,m.activeMs,COALESCE(u.balance,0) AS balance FROM community_members m LEFT JOIN users u ON u.id=m.user WHERE m.registered=1 ORDER BY m.joinedAt DESC LIMIT 1000');}
- summary(){const rows=this.store.all('SELECT COUNT(*) AS total,SUM(CASE WHEN registered=1 THEN 1 ELSE 0 END) AS registered FROM community_members')[0]||{};return {lastAward:this.lastAward,audience:normalizePoints(this.store.get('pointSettings')||{}).audience,registered:rows.registered||0,pending:(rows.total||0)-(rows.registered||0),requirements:{follow:true,anyOf:['100 likes','1 regalo','10 comentarios']}};}
+ summary(){const rows=this.store.all('SELECT COUNT(*) AS total,SUM(CASE WHEN registered=1 THEN 1 ELSE 0 END) AS registered FROM community_members')[0]||{};return {lastAward:this.lastAward,enabled:normalizePoints(this.store.get('pointSettings')||{}).enabled,audience:normalizePoints(this.store.get('pointSettings')||{}).audience,registered:rows.registered||0,pending:(rows.total||0)-(rows.registered||0),requirements:{follow:true,anyOf:['100 likes','1 regalo','10 comentarios']}};}
  credit(user,amount){
   if(!Number.isSafeInteger(amount)||amount===0||Math.abs(amount)>1000000)throw Error('Cantidad de puntos inválida');
   const m=this.store.all('SELECT user,name FROM community_members WHERE user=? AND registered=1',[user])[0];
