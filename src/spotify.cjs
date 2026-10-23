@@ -1,7 +1,8 @@
 const {spotifyClientId:defaultClientId}=require('../release.json');
 const {pkce,listenCallback,jsonRequest}=require('./oauth.cjs');
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
 class Spotify{
- constructor({store,secretGet,secretSet,open,change}){Object.assign(this,{store,secretGet,secretSet,open,change});this.status={status:'Desconectado',connected:false};this.callback=null;this.poll=null;this.tokens=null;this.profile=null;this.inflight=false;this.nextPoll=0;}
+ constructor({store,secretGet,secretSet,open,change}){Object.assign(this,{store,secretGet,secretSet,open,change});this.status={status:'Desconectado',connected:false};this.callback=null;this.poll=null;this.tokens=null;this.profile=null;this.inflight=false;this.nextPoll=0;this.priorityQueue=[];this.lastTrackUri='';this.queueLimited=true;this.spotifyQueue=[];}
  setStatus(s){this.status={...this.status,...s};this.change(this.status);}
  clientId(value){return (typeof value==='string'&&value.trim())||this.store.get('spotifyClientId')||defaultClientId||'';}
  async connect(clientId){clientId=this.clientId(clientId);if(!/^[a-f\d]{32}$/i.test(clientId||''))throw Error('Escribe el Client ID de tu app Spotify (32 caracteres)');this.store.set('spotifyClientId',clientId);this.callback?.close();const pair=pkce();this.setStatus({status:'Esperando autorización en el navegador',connected:false});
@@ -16,11 +17,49 @@ class Spotify{
  async token(){if(!this.tokens)throw Error('Conecta Spotify primero');if(Date.now()>this.tokens.expires-60000){if(!this.tokens.refresh)throw Error('Conecta Spotify de nuevo');if(!this.refreshPromise)this.refreshPromise=(async()=>{const d=await jsonRequest('https://accounts.spotify.com/api/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'refresh_token',refresh_token:this.tokens.refresh,client_id:this.clientId()})});this.setTokens(d);})().finally(()=>this.refreshPromise=null);await this.refreshPromise;}return this.tokens.access;}
  async api(endpoint,method='GET',body,{allowEmptySuccess=false}={}){const access=await this.token();try{return await jsonRequest('https://api.spotify.com/v1/'+endpoint,{method,headers:{Authorization:'Bearer '+access,...(body?{'Content-Type':'application/json'}:{})},...(body?{body:JSON.stringify(body)}:{}),allowEmptySuccess});}catch(e){if(e.status===401&&this.tokens){this.tokens.expires=0;}if(e.status===429)this.nextPoll=Date.now()+e.retryAfter*1000;throw e;}}
  async activate(){this.profile=await this.api('me');this.setStatus({status:'Conectado',connected:true,name:this.profile.display_name||this.profile.id,avatar:this.profile.images?.[0]?.url||''});clearInterval(this.poll);await this.tick();this.poll=setInterval(()=>this.tick(),5000);this.poll.unref();}
- async tick(){if(this.inflight||Date.now()<this.nextPoll)return;this.inflight=true;try{const d=await this.api('me/player');const m={connected:true,source:'spotify',uri:d?.item?.uri||'',profile:this.profile?.display_name||'',avatar:this.profile?.images?.[0]?.url||'',playing:!!d?.is_playing,at:Date.now(),title:d?.item?.name||'Sin reproducción activa',artist:(d?.item?.artists||[]).map(x=>x.name).join(', '),cover:d?.item?.album?.images?.[0]?.url||d?.item?.images?.[0]?.url||'',progress:d?.progress_ms||0,duration:d?.item?.duration_ms||0};if(Date.now()>(this.nextQueuePoll||0)){this.nextQueuePoll=Date.now()+30000;try{const q=await this.api('me/player/queue');this.spotifyQueue=(q?.queue||[]).slice(0,3).map(t=>({uri:t.uri,name:t.name,artist:(t.artists||[]).map(a=>a.name).join(', '),cover:t.album?.images?.[0]?.url||t.images?.[0]?.url||'',duration:Number(t.duration_ms)||0}));this.queueLimited=false;}catch{this.queueLimited=true;this.nextQueuePoll=Date.now()+300000;}}m.spotifyQueue=this.spotifyQueue||[];m.queueLimited=!!this.queueLimited;this.music=m;this.change(this.status,m);}catch(e){this.setStatus({status:e.message,connected:!!this.tokens});}finally{this.inflight=false;}}
+ queueTrackData(list=[]){return (list||[]).map(t=>({uri:t?.uri||'',name:t?.name||'',artist:(t?.artists||[]).map(a=>a.name).join(', '),cover:t?.album?.images?.[0]?.url||t?.images?.[0]?.url||'',duration:Number(t?.duration_ms)||0})).filter(t=>t.uri||t.name);}
+ async promotePriority(rawQueue,currentUri,justChanged){
+  const head=this.priorityQueue[0];
+  if(!head?.uri)return false;
+  if(currentUri===head.uri){this.priorityQueue.shift();return false;}
+  if(rawQueue?.[0]?.uri===head.uri)return false;
+  if(!justChanged||this.promoting)return false;
+  const index=(rawQueue||[]).findIndex(t=>t?.uri===head.uri);
+  if(index<0||index>20)return false;
+  this.promoting=true;
+  try{
+   for(let i=0;i<=index;i++){
+    await this.api('me/player/next','POST',undefined,{allowEmptySuccess:true});
+    if(i<index)await wait(140);
+   }
+   return true;
+  }finally{this.promoting=false;}
+ }
+ async tick(){
+  if(this.inflight||Date.now()<this.nextPoll)return;
+  this.inflight=true;
+  try{
+   let d=await this.api('me/player');
+   let queueRaw=[];
+   if(Date.now()>(this.nextQueuePoll||0)){
+    this.nextQueuePoll=Date.now()+30000;
+    try{const q=await this.api('me/player/queue');queueRaw=q?.queue||[];this.spotifyQueue=this.queueTrackData(queueRaw).slice(0,3);this.queueLimited=false;this.lastFullQueue=this.queueTrackData(queueRaw);}catch{this.queueLimited=true;this.nextQueuePoll=Date.now()+300000;queueRaw=this.lastFullQueue||[];}
+   }else queueRaw=this.lastFullQueue||[];
+   const currentUri=d?.item?.uri||'';
+   const justChanged=currentUri&&this.lastTrackUri&&currentUri!==this.lastTrackUri&&Number(d?.progress_ms||0)<15000;
+   const promoted=await this.promotePriority(queueRaw,currentUri,justChanged);
+   if(promoted){await wait(160);d=await this.api('me/player');try{const q=await this.api('me/player/queue');queueRaw=q?.queue||[];this.spotifyQueue=this.queueTrackData(queueRaw).slice(0,3);this.queueLimited=false;this.lastFullQueue=this.queueTrackData(queueRaw);}catch{}}
+   const m={connected:true,source:'spotify',uri:d?.item?.uri||'',profile:this.profile?.display_name||'',avatar:this.profile?.images?.[0]?.url||'',playing:!!d?.is_playing,at:Date.now(),title:d?.item?.name||'Sin reproducción activa',artist:(d?.item?.artists||[]).map(x=>x.name).join(', '),cover:d?.item?.album?.images?.[0]?.url||d?.item?.images?.[0]?.url||'',progress:d?.progress_ms||0,duration:d?.item?.duration_ms||0,spotifyQueue:this.spotifyQueue||[],queueLimited:!!this.queueLimited};
+   if(m.uri&&this.priorityQueue[0]?.uri===m.uri)this.priorityQueue.shift();
+   this.lastTrackUri=m.uri||'';
+   this.music=m;this.change(this.status,m);
+  }catch(e){this.setStatus({status:e.message,connected:!!this.tokens});}
+  finally{this.inflight=false;}
+ }
  async playback(op){if(!['play','pause','next','previous'].includes(op))throw Error('Acción de reproducción inválida');await this.api('me/player/'+op,['next','previous'].includes(op)?'POST':'PUT',undefined,{allowEmptySuccess:true});await this.tick();}
  async search(q){if(typeof q!=='string'||q.length<2||q.length>150)throw Error('Busca de 2 a 150 caracteres');const d=await this.api('search?'+new URLSearchParams({q,type:'track',limit:'10'}));return (d.tracks?.items||[]).map(t=>({id:t.id,uri:t.uri,name:t.name,artist:(t.artists||[]).map(a=>a.name).join(', '),duration:t.duration_ms,cover:t.album?.images?.[0]?.url||''}));}
- async enqueue(uri){if(!/^spotify:track:[a-zA-Z\d]{22}$/.test(uri))throw Error('Canción inválida');await this.api('me/player/queue?'+new URLSearchParams({uri}),'POST',undefined,{allowEmptySuccess:true});}
- logout(){this.callback?.close();clearInterval(this.poll);this.tokens=null;this.music={connected:false,source:'none'};this.store.set('secret:spotify',null);this.setStatus({status:'Desconectado',connected:false,name:'',avatar:''});this.change(this.status,this.music);}
+ async enqueue(uri,{priority=false}={}){if(!/^spotify:track:[a-zA-Z\d]{22}$/.test(uri))throw Error('Canción inválida');await this.api('me/player/queue?'+new URLSearchParams({uri}),'POST',undefined,{allowEmptySuccess:true});if(priority!==false)this.priorityQueue.push({uri,at:Date.now()});if(this.priorityQueue.length>25)this.priorityQueue=this.priorityQueue.slice(-25);this.nextQueuePoll=0;}
+ logout(){this.callback?.close();clearInterval(this.poll);this.tokens=null;this.priorityQueue=[];this.music={connected:false,source:'none'};this.store.set('secret:spotify',null);this.setStatus({status:'Desconectado',connected:false,name:'',avatar:''});this.change(this.status,this.music);}
  close(){this.callback?.close();clearInterval(this.poll);}
 }
 module.exports={Spotify};

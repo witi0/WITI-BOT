@@ -61,5 +61,5 @@ jobs:
           $version = node -p "require('./package.json').version"
           $assets = @($setup.FullName, 'dist/SHA256SUMS.txt')
           if (Test-Path 'dist/witi-update.json') { $assets += 'dist/witi-update.json' }
-          gh release create "v$version" @assets --target "$env:GITHUB_SHA" --title "WITI BOT v$version" --notes-file CHANGELOG.md
+          gh release create "v$version" @assets --target "$env:GITHUB_SHA" --title "WITI BOT v$version" --notes-file RELEASE_NOTES.md
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

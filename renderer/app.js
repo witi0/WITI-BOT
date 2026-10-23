@@ -7,14 +7,32 @@ function node(tag,text,cls){const e=document.createElement(tag);if(text!==undefi
 function button(text,fn){const b=node('button',text);b.type='button';b.onclick=safe(fn);return b;}
 function empty(parent,text){parent.append(node('div',text,'empty'));}
 async function refresh(){state=await call('snapshot');render();}
+const anonymousCreator='anonymous-creator.svg';
+function cleanHandle(value){return String(value||'').trim().replace(/^@/,'');}
+function applyCreatorAvatar(selector,url,label='Avatar del creador'){const img=$(selector);if(!img)return;img.alt=label;img.onerror=()=>{if(!img.src.endsWith(anonymousCreator))img.src=anonymousCreator;};img.src=/^https?:\/\//i.test(String(url||''))?url:anonymousCreator;}
+function renderCreatorIdentity(){
+ const profile=state?.profile||{};
+ const handle=cleanHandle(profile.tiktokUsername||state?.tiktokUsername||'');
+ const avatar=profile.tiktokAvatar||profile.avatar||'';
+ const displayName=(profile.name||'').trim()||profile.tiktokDisplayName||((handle&&'@'+handle)||'Mi espacio de trabajo');
+ const subtitle=handle?('@'+handle+(avatar?' · foto de TikTok':' · cuenta detectada')):'Operador local · no reclamado';
+ if($('#workspaceTitle'))$('#workspaceTitle').textContent=displayName;
+ if($('#workspaceSubtitle'))$('#workspaceSubtitle').textContent=subtitle;
+ if($('#heroAvatarTag'))$('#heroAvatarTag').textContent=handle?('@'+handle).slice(0,24):'NO RECLAMADO';
+ applyCreatorAvatar('#workspaceAvatarImg',avatar,displayName);
+ applyCreatorAvatar('#headerUserAvatar',avatar,displayName);
+ applyCreatorAvatar('#heroAvatarImg',avatar,displayName);
+ const form=$('#profileForm');
+ if(form&&!document.activeElement?.closest?.('#profileForm')){form.elements.name.value=profile.name||'';form.elements.username.value=handle?('@'+handle):'';}
+}
 function render(){
  $('#rulesCount').textContent=state.rules.length;$('#overlaysCount').textContent=state.overlays.length;$('#usersCount').textContent=state.users.length;$('#obsStatus').textContent=state.obsConnected?'Conectado':'Sin conectar';$('#liveLock').checked=state.live;$('#version').textContent='Versión '+state.version+' · Creator Studio';
- if(!document.activeElement.closest('#profileForm'))$('#profileForm [name=name]').value=state.profile.name||'';
+ renderCreatorIdentity();
  if(!window.__voiceSettingsLoaded&&state.ttsSettings){window.__voiceSettingsLoaded=true;const t=state.ttsSettings;$('#voiceEngine').value=t.engine||'online';$('#rate').value=t.rate||1;$('#pitch').value=t.pitch??1;$('#randomVoice').checked=!!t.random;$('#rate').oninput();$('#pitch').oninput();loadVoices();}renderRules();renderOverlays();renderCommunity();renderLogs();renderUpdate(state.update);if(typeof renderStudio==='function')renderStudio();if(typeof renderScreens==='function')renderScreens(state);
 }
 $$('nav button').forEach(b=>b.onclick=()=>{$$('nav button').forEach(n=>n.classList.toggle('active',n===b));$$('.page').forEach(s=>s.classList.toggle('active',s.id===b.dataset.page));$('#breadcrumb').textContent='Workspace / '+b.querySelector('span').textContent;document.querySelector('main')?.scrollTo({top:0,left:0});window.scrollTo({top:0,left:0});});
 $$('[data-go]').forEach(b=>b.onclick=()=>{document.querySelector('nav button[data-page="'+b.dataset.go+'"]').click();});
-$('#profileForm').onsubmit=safe(async e=>{e.preventDefault();await call('profile',{name:e.target.elements.name.value});toast('Perfil guardado');await refresh();});
+$('#profileForm').onsubmit=safe(async e=>{e.preventDefault();await call('profile',{name:e.target.elements.name.value,username:e.target.elements.username.value});toast('Perfil guardado');await refresh();});
 $('#simForm').onsubmit=safe(async e=>{e.preventDefault();const f=e.target;const result=await call('simulate',{type:f.elements.type.value,text:f.elements.text.value,gift:f.elements.gift.value});$('#simResult').textContent=result.length?result.map(r=>r.action+': '+r.status+(r.message?' — '+r.message:'')).join(' · '):'No hay reglas activas que coincidan con este evento.';await refresh();});
 function renderRules(){const root=$('#ruleList');root.replaceChildren();if(!state.rules.length)empty(root,'Todavía no hay reglas. Crea una y pruébala desde Inicio.');for(const r of state.rules){const box=node('div',undefined,'list-item');box.append(node('h3',r.name),node('p',r.trigger+' → '+r.actions.map(a=>a.type).join(' + ')+' · '+(r.enabled?'Activa':'Pausada')));const row=node('div',undefined,'row');row.append(button('Editar',()=>editRule(r)),button(r.enabled?'Pausar':'Activar',async()=>{await call('save-rule',{...r,enabled:!r.enabled});await refresh();}),button('Eliminar',async()=>{if(!confirm('¿Eliminar esta regla?'))return;await call('delete-rule',r.id);await refresh();}));box.append(row);root.append(box);}}
 function editRule(r){const f=$('#ruleForm');for(const k of ['id','name','trigger','match','cooldown','likeThreshold'])f.elements[k].value=r[k]??'';f.elements.likeThreshold.value=r.likeThreshold??500;f.elements.enabled.checked=r.enabled;f.elements.repeatGiftAudio.checked=r.repeatGiftAudio!==false;f.elements.individualOverlay.checked=!!r.individualOverlay;actions=structuredClone(r.actions);renderActions();$('#ruleTitle').textContent='Editar regla';}
@@ -84,3 +102,5 @@ window.witi.on('tts-job',async d=>{
 });
 
 window.witi.on('tts-control',d=>{if(d.stop){currentTtsDelivery=null;stopVoice();}const enabled=document.querySelector('#ttsSettingsForm [name=enabled]');if(enabled)enabled.checked=!d.muted;voiceStatus(d.muted?'TTS desactivado':'TTS disponible');});window.witi.on('navigate-page',page=>document.querySelector('nav [data-page="'+page+'"]')?.click());
+
+window.witi.on('profile-updated',d=>{if(!state)state={profile:{}};state.profile={...(state.profile||{}),...(d||{})};renderCreatorIdentity();});

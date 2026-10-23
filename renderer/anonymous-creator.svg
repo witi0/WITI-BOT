@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none">
+<rect width="256" height="256" rx="40" fill="#111514"/>
+<rect x="24" y="24" width="208" height="208" rx="32" fill="#171c1b" stroke="#2e4038" stroke-width="4"/>
+<path d="M128 45c27.6 0 50 22.4 50 50 0 16.7-8.2 31.5-20.7 40.6 23.5 9.4 40.8 31.4 44.6 57.9H54.1c3.8-26.5 21.1-48.5 44.6-57.9C86.2 126.5 78 111.7 78 95c0-27.6 22.4-50 50-50Z" fill="#203028"/>
+<circle cx="128" cy="95" r="34" fill="#9bd5b8" fill-opacity="0.14" stroke="#49c78e" stroke-opacity="0.65" stroke-width="5"/>
+<path d="M81 192c7.6-29.6 26.7-45 47-45s39.4 15.4 47 45" stroke="#49c78e" stroke-opacity="0.72" stroke-width="8" stroke-linecap="round"/>
+<circle cx="128" cy="95" r="16" fill="#49c78e" fill-opacity="0.65"/>
+<path d="M74 212h108" stroke="#334840" stroke-width="4" stroke-linecap="round"/>
+<text x="128" y="226" text-anchor="middle" fill="#7fc59f" font-family="Arial, sans-serif" font-size="18" font-weight="700">NO RECLAMADO</text>
+</svg>

@@ -34,7 +34,7 @@ class Commands{
   }catch(err){this.store.db.run('ROLLBACK');throw err;}
   let message,spotifyQueued=false;
   try{
-   if(cmd.action==='play'){const music=require('./music-requests.cjs');const requestId=music.rememberRequest(this.store,song,e);try{await this.spotify.enqueue(song.uri);}catch(err){try{music.forgetRequest(this.store,requestId);}catch{}throw err;}spotifyQueued=true;try{this.queueChanged();}catch{}message=`${e.name||e.user}, ${song.name} · ${song.artist} añadida a Spotify y a Siguientes 3 (${cmd.cost} puntos)`;}
+   if(cmd.action==='play'){const music=require('./music-requests.cjs');const requestId=music.rememberRequest(this.store,song,e);try{await this.spotify.enqueue(song.uri,{priority:true});}catch(err){try{music.forgetRequest(this.store,requestId);}catch{}throw err;}spotifyQueued=true;try{this.queueChanged();}catch{}message=`${e.name||e.user}, ${song.name} · ${song.artist} añadida a Spotify y a Siguientes 3 (${cmd.cost} puntos)`;}
    if(cmd.action==='skip'){await this.spotify.playback('next');message='Canción saltada';}
    if(cmd.action==='points')message=`${e.name}, tienes ${balance()} puntos`;
    if(cmd.action==='tts'){this.speak(args.slice(0,300),e);message='Lectura añadida a la cola';}

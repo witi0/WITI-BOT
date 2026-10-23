@@ -1,3 +1,11 @@
+## 5.3.7 · Creator Identity / Spotify Queue
+
+- Bindings de avatar del workspace a perfil TikTok (`@uniqueId`); fallback anónimo, invalidación de caché visual al cambiar de cuenta y sincronización por IPC.
+- Resolución del avatar asíncrona, desacoplada del handshake TikTok LIVE.
+- Reconciliación de cola `spotifyRequests` + endpoint `GET /me/player/queue`; deduplicación por URI y listado limitado a 3 entradas.
+- Priorización de `/play` sobre la cola ordinaria; conservación de atribución de usuario/avatar y actualización de la fuente musical.
+- Release de Windows usa `RELEASE_NOTES.md` para evitar publicar el historial acumulado completo.
+
 ## 5.3.6 · Corrección de /play y respuestas Spotify
 
 - El comando /play confirma correctamente el alta de una canción cuando Spotify acepta la petición HTTP sin devolver un cuerpo JSON.
