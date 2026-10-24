@@ -6,7 +6,7 @@ function safe(fn){return async(...args)=>{try{return await fn(...args);}catch(e)
 function node(tag,text,cls){const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;}
 function button(text,fn){const b=node('button',text);b.type='button';b.onclick=safe(fn);return b;}
 function empty(parent,text){parent.append(node('div',text,'empty'));}
-async function refresh(){state=await call('snapshot');render();}
+async function refresh(){state=await call('snapshot');render();if(window.__desktopListenersReady)await call('desktop-ready');}
 const anonymousCreator='anonymous-creator.svg';
 function cleanHandle(value){return String(value||'').trim().replace(/^@/,'');}
 function applyCreatorAvatar(selector,url,label='Avatar del creador'){const img=$(selector);if(!img)return;img.alt=label;img.onerror=()=>{if(!img.src.endsWith(anonymousCreator))img.src=anonymousCreator;};img.src=/^https?:\/\//i.test(String(url||''))?url:anonymousCreator;}
@@ -65,24 +65,66 @@ $('#liveLock').onchange=safe(async e=>{await call('live-lock',e.target.checked);
 function renderUpdate(u){$('#updateStatus').textContent=u.status==='available'?'Nueva versión '+u.version+' disponible':u.status==='downloading'?'Descargando '+Math.round(u.percent)+'%':u.status==='downloaded'?'Lista para instalar':u.status;$('#updateNotes').textContent=typeof u.notes==='string'?u.notes:Array.isArray(u.notes)?u.notes.map(n=>n.note||'').join('\n'):'';$('#downloadUpdate').hidden=u.status!=='available';$('#installUpdate').hidden=u.status!=='downloaded';}
 $('#checkUpdate').onclick=safe(async()=>renderUpdate(await call('update-check')));$('#downloadUpdate').onclick=safe(()=>call('update-download'));$('#installUpdate').onclick=safe(()=>call('update-install'));
 const VOICE_FALLBACKS=[{id:'es_mx_002',name:'Álex',locale:'México'},{id:'es_male_m3',name:'Julio',locale:'Latinoamérica'},{id:'es_002',name:'Mateo',locale:'España'},{id:'es_female_f6',name:'Alejandra',locale:'Latinoamérica'},{id:'es_female_fp1',name:'Mariana',locale:'Latinoamérica'},{id:'es_mx_female_supermom',name:'Super Mamá',locale:'México'},{id:'es_mx_male_transformer',name:'Optimus MX',locale:'México'}];
-let oldVoices=VOICE_FALLBACKS, onlinePlayer=null, voiceQueue=[], voiceRunning=false,voiceEpoch=0,remoteUnavailableUntil=0,abortActiveVoice=null;
+let oldVoices=VOICE_FALLBACKS,onlinePlayer=null,voiceQueue=[],voiceRunning=false,voiceEpoch=0,abortActiveVoice=null;
 const voiceStatus=text=>$('#voiceStatus').textContent=text;
-function loadVoices(){const old=$('#voiceList').value;voices=speechSynthesis.getVoices().filter(v=>v.lang.toLowerCase().startsWith('es'));const selected=$('#voiceEngine').value;
+function loadVoices(){const old=$('#voiceList').value;voices=speechSynthesis.getVoices().filter(v=>String(v.lang||'').toLowerCase().startsWith('es'));const selected=$('#voiceEngine').value;
  const root=$('#voiceList');root.replaceChildren();
- if(selected==='local')for(const voice of voices){const option=node('option',voice.name+' · '+voice.lang+' · local');option.value=voice.voiceURI;root.append(option);}
- else for(const voice of oldVoices){const option=node('option',voice.name+' · '+voice.locale+' · online');option.value=voice.id;root.append(option);}
- const configured=state?.ttsSettings;const preferred=([ ...root.options ].some(x=>x.value===old)?old:(configured?.voice||''));if([...root.options].some(x=>x.value===preferred))root.value=preferred;
- if(!root.children.length){const option=node('option','No hay voces españolas disponibles');option.value='';root.append(option);}
- voiceStatus(selected==='online'?'WitiVoces · Álex, Julio, Mateo, Alejandra, Mariana, Super Mamá y Optimus MX. Si el proveedor no responde, no se cambiará a Windows sin tu permiso.':voices.length+' voces españolas instaladas en Windows.');
+ if(selected==='local')for(const voice of voices){const option=node('option',voice.name+' · '+voice.lang+' · Windows');option.value=voice.voiceURI;root.append(option);}
+ else for(const voice of oldVoices){const option=node('option',voice.name+' · '+voice.locale+' · WitiVoces');option.value=voice.id;root.append(option);}
+ if(selected==='local'&&!root.children.length){const option=node('option','Windows SAPI · Español');option.value='__windows_sapi__';root.append(option);}
+ const configured=state?.ttsSettings;const preferred=[...root.options].some(x=>x.value===old)?old:(configured?.voice||'');if([...root.options].some(x=>x.value===preferred))root.value=preferred;
+ if(!root.children.length){const option=node('option','No hay voces disponibles');option.value='';root.append(option);}
+ voiceStatus(selected==='online'?'WitiVoces originales · proveedor TikTok TTS no oficial. Prueba la voz antes del LIVE.':'Voz española instalada en Windows. El respaldo SAPI se utiliza solo en modo Windows.');
 }
 function voiceChoice(){let id=$('#voiceList').value;if($('#randomVoice').checked){const xs=[...$('#voiceList').options].filter(o=>o.value);if(xs.length)id=xs[Math.floor(Math.random()*xs.length)].value;}return id;}
-function speakLocal(text){const id=voiceChoice();return new Promise((resolve,reject)=>{voices=speechSynthesis.getVoices().filter(v=>String(v.lang).toLowerCase().startsWith('es'));const v=voices.find(x=>x.voiceURI===id)||voices.find(x=>String(x.lang).toLowerCase().startsWith('es-mx'))||voices[0];if(!v)return reject(Error('No hay voces en español instaladas en Windows'));const utter=new SpeechSynthesisUtterance(text);utter.voice=v;utter.rate=Number($('#rate').value);utter.pitch=Number($('#pitch').value);let done=false;const finish=err=>{if(done)return;done=true;clearTimeout(timer);if(abortActiveVoice===cancel)abortActiveVoice=null;err?reject(err):resolve();};const cancel=()=>finish(Error('Lectura cancelada'));abortActiveVoice=cancel;const timer=setTimeout(()=>{speechSynthesis.cancel();finish(Error('La voz local excedió el tiempo de lectura'));},Math.max(12000,Math.min(60000,String(text).length*330)));utter.onend=()=>finish();utter.onerror=ev=>finish(Error('La voz local no pudo hablar: '+ev.error));speechSynthesis.speak(utter);});}
-async function speakOnline(text){const epoch=voiceEpoch;if(Date.now()<remoteUnavailableUntil)throw Error('WitiVoces sin conexión temporalmente');const chosen=voiceChoice();if(!chosen)throw Error('Selecciona una voz WitiVoces');const sound=await call('voice-synthesize',{voice:chosen,text});if(epoch!==voiceEpoch)throw Error('Lectura cancelada');return new Promise((resolve,reject)=>{const player=new Audio('data:'+sound.mime+';base64,'+sound.data);onlinePlayer=player;player.playbackRate=Math.max(0.5,Math.min(2,Number($('#rate').value)));let ended=false;const finish=err=>{if(ended)return;ended=true;clearTimeout(watchdog);if(abortActiveVoice===cancel)abortActiveVoice=null;if(onlinePlayer===player)onlinePlayer=null;err?reject(err):resolve();};const cancel=()=>{player.pause();finish(Error('Lectura cancelada'));};abortActiveVoice=cancel;const watchdog=setTimeout(()=>{player.pause();finish(Error('Tiempo de reproducción agotado'));},60000);player.onended=()=>finish();player.onerror=()=>finish(Error('El audio online no se pudo reproducir'));player.play().catch(finish);});}
-async function drainVoices(){if(voiceRunning)return;voiceRunning=true;const generation=voiceEpoch;try{while(voiceQueue.length&&generation===voiceEpoch){const text=voiceQueue.shift();try{if($('#voiceEngine').value==='online'){await speakOnline(text);voiceStatus('WitiVoces · lectura completada');}else await speakLocal(text);}catch(e){if($('#voiceEngine').value==='online')remoteUnavailableUntil=Date.now()+10000;voiceStatus('WitiVoces no disponible: '+String(e.message||e)+'. No se sustituyó la voz por Windows.');}}}finally{voiceRunning=false;}}
+function playEncodedAudio(sound,epoch=voiceEpoch){
+ if(!sound||!/^audio\/(mpeg|mp3|wav|ogg)$/.test(sound.mime||'')||!sound.data)throw Error('El sintetizador no devolvió audio');
+ if(epoch!==voiceEpoch)throw Error('Lectura cancelada');
+ return new Promise((resolve,reject)=>{
+  const player=new Audio('data:'+sound.mime+';base64,'+sound.data);onlinePlayer=player;
+  player.playbackRate=Math.max(.5,Math.min(2,Number($('#rate').value)||1));
+  let ended=false;
+  const finish=err=>{if(ended)return;ended=true;clearTimeout(watchdog);if(abortActiveVoice===cancel)abortActiveVoice=null;if(onlinePlayer===player)onlinePlayer=null;err?reject(err):resolve();};
+  const cancel=()=>{player.pause();finish(Error('Lectura cancelada'));};abortActiveVoice=cancel;
+  const watchdog=setTimeout(()=>{player.pause();finish(Error('Tiempo de reproducción agotado'));},60000);
+  player.onended=()=>finish();player.onerror=()=>finish(Error('El audio no se pudo reproducir en Windows'));
+  player.play().catch(err=>finish(Error('Reproducción bloqueada: '+String(err?.message||err))));
+ });
+}
+function speakBrowserLocal(text){const id=voiceChoice();return new Promise((resolve,reject)=>{
+ voices=speechSynthesis.getVoices().filter(v=>String(v.lang||'').toLowerCase().startsWith('es'));
+ const v=voices.find(x=>x.voiceURI===id)||voices.find(x=>String(x.lang).toLowerCase().startsWith('es-mx'))||voices[0];
+ if(!v)return reject(Error('Chromium no detectó voces españolas'));
+ speechSynthesis.cancel();speechSynthesis.resume();
+ const utter=new SpeechSynthesisUtterance(text);utter.voice=v;utter.rate=Number($('#rate').value)||1;utter.pitch=Number($('#pitch').value)||1;
+ let done=false;const finish=err=>{if(done)return;done=true;clearTimeout(timer);if(abortActiveVoice===cancel)abortActiveVoice=null;err?reject(err):resolve();};
+ const cancel=()=>{speechSynthesis.cancel();finish(Error('Lectura cancelada'));};abortActiveVoice=cancel;
+ const timer=setTimeout(()=>{speechSynthesis.cancel();finish(Error('La voz de Windows no respondió'));},Math.max(12000,Math.min(45000,String(text).length*260)));
+ utter.onend=()=>finish();utter.onerror=ev=>finish(Error('Error de voz local: '+String(ev.error||'desconocido')));
+ try{speechSynthesis.speak(utter);}catch(err){finish(err);}
+ });}
+async function speakLocal(text){
+ const epoch=voiceEpoch;
+ try{if(voiceChoice()!=='__windows_sapi__')return await speakBrowserLocal(text);}catch(err){if(epoch!==voiceEpoch)throw err;}
+ const sound=await call('voice-local-synthesize',{text,rate:Number($('#rate').value)||1});
+ return playEncodedAudio(sound,epoch);
+}
+async function speakOnline(text){
+ const epoch=voiceEpoch,chosen=voiceChoice();if(!chosen)throw Error('Selecciona una voz WitiVoces');
+ const sound=await call('voice-synthesize',{voice:chosen,text});
+ return playEncodedAudio(sound,epoch);
+}
+async function drainVoices(){if(voiceRunning)return;voiceRunning=true;const generation=voiceEpoch;try{while(voiceQueue.length&&generation===voiceEpoch){const text=voiceQueue.shift();try{if($('#voiceEngine').value==='online'){await speakOnline(text);voiceStatus('WitiVoces · lectura completada');}else{await speakLocal(text);voiceStatus('Voz local · lectura completada');}}catch(e){voiceStatus('No se pudo leer: '+String(e.message||e)+'. No se cambió a voz Microsoft.');}}}finally{voiceRunning=false;}}
 function speak(text){if(typeof text!=='string'||!text.trim())return;voiceQueue.push(text.slice(0,200));if(voiceQueue.length>3)voiceQueue.splice(0,voiceQueue.length-3);drainVoices().catch(e=>toast(e.message,true));}
 function stopVoice(){voiceEpoch++;voiceQueue=[];abortActiveVoice?.();abortActiveVoice=null;onlinePlayer?.pause();onlinePlayer=null;speechSynthesis.cancel();voiceRunning=false;voiceStatus('Lectura detenida.');}
-$('#voiceEngine').onchange=()=>{remoteUnavailableUntil=0;loadVoices();};$('#voiceList').onchange=()=>{remoteUnavailableUntil=0;};$('#rate').oninput=()=>$('#rateValue').textContent=Number($('#rate').value).toFixed(1)+'×';$('#pitch').oninput=()=>$('#pitchValue').textContent=Number($('#pitch').value).toFixed(1)+'×';
-$('#ttsPlay').onclick=safe(()=>call('tts-test',$('#ttsText').value));$('#ttsStop').onclick=()=>{currentTtsDelivery=null;stopVoice();call('tts-stop').catch(()=>{});};$('#ttsPause').onclick=()=>{if(onlinePlayer){if(onlinePlayer.paused)onlinePlayer.play().catch(()=>{});else onlinePlayer.pause();}else speechSynthesis.paused?speechSynthesis.resume():speechSynthesis.pause();};
+$('#voiceEngine').onchange=()=>loadVoices();$('#voiceList').onchange=()=>voiceStatus('Voz seleccionada. Utiliza «Escuchar voz» para verificarla.');$('#rate').oninput=()=>$('#rateValue').textContent=Number($('#rate').value).toFixed(1)+'×';$('#pitch').oninput=()=>$('#pitchValue').textContent=Number($('#pitch').value).toFixed(1)+'×';
+$('#ttsPlay').onclick=safe(async()=>{
+ const text=$('#ttsText').value.trim();if(!text)throw Error('Escribe un texto para probar');
+ stopVoice();voiceStatus('Generando prueba de '+($('#voiceEngine').value==='online'?'WitiVoces':'Windows')+'…');
+ try{if($('#voiceEngine').value==='online')await speakOnline(text);else await speakLocal(text);voiceStatus('Prueba completada · motor '+($('#voiceEngine').value==='online'?'WitiVoces':'Windows'));}
+ catch(err){voiceStatus('Prueba fallida: '+String(err.message||err));throw err;}
+});
+$('#ttsStop').onclick=()=>{currentTtsDelivery=null;stopVoice();call('tts-stop').catch(()=>{});};$('#ttsPause').onclick=()=>{if(onlinePlayer){if(onlinePlayer.paused)onlinePlayer.play().catch(()=>{});else onlinePlayer.pause();}else speechSynthesis.paused?speechSynthesis.resume():speechSynthesis.pause();};
 speechSynthesis.onvoiceschanged=loadVoices;loadVoices();call('voice-list').then(v=>{oldVoices=v;loadVoices();}).catch(()=>{});
 window.witi.on('speak',d=>speak(d.text));window.witi.on('stop',()=>{stopVoice();libraryPlayer?.pause();});
 window.witi.on('update',renderUpdate);window.witi.on('obs-disconnected',()=>{toast('OBS desconectado',true);$('#sceneList').replaceChildren();safe(refresh)();});
@@ -98,9 +140,13 @@ window.witi.on('tts-job',async d=>{
  if(d.type==='interrupt-action'){if(d.delivery===currentTtsDelivery){stopVoice();currentTtsDelivery=null;}return;}
  if(d.type!=='queued-action')return;
  currentTtsDelivery=d.delivery;let status='ended';const timer=setTimeout(()=>{if(currentTtsDelivery===d.delivery){stopVoice();currentTtsDelivery=null;call('tts-ack',{delivery:d.delivery,status:'error'}).catch(()=>{});}},90000);
- try{if($('#voiceEngine').value==='online'){await speakOnline(d.payload.text);voiceStatus('WitiVoces · lectura completada');}else await speakLocal(d.payload.text);}catch(err){status='error';if($('#voiceEngine').value==='online'){remoteUnavailableUntil=Date.now()+10000;voiceStatus('WitiVoces no disponible: '+String(err.message||err).slice(0,140)+'. No se cambió a voz Microsoft.');}else voiceStatus(err.message);}finally{clearTimeout(timer);if(currentTtsDelivery===d.delivery){currentTtsDelivery=null;await call('tts-ack',{delivery:d.delivery,status}).catch(()=>{});}}
+ try{if($('#voiceEngine').value==='online'){await speakOnline(d.payload.text);voiceStatus('WitiVoces · lectura completada');}else await speakLocal(d.payload.text);}catch(err){status='error';if($('#voiceEngine').value==='online'){voiceStatus('WitiVoces no disponible: '+String(err.message||err).slice(0,160)+'. No se cambió a voz Microsoft.');}else voiceStatus(String(err.message||err));}finally{clearTimeout(timer);if(currentTtsDelivery===d.delivery){currentTtsDelivery=null;await call('tts-ack',{delivery:d.delivery,status}).catch(()=>{});}}
 });
 
 window.witi.on('tts-control',d=>{if(d.stop){currentTtsDelivery=null;stopVoice();}const enabled=document.querySelector('#ttsSettingsForm [name=enabled]');if(enabled)enabled.checked=!d.muted;voiceStatus(d.muted?'TTS desactivado':'TTS disponible');});window.witi.on('navigate-page',page=>document.querySelector('nav [data-page="'+page+'"]')?.click());
 
 window.witi.on('profile-updated',d=>{if(!state)state={profile:{}};state.profile={...(state.profile||{}),...(d||{})};renderCreatorIdentity();});
+
+// Release queued audio only after listeners and persisted preferences are ready.
+window.__desktopListenersReady=true;
+if(state)call('desktop-ready').catch(()=>{});

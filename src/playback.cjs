@@ -22,6 +22,21 @@ class PlaybackQueue{
   if(level===1&&!preview&&this.store.get('audioSettings')?.interruptCritical!==false&&this.player(overlay,false))this.preemptLowerPriority();
   this.wake();this.changed();return id;
  }
+ dropStaleLiveComment(maxAgeMs=9000){
+  let cancelled=0;
+  for(const [key,a] of [...this.active]){
+   if(a.player!=='desktop-tts'||Date.now()-Number(a.startedAt||Date.now())<maxAgeMs)continue;
+   const row=this.store.all('SELECT body FROM playback_jobs WHERE id=?',[a.job])[0];
+   let isComment=false;try{isComment=JSON.parse(row?.body||'{}').source==='live-comment';}catch{}
+   if(!isComment)continue;
+   this.store.db.run("UPDATE playback_jobs SET state='cancelled' WHERE id=? AND state='pending'",[a.job]);
+   this.active.delete(key);if(this.busyAudio===a.delivery)this.busyAudio=null;
+   try{a.output.send({type:'interrupt-action',delivery:a.delivery,reason:'stale-live-comment'});}catch{}
+   cancelled++;
+  }
+  if(cancelled){this.store.flush();this.changed();}
+  return cancelled;
+ }
  preemptLowerPriority(){
   for(const [key,a]of [...this.active]){
    if(a.priority===1||a.preview)continue;
@@ -38,7 +53,7 @@ class PlaybackQueue{
    if(job.audio&&this.busyAudio)continue;
    if(job.audio&&job.priority!==1&&Date.now()<(this.nextAudioAt||0))continue;
    const output=this.player(job.overlay,!!job.preview);if(!output)continue;
-   const delivery=crypto.randomUUID();const active={delivery,job:job.id,player:output.id,output,audio:!!job.audio,priority:job.priority||3,preview:!!job.preview};
+   const delivery=crypto.randomUUID();const active={delivery,job:job.id,player:output.id,output,audio:!!job.audio,priority:job.priority||3,preview:!!job.preview,startedAt:Date.now()};
    this.active.set(key,active);if(job.audio)this.busyAudio=delivery;
    try{output.send({type:'queued-action',delivery,jobId:job.id,sequence:job.done+1,total:job.total,payload:JSON.parse(job.body),priority:active.priority});}
    catch{this.active.delete(key);if(this.busyAudio===delivery)this.busyAudio=null;}

@@ -9,6 +9,7 @@ test('ajustes TTS heredados no bloquean snapshot, configuración OBS ni conexió
  const connections=[];
  class Reader extends TikTokReader{constructor(options){super({...options,connectionFactory:()=>{const socket=new EventEmitter();socket.connect=async()=>{connected++;return{roomId:'123456789123456789'}};socket.disconnect=async()=>{};connections.push(socket);return socket;}});}}
  const server={playback:{cancelOverlay(){},status:()=>({}),enqueue(job){speech.push(job);},wake(){},disconnect(){}},url:id=>'http://127.0.0.1/overlay/'+id,templateUrl:id=>'http://127.0.0.1/template/'+id,ruleUrl:id=>'http://127.0.0.1/rule/'+id,asset:id=>'http://127.0.0.1/asset/'+id,refresh(){},preview(){},previewAll(){},broadcast(){},emit(id,data){emitted.push({id,...data});},close(){}};
+ new (realRequire('./playback.cjs').PlaybackQueue)(store);
  const fakeRequire=name=>{
   if(name==='electron')return {app,BrowserWindow:Window,ipcMain:{handle:(key,fn)=>handlers.set(key,fn)},dialog:{showErrorBox:(_,message)=>fatal.push(message)},safeStorage:{isEncryptionAvailable:()=>true},shell:{},clipboard:{writeText(){}},Menu:{setApplicationMenu(){}}};
   if(name==='./core.cjs')return {...realRequire(name),Store:{open:async()=>store}};

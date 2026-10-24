@@ -1,3 +1,21 @@
+# 5.3.9
+
+- Handshake desktop-ready para TTS/sonidos; ACK y recuperación tras recargar.
+- Recuperación de ajustes legacy de puntos y validación estricta al guardar.
+- Aislamiento de permisos follower por evento.
+- Reasignación persistente del puerto HTTP ante EADDRINUSE.
+- Canal profile-updated habilitado en preload.
+- Audio activo con la ventana minimizada.
+
+## 5.3.8 · TTS Runtime Fix
+
+- Desacoplada preescucha de voz de `ttsMuted` y de la cola LIVE.
+- Normalización de respuestas anidadas de proveedores WitiVoces (`data.v_str`) y codificación de audio.
+- Race de endpoints con timeout, memoización de síntesis concurrente y eliminación de cooldown global.
+- Compactación de jobs pendientes, expiración de lecturas activas de comentario (>9 s) y precarga de síntesis.
+- Respaldo explícito Windows SAPI cuando `speechSynthesis.getVoices()` no devuelve voces españolas.
+- No se altera la selección WitiVoces por voces locales de forma automática.
+
 ## 5.3.7 · Creator Identity / Spotify Queue
 
 - Bindings de avatar del workspace a perfil TikTok (`@uniqueId`); fallback anónimo, invalidación de caché visual al cambiar de cuenta y sincronización por IPC.

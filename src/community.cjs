@@ -2,13 +2,15 @@
 const crypto=require('node:crypto');
 const {followerStatus}=require('./follower.cjs');
 const defaults=Object.freeze({enabled:false,initialPoints:25,perCoin:1,perFollow:5,perShare:5,perComment:0,perSubscription:25,perLike:1,likesPerPoint:100,commentCooldown:10,shareCooldown:30,perMinute:0});
-function normalizePoints(input={}){
+function normalizePoints(input={}, {strict=false}={}){
+ if(!input||typeof input!=='object'||Array.isArray(input))input={};
  const out={enabled:!!input.enabled,audience:['all','follower','community'].includes(input.audience)?input.audience:'all'};
  for(const [key,fallback] of Object.entries(defaults)){
   if(key==='enabled')continue;
   const n=Number(input[key]??fallback);
-  if(!Number.isFinite(n)||n<0||n>100000||(key==='likesPerPoint'&&n<1))throw Error('Cantidad de puntos inválida: '+key);
-  out[key]=key==='perCoin'?n:Math.floor(n);
+  const invalid=!Number.isFinite(n)||n<0||n>100000||(key==='likesPerPoint'&&n<1);
+  if(invalid&&strict)throw Error('Cantidad de puntos inválida: '+key);
+  out[key]=invalid?fallback:key==='perCoin'?n:Math.floor(n);
  }
  return out;
 }
@@ -43,6 +45,7 @@ class Community{
   const name=String(e.name||existing?.name||user).slice(0,100),avatar=String(e.avatar||existing?.avatar||'').slice(0,2048);
   s.db.run('INSERT OR IGNORE INTO community_members(user,follower,registered,likes,commentAt,shareAt,name,avatar,comments,gifts,shares,joinedAt,seenAt) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)',[user,follower,registered?1:0,likes,existing?.commentAt||0,existing?.shareAt||0,name,avatar,comments,gifts,shares,newlyRegistered?now:(existing?.joinedAt||0),now]);
   s.db.run('UPDATE community_members SET follower=?,registered=?,likes=?,name=?,avatar=?,comments=?,gifts=?,shares=?,joinedAt=?,seenAt=? WHERE user=?',[follower,registered?1:0,likes,name,avatar,comments,gifts,shares,newlyRegistered?now:(existing?.joinedAt||0),now,user]);
+  // History informs membership; it cannot grant permission to the current message.
   e.follower=raw;
   e.roles=[...new Set([...(e.roles||[]).filter(x=>x!=='follower'),...(e.follower===true?['follower']:[])])];
   e.communityJustRegistered=newlyRegistered;if(e.id)s.db.run('INSERT OR IGNORE INTO community_observations VALUES(?)',[e.id]);
